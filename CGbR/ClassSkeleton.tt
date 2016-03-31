@@ -4,3 +4,26 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="Usings" type="System.String[]" #>
+<#@ parameter name="Namespace" type="System.String" #>
+<#@ parameter name="ClassName" type="System.String" #>
+<#@ parameter name="BaseClasses" type="System.String" #>
+<#
+    foreach(var usedNamespace in Usings.Distinct())
+    {
+#>
+using <#= usedNamespace #>;
+<#
+    }
+#>
+
+namespace <#= Namespace #>
+{
+    /// <summary>
+    /// Auto generated class by CGbR project
+    /// </summary>
+    public partial class <#= ClassName #><#= string.IsNullOrEmpty(BaseClasses) ? string.Empty : " : " #><#= BaseClasses #>
+    {
+        
+    }
+}

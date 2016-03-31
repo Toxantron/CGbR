@@ -4,3 +4,4 @@ obj
 
 # Ignore user preferences for mono-develop and Visual Studio
 *.userprefs
+*.suo
