@@ -1,0 +1,6 @@
+# Bin and obj folders shall never be commited
+bin
+obj
+
+# Ignore user preferences for mono-develop and Visual Studio
+*.userprefs
