@@ -38,6 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeneratorPartial.cs" />
+    <Compile Include="IGlobalGenerator.cs" />
+    <Compile Include="ILocalGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClassModel\ClassModel.cs" />

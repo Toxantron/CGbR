@@ -49,7 +49,8 @@ namespace CGbR
             // Generate all local partials
             GenerateLocalPartials(files);
 
-            // Generate the global partials
+            // Generate global classes that build on multiple files
+            GenerateGlobalClasses(files);
 		}
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace CGbR
                 var model = file.ClassModel;
 
                 // Find all matching generators and collect their code fragments
-                var fragments = (from gen in _generators
+                var fragments = (from gen in _generators.OfType<ILocalGenerator>()
                                  where gen.CanExtend(model)
                                  select new GeneratorPartial
                                  {
@@ -106,7 +107,23 @@ namespace CGbR
                     { "Namespace", model.Namespace },
                     { "Fragments", fragments }
                 };
+                var code = template.TransformText();
+
+                // Write file
+                var fileName = Path.GetFileNameWithoutExtension(file.Name);
+                fileName = Path.Combine(fileName, ".Generated.cs");
+                File.WriteAllText(fileName, code);
             }
+        }
+
+        /// <summary>
+        /// Generate the global classes
+        /// </summary>
+        /// <param name="files"></param>
+        private static void GenerateGlobalClasses(IEnumerable<ParsedFile> files)
+        {
+
+
         }
 
         /// <summary>
