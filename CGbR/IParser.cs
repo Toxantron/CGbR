@@ -10,7 +10,7 @@ namespace CGbR
 		/// <summary>
 		/// Parse all classes from a file
 		/// </summary>
-		ClassModel[] ParseFile(string file);
+		ClassModel ParseFile(string file);
 	}
 }
 

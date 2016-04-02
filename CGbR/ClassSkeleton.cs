@@ -31,7 +31,7 @@ namespace CGbR
             
             #line 11 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\ClassSkeleton.tt"
 
-    foreach(var usedNamespace in Usings.Distinct())
+    foreach(var usedNamespace in Fragments.SelectMany(f => f.Usings).Distinct().OrderBy(f => f))
     {
 
             
@@ -80,24 +80,44 @@ namespace CGbR
             
             #line default
             #line hidden
-            this.Write("\r\n    {\r\n        \r\n    }\r\n}");
+            this.Write("\r\n    {\r\n");
+            
+            #line 27 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\ClassSkeleton.tt"
+
+    foreach (var fragment in Fragments)
+    {
+
+            
+            #line default
+            #line hidden
+            this.Write("        #region ");
+            
+            #line 31 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\ClassSkeleton.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(fragment.GeneratorName));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n\r\n");
+            
+            #line 33 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\ClassSkeleton.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(fragment.Code));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n        \r\n        #endregion\r\n\r\n\r\n");
+            
+            #line 38 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\ClassSkeleton.tt"
+
+    }
+
+            
+            #line default
+            #line hidden
+            this.Write("    }\r\n}");
             return this.GenerationEnvironment.ToString();
         }
         
         #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\ClassSkeleton.tt"
-
-private string[] _UsingsField;
-
-/// <summary>
-/// Access the Usings parameter of the template.
-/// </summary>
-private string[] Usings
-{
-    get
-    {
-        return this._UsingsField;
-    }
-}
 
 private string _NamespaceField;
 
@@ -138,6 +158,19 @@ private string BaseClasses
     }
 }
 
+private CGbR.GeneratorPartial[] _FragmentsField;
+
+/// <summary>
+/// Access the Fragments parameter of the template.
+/// </summary>
+private global::CGbR.GeneratorPartial[] Fragments
+{
+    get
+    {
+        return this._FragmentsField;
+    }
+}
+
 
 /// <summary>
 /// Initialize the template
@@ -146,20 +179,6 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool UsingsValueAcquired = false;
-if (this.Session.ContainsKey("Usings"))
-{
-    this._UsingsField = ((string[])(this.Session["Usings"]));
-    UsingsValueAcquired = true;
-}
-if ((UsingsValueAcquired == false))
-{
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Usings");
-    if ((data != null))
-    {
-        this._UsingsField = ((string[])(data));
-    }
-}
 bool NamespaceValueAcquired = false;
 if (this.Session.ContainsKey("Namespace"))
 {
@@ -200,6 +219,20 @@ if ((BaseClassesValueAcquired == false))
     if ((data != null))
     {
         this._BaseClassesField = ((string)(data));
+    }
+}
+bool FragmentsValueAcquired = false;
+if (this.Session.ContainsKey("Fragments"))
+{
+    this._FragmentsField = ((global::CGbR.GeneratorPartial[])(this.Session["Fragments"]));
+    FragmentsValueAcquired = true;
+}
+if ((FragmentsValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Fragments");
+    if ((data != null))
+    {
+        this._FragmentsField = ((global::CGbR.GeneratorPartial[])(data));
     }
 }
 

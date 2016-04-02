@@ -4,12 +4,12 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ parameter name="Usings" type="System.String[]" #>
 <#@ parameter name="Namespace" type="System.String" #>
 <#@ parameter name="ClassName" type="System.String" #>
 <#@ parameter name="BaseClasses" type="System.String" #>
+<#@ parameter name="Fragments" type="CGbR.GeneratorPartial[]" #>
 <#
-    foreach(var usedNamespace in Usings.Distinct())
+    foreach(var usedNamespace in Fragments.SelectMany(f => f.Usings).Distinct().OrderBy(f => f))
     {
 #>
 using <#= usedNamespace #>;
@@ -24,6 +24,19 @@ namespace <#= Namespace #>
     /// </summary>
     public partial class <#= ClassName #><#= string.IsNullOrEmpty(BaseClasses) ? string.Empty : " : " #><#= BaseClasses #>
     {
+<#
+    foreach (var fragment in Fragments)
+    {
+#>
+        #region <#= fragment.GeneratorName #>
+
+<#= fragment.Code #>
         
+        #endregion
+
+
+<#
+    }
+#>
     }
 }
