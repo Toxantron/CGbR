@@ -53,7 +53,7 @@ public class Partial
 
 The resulting array would look like this:
 | Position | Property    |
------------|--------------
+|----------|-------------|
 | 0 - 3    | Id     |
 | 4 - 5    | Number |
 | 6 - 7    | Partials.Length |
