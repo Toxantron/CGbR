@@ -38,7 +38,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassModel\CodeRepresentationAttribute.cs" />
+    <Compile Include="ClassModel\TypeAliasAttribute.cs" />
     <Compile Include="ClassModel\PropertyModel.cs" />
     <Compile Include="ClassModel\ValueType.cs" />
     <Compile Include="GeneratorPartial.cs" />
@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Generator\GeneratorFactory.cs" />
     <Compile Include="Generator\GeneratorTools.cs" />
+    <Compile Include="Generator\Serialization\BinarySize.cs" />
     <Compile Include="Generator\Serialization\JsonSerializer.cs" />
     <Compile Include="Generator\Serialization\JsonSerializerGenerator.cs">
       <AutoGen>True</AutoGen>

@@ -94,9 +94,13 @@
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
                                   .Where(p => !p.IsCollection))
     {
+        var converter = property.ValueType == ValueType.Class
+            ? $"new {property.PropertyType}().FromJson(reader)"
+            : $"Convert.To{property.ValueType}(reader.Value)";
 #>
                     case "<#= property.Name #>":
-                        <#= property.Name #> = <#= Converter(property) #>;
+                        reader.Read();
+                        <#= property.Name #> = <#= converter #>;
                         break;
 
 <#
@@ -110,8 +114,23 @@
 #>
                     case "<#= property.Name #>":
                         var <#= varName #> = new List<<#= property.PropertyType #>>();
+<#
+        if (property.ValueType == ValueType.Class)
+        {
+#>
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            <#= varName #>.Add(<#= Converter(property) #>);
+                            <#= varName #>.Add(new <#= property.PropertyType #>().FromJson(reader));
+<#
+        }
+        else
+        {
+#>
+                        reader.Read(); // Skip array opener
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            <#= varName #>.Add(Convert.To<#= property.ValueType #>(reader.Value));
+<#            
+        }
+#>
                         <#= property.Name #> = <#= varName #>.ToArray();
                         break;
 
@@ -123,15 +142,3 @@
 
             return this;
         }
-
-<#+
-
-    // Generate converter string for given property
-    private static string Converter(PropertyModel property)
-    {
-        var converter = property.ValueType == ValueType.Class
-            ? $"new {property.PropertyType}().FromJson(reader)"
-            : $"({property.PropertyType}) reader.ReadAsInt32()";
-        return converter;
-    }
-#>

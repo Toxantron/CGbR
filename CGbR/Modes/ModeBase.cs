@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace CGbR
 {
@@ -46,6 +48,28 @@ namespace CGbR
                 Name = filePath,
                 ClassModel = model
             };
+        }
+
+        /// <summary>
+        /// Generate local partial of a file
+        /// </summary>
+        /// <param name="file">File to generate for</param>
+        protected void GenerateLocalPartial(ParsedFile file)
+        {
+            var model = file.ClassModel;
+
+            // Find all matching generators and collect their code fragments
+            var fragments = (from gen in Generators.OfType<ILocalGenerator>()
+                             where gen.CanExtend(model)
+                             select new GeneratorPartial(gen, gen.Extend(model)));
+
+            // Initialize and execute the class skeleton template
+            var code = GenerateClass(model.Name, model.Namespace, fragments.ToArray());
+
+            // Write file
+            var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";
+            fileName = Path.Combine(Path.GetDirectoryName(file.Name), fileName);
+            File.WriteAllText(fileName, code);
         }
 
         /// <summary>

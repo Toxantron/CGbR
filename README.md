@@ -4,7 +4,7 @@ and with no doubt reflection is a powerful tool. It does however come at the pri
 static C# performs incredibly well when it can be fully compiled but no one really wants to take the time of writing
 fast boilerplate code over and over again. 
 
-The idea of CGbR (*C*ode *G*enerator *b*eats *R*eflectin) is to combine these two offering a reflection similar API but 
+The idea of CGbR (**C**ode **G**enerator **b**eats **R**eflectin) is to combine these two offering a reflection similar API but 
 performing dynamic parsing operations in the pre-build stage. Using C# partial classes it generates a file _<file_name>.Generated.cs_ 
 that contains performance optimized non-dynamic C# methods and properties based on attributes and interfaces defined in the original
 class. 
@@ -95,6 +95,9 @@ public partial class Root
 
     [DataMember]
     public Partial[] Partials { get; set; }
+
+    [DataMember]
+    public int[] Numbers { get; set; }
 }
 
 [DataContract]
@@ -123,6 +126,14 @@ public void IncludeJson(JsonWriter writer)
     }
     writer.WriteEndArray();
     
+    writer.WritePropertyName("Numbers");
+    writer.WriteStartArray();
+    for (var i = 0; i < Numbers?.Length; i++)
+    {
+        writer.WriteValue(Numbers[i]);
+    }
+    writer.WriteEndArray();
+    
     writer.WriteEndObject();
 }
 public Root FromJson(JsonReader reader)
@@ -140,7 +151,8 @@ public Root FromJson(JsonReader reader)
         switch ((string) reader.Value)
         {
             case "Number":
-                Number = (int) reader.ReadAsInt32();
+                reader.Read();
+                Number = Convert.ToInt32(reader.Value);
                 break;
 
             case "Partials":
@@ -148,6 +160,14 @@ public Root FromJson(JsonReader reader)
                 while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                     partials.Add(new Partial().FromJson(reader));
                 Partials = partials.ToArray();
+                break;
+
+            case "Numbers":
+                var numbers = new List<int>();
+                reader.Read(); // Skip array opener
+                while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                    numbers.Add(Convert.ToInt32(reader.Value));
+                Numbers = numbers.ToArray();
                 break;
 
         }
@@ -181,7 +201,8 @@ public Partial FromJson(JsonReader reader)
         switch ((string) reader.Value)
         {
             case "Id":
-                Id = (short) reader.ReadAsInt32();
+                reader.Read();
+                Id = Convert.ToInt16(reader.Value);
                 break;
 
         }

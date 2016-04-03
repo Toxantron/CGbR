@@ -44,8 +44,8 @@ namespace CGbR.GeneratorTests
             Assert.AreEqual(2, deserialized.Partials.Length, "Failed to parse class array");
             Assert.AreEqual(1, deserialized.Partials[0].Id);
             Assert.AreEqual(2, deserialized.Partials[1].Id);
-            //Assert.AreEqual(3, deserialized.Numbers.Length);
-            //Assert.AreEqual(38, deserialized.Numbers.Sum());
+            Assert.AreEqual(3, deserialized.Numbers.Length);
+            Assert.AreEqual(38, deserialized.Numbers.Sum());
         }
     }
 }

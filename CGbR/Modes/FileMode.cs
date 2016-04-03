@@ -11,7 +11,9 @@
         /// <see cref="IGeneratorMode"/>
         public override void Execute(string path)
         {
-            throw new System.NotImplementedException();
+            // Parse file
+            var file = Parse(path);
+            GenerateLocalPartial(file);
         }
     }
 }

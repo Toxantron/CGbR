@@ -133,8 +133,8 @@ namespace CGbR
             foreach (var value in values)
             {
                 var member = enumType.GetMember(value);
-                var attribute = member[0].GetCustomAttribute<CodeRepresentationAttribute>();
-                if (attribute != null && attribute.Representations.Contains(typeString))
+                var attribute = member[0].GetCustomAttribute<TypeAliasAttribute>();
+                if (attribute != null && attribute.Aliases.Contains(typeString))
                     return (ValueType)Enum.Parse(typeof(ValueType), value);
             }
             return ValueType.Class;
