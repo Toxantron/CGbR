@@ -40,6 +40,8 @@ namespace CGbR.GeneratorTests
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
             Buffer.BlockCopy(BitConverter.GetBytes(Number), 0, bytes, index, 4);
+            index += 4;
+
             return bytes;
         }
 

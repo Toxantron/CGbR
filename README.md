@@ -9,6 +9,12 @@ performing dynamic parsing operations in the pre-build stage. Using C# partial c
 that contains performance optimized non-dynamic C# methods and properties based on attributes and interfaces defined in the original
 class. 
 
+## Modes of operations
+The tool supports 3 modes of operation. It can run on a single file or a project/solution directory. The first one is meant
+to be used within VisualStudio as a custom tool for a single file and the others are used as pre-build events or build
+targets. Choice is made automatically based on the first argument. For files of type ".cs" and the others look for a 
+".csproj" or ".sln" file in the given path.
+
 ## Serialization
 The perfect usage scenario and actually the origin of CGbR is serializing and deserializing objects. In the original
 project performance gains from generated static code over the original reflection API were somewhere between factor of
