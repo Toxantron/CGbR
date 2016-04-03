@@ -6,6 +6,7 @@
  */
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -48,9 +49,6 @@ namespace CGbR.GeneratorTests
             //Buffer.BlockCopy(BitConverter.GetBytes(Partials), 0, bytes, index, 4);
             index += 4;
 
-            //Buffer.BlockCopy(BitConverter.GetBytes(Numbers), 0, bytes, index, 4);
-            index += 4;
-
             return bytes;
         }
 
@@ -82,11 +80,11 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var writer = new StringWriter(builder);
+            var stringWriter = new StringWriter(builder);
 
-            using (var json = new JsonTextWriter(writer))
+            using (var writer = new JsonTextWriter(stringWriter))
             {
-                IncludeJson(json);
+                IncludeJson(writer);
 
                 return builder.ToString();
             }
@@ -95,31 +93,70 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter json)
-        {
-            json.WriteStartObject();
+public void IncludeJson(JsonWriter writer)
+{
+    writer.WriteStartObject();
 
-            json.WritePropertyName("Number");
-            json.WriteValue(Number);
+    writer.WritePropertyName("Number");
+    writer.WriteValue(Number);
     
-            json.WritePropertyName("Partials");
-            json.WriteStartArray();
-            for (var i = 0; i < Partials?.Length; i++)
+    writer.WritePropertyName("Partials");
+    writer.WriteStartArray();
+    for (var i = 0; i < Partials?.Length; i++)
+    {
+        Partials[i].IncludeJson(writer);
+    }
+    writer.WriteEndArray();
+    
+    writer.WriteEndObject();
+}
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public Root FromJson(string json)
+        {
+            using (var reader = new JsonTextReader(new StringReader(json)))
             {
-            	Partials[i].IncludeJson(json);
+                return FromJson(reader);
             }
-            json.WriteEndArray();
-    
-            json.WritePropertyName("Numbers");
-            json.WriteStartArray();
-            for (var i = 0; i < Numbers?.Length; i++)
-            {
-            	json.WriteValue(Numbers[i]);
-            }
-            json.WriteEndArray();
-    
-            json.WriteEndObject();
         }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public Root FromJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                // Break on EndObject
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
+
+                // Only look for properties
+                if (reader.TokenType != JsonToken.PropertyName)
+                    continue;
+
+                switch ((string) reader.Value)
+                {
+                    case "Number":
+                        Number = (int) reader.ReadAsInt32();
+                        break;
+
+                    case "Partials":
+                        var partials = new List<Partial>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            partials.Add(new Partial().FromJson(reader));
+                        Partials = partials.ToArray();
+                        break;
+
+                }
+            }
+
+            return this;
+        }
+
+
         
         #endregion
 

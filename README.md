@@ -10,10 +10,11 @@ that contains performance optimized non-dynamic C# methods and properties based 
 class. 
 
 **Quick links:**
+
 1. [Modes of operation](#modes-of-operation)
 2. [Serialization](#serialization)
-2.1 [Binary](#binary-datacontract-serializer)
-2.2 [JSON](#json-datacontract-serializer)
+  * [Binary](#binary-datacontract-serializer)
+  * [JSON](#json-datacontract-serializer)
 3. [Dependency Injection](#dependency-injection)
 4. [Developers](#developers)
 
@@ -80,7 +81,7 @@ The resulting array would look like this:
 | 8 + n*9  | Price |
 
 ### JSON DataContract Serializer
-Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [JSON .Net](http://www.newtonsoft.com/json)
+Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
 from Newtonsoft. It uses the internal JsonWriter and JsonReader classes to write the string.It just replaces the reflection 
 serializer classes with generated serialize and deserialize methods.
 
@@ -107,33 +108,86 @@ public partial class Partial
 Generates the following code:
 ```c#
 // In Root.Generated.cs
-public void IncludeJson(JsonWriter json)
+public void IncludeJson(JsonWriter writer)
 {
-    json.WriteStartObject();
+    writer.WriteStartObject();
 
-    json.WritePropertyName("Number");
-    json.WriteValue(Number);
+    writer.WritePropertyName("Number");
+    writer.WriteValue(Number);
     
-    json.WritePropertyName("Partials");
-    json.WriteStartArray();
-    for (var i = 0; i < Partials.Length; i++)
+    writer.WritePropertyName("Partials");
+    writer.WriteStartArray();
+    for (var i = 0; i < Partials?.Length; i++)
     {
-        Partials[i].IncludeJson(json);
+        Partials[i].IncludeJson(writer);
     }
-    json.WriteEndArray();
+    writer.WriteEndArray();
     
-    json.WriteEndObject();
+    writer.WriteEndObject();
+}
+public Root FromJson(JsonReader reader)
+{
+    while (reader.Read())
+    {
+        // Break on EndObject
+        if (reader.TokenType == JsonToken.EndObject)
+            break;
+
+        // Only look for properties
+        if (reader.TokenType != JsonToken.PropertyName)
+            continue;
+
+        switch ((string) reader.Value)
+        {
+            case "Number":
+                Number = (int) reader.ReadAsInt32();
+                break;
+
+            case "Partials":
+                var partials = new List<Partial>();
+                while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                    partials.Add(new Partial().FromJson(reader));
+                Partials = partials.ToArray();
+                break;
+
+        }
+    }
+
+    return this;
 }
 
 // In Partial.Generated.cs
-public void IncludeJson(JsonWriter json)
+public void IncludeJson(JsonWriter writer)
 {
-    json.WriteStartObject();
+    writer.WriteStartObject();
 
-    json.WritePropertyName("Id");
-    json.WriteValue(Id);
+    writer.WritePropertyName("Id");
+    writer.WriteValue(Id);
     
-    json.WriteEndObject();
+    writer.WriteEndObject();
+}
+public Partial FromJson(JsonReader reader)
+{
+    while (reader.Read())
+    {
+        // Break on EndObject
+        if (reader.TokenType == JsonToken.EndObject)
+            break;
+
+        // Only look for properties
+        if (reader.TokenType != JsonToken.PropertyName)
+            continue;
+
+        switch ((string) reader.Value)
+        {
+            case "Id":
+                Id = (short) reader.ReadAsInt32();
+                break;
+
+        }
+    }
+
+    return this;
 }
 ```
 

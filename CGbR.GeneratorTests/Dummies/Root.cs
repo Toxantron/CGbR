@@ -15,7 +15,6 @@ namespace CGbR.GeneratorTests
         [DataMember]
         public Partial[] Partials { get; set; }
 
-        [DataMember]
         public int[] Numbers { get; set; }
     }
 }

@@ -42,16 +42,16 @@
     <Compile Include="ClassModel\PropertyModel.cs" />
     <Compile Include="ClassModel\ValueType.cs" />
     <Compile Include="GeneratorPartial.cs" />
-    <Compile Include="Generator\BinarySerializer\BinarySerializer.cs" />
-    <Compile Include="Generator\BinarySerializer\BinarySerializerGenerator.cs">
+    <Compile Include="Generator\Serialization\BinarySerializer.cs" />
+    <Compile Include="Generator\Serialization\BinarySerializerGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BinarySerializerGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Generator\GeneratorFactory.cs" />
     <Compile Include="Generator\GeneratorTools.cs" />
-    <Compile Include="Generator\JsonSerializer\JsonSerializer.cs" />
-    <Compile Include="Generator\JsonSerializer\JsonSerializerGenerator.cs">
+    <Compile Include="Generator\Serialization\JsonSerializer.cs" />
+    <Compile Include="Generator\Serialization\JsonSerializerGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>JsonSerializerGenerator.tt</DependentUpon>
@@ -81,12 +81,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="Generator\BinarySerializer\BinarySerializerGenerator.tt">
+    <Content Include="Generator\Serialization\BinarySerializerGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>BinarySerializerGenerator.cs</LastGenOutput>
       <CustomToolNamespace>CGbR</CustomToolNamespace>
     </Content>
-    <Content Include="Generator\JsonSerializer\JsonSerializerGenerator.tt">
+    <Content Include="Generator\Serialization\JsonSerializerGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>JsonSerializerGenerator.cs</LastGenOutput>
       <CustomToolNamespace>CGbR</CustomToolNamespace>

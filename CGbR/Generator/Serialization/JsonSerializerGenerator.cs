@@ -19,7 +19,7 @@ namespace CGbR
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+    #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class JsonSerializerGenerator : JsonSerializerGeneratorBase
     {
@@ -35,11 +35,11 @@ namespace CGbR
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var writer = new StringWriter(builder);
+            var stringWriter = new StringWriter(builder);
 
-            using (var json = new JsonTextWriter(writer))
+            using (var writer = new JsonTextWriter(stringWriter))
             {
-                IncludeJson(json);
+                IncludeJson(writer);
 
                 return builder.ToString();
             }
@@ -48,80 +48,80 @@ namespace CGbR
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter json)
+        public void IncludeJson(JsonWriter writer)
         {
-            json.WriteStartObject();
+            writer.WriteStartObject();
 
 ");
             
-            #line 31 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+            #line 31 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
-    foreach (var model in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
 
             
             #line default
             #line hidden
-            this.Write("            json.WritePropertyName(\"");
+            this.Write("            writer.WritePropertyName(\"");
             
-            #line 35 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(model.Name));
+            #line 35 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write("\");\r\n");
             
-            #line 36 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+            #line 36 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
-        if (model.IsCollection)
+        if (property.IsCollection)
         {
 
             
             #line default
             #line hidden
-            this.Write("            json.WriteStartArray();\r\n            for (var i = 0; i < ");
+            this.Write("            writer.WriteStartArray();\r\n            for (var i = 0; i < ");
             
-            #line 41 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(model.Name));
+            #line 41 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write("?.Length; i++)\r\n            {\r\n");
             
-            #line 43 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+            #line 43 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
         }
-        var target = $"{model.Name}{(model.IsCollection ? "[i]" : string.Empty)}";  
+        var target = $"{property.Name}{(property.IsCollection ? "[i]" : string.Empty)}";  
 
             
             #line default
             #line hidden
             this.Write("            ");
             
-            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(model.IsCollection ? "\t" : string.Empty));
+            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.IsCollection ? "\t" : string.Empty));
             
             #line default
             #line hidden
             
-            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(model.ValueType == ValueType.Class ? $"{target}.IncludeJson(json)" : $"json.WriteValue({target})"));
+            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.WriteValue({target})"));
             
             #line default
             #line hidden
             this.Write(";\r\n");
             
-            #line 48 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+            #line 48 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
-        if (model.IsCollection)
+        if (property.IsCollection)
         {
 
             
             #line default
             #line hidden
-            this.Write("            }\r\n            json.WriteEndArray();\r\n");
+            this.Write("            }\r\n            writer.WriteEndArray();\r\n");
             
-            #line 54 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+            #line 54 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
             
         }
 
@@ -130,18 +130,181 @@ namespace CGbR
             #line hidden
             this.Write("    \r\n");
             
-            #line 58 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+            #line 58 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
     }
 
             
             #line default
             #line hidden
-            this.Write("            json.WriteEndObject();\r\n        }");
+            this.Write("            writer.WriteEndObject();\r\n        }\r\n\r\n        /// <summary>\r\n       " +
+                    " /// Convert object to JSON string\r\n        /// </summary>\r\n        public ");
+            
+            #line 67 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
+            
+            #line default
+            #line hidden
+            this.Write(@" FromJson(string json)
+        {
+            using (var reader = new JsonTextReader(new StringReader(json)))
+            {
+                return FromJson(reader);
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public ");
+            
+            #line 78 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
+            
+            #line default
+            #line hidden
+            this.Write(@" FromJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                // Break on EndObject
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
+
+                // Only look for properties
+                if (reader.TokenType != JsonToken.PropertyName)
+                    continue;
+
+                switch ((string) reader.Value)
+                {
+");
+            
+            #line 92 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+
+    // We start with the easy properties and move on to collections
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
+                                  .Where(p => !p.IsCollection))
+    {
+
+            
+            #line default
+            #line hidden
+            this.Write("                    case \"");
+            
+            #line 98 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
+            
+            #line default
+            #line hidden
+            this.Write("\":\r\n                        ");
+            
+            #line 99 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" = ");
+            
+            #line 99 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Converter(property)));
+            
+            #line default
+            #line hidden
+            this.Write(";\r\n                        break;\r\n\r\n");
+            
+            #line 102 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+
+    }
+
+    // And for the fun part collections
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
+                                  .Where(p => p.IsCollection))
+    {
+        var varName = property.Name.ToLower();
+
+            
+            #line default
+            #line hidden
+            this.Write("                    case \"");
+            
+            #line 111 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
+            
+            #line default
+            #line hidden
+            this.Write("\":\r\n                        var ");
+            
+            #line 112 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(varName));
+            
+            #line default
+            #line hidden
+            this.Write(" = new List<");
+            
+            #line 112 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.PropertyType));
+            
+            #line default
+            #line hidden
+            this.Write(">();\r\n                        while (reader.Read() && reader.TokenType != JsonTok" +
+                    "en.EndArray)\r\n                            ");
+            
+            #line 114 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(varName));
+            
+            #line default
+            #line hidden
+            this.Write(".Add(");
+            
+            #line 114 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Converter(property)));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n                        ");
+            
+            #line 115 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" = ");
+            
+            #line 115 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(varName));
+            
+            #line default
+            #line hidden
+            this.Write(".ToArray();\r\n                        break;\r\n\r\n");
+            
+            #line 118 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+
+    }
+
+            
+            #line default
+            #line hidden
+            this.Write("                }\r\n            }\r\n\r\n            return this;\r\n        }\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\JsonSerializer\JsonSerializerGenerator.tt"
+        #line 127 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+
+
+    // Generate converter string for given property
+    private static string Converter(PropertyModel property)
+    {
+        var converter = property.ValueType == ValueType.Class
+            ? $"new {property.PropertyType}().FromJson(reader)"
+            : $"({property.PropertyType}) reader.ReadAsInt32()";
+        return converter;
+    }
+
+        
+        #line default
+        #line hidden
+        
+        #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
 private global::CGbR.ClassModel _ModelField;
 

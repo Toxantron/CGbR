@@ -19,7 +19,7 @@ namespace CGbR
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+    #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class BinarySerializerGenerator : BinarySerializerGeneratorBase
     {
@@ -55,7 +55,7 @@ namespace CGbR
         {
 ");
             
-            #line 32 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+            #line 32 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     foreach (var model in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
@@ -65,14 +65,14 @@ namespace CGbR
             #line hidden
             this.Write("            //Buffer.BlockCopy(BitConverter.GetBytes(");
             
-            #line 36 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+            #line 36 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(model.Name));
             
             #line default
             #line hidden
             this.Write("), 0, bytes, index, 4);\r\n            index += 4;\r\n\r\n");
             
-            #line 39 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+            #line 39 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     }
 
@@ -82,7 +82,7 @@ namespace CGbR
             this.Write("            return bytes;\r\n        }\r\n\r\n        /// <summary>\r\n        /// Create" +
                     " object from byte array\r\n        /// </summary>\r\n        public ");
             
-            #line 48 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+            #line 48 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
             
             #line default
@@ -98,7 +98,7 @@ namespace CGbR
         /// </summary>
         public ");
             
-            #line 57 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+            #line 57 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
             
             #line default
@@ -108,7 +108,7 @@ namespace CGbR
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\BinarySerializer\BinarySerializerGenerator.tt"
+        #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
 private global::CGbR.ClassModel _ModelField;
 

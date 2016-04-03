@@ -6,6 +6,7 @@
  */
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -76,11 +77,11 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var writer = new StringWriter(builder);
+            var stringWriter = new StringWriter(builder);
 
-            using (var json = new JsonTextWriter(writer))
+            using (var writer = new JsonTextWriter(stringWriter))
             {
-                IncludeJson(json);
+                IncludeJson(writer);
 
                 return builder.ToString();
             }
@@ -89,15 +90,55 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter json)
+        public void IncludeJson(JsonWriter writer)
         {
-            json.WriteStartObject();
+            writer.WriteStartObject();
 
-            json.WritePropertyName("Id");
-            json.WriteValue(Id);
+            writer.WritePropertyName("Id");
+            writer.WriteValue(Id);
     
-            json.WriteEndObject();
+            writer.WriteEndObject();
         }
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public Partial FromJson(string json)
+        {
+            using (var reader = new JsonTextReader(new StringReader(json)))
+            {
+                return FromJson(reader);
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public Partial FromJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                // Break on EndObject
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
+
+                // Only look for properties
+                if (reader.TokenType != JsonToken.PropertyName)
+                    continue;
+
+                switch ((string) reader.Value)
+                {
+                    case "Id":
+                        Id = (short) reader.ReadAsInt32();
+                        break;
+
+                }
+            }
+
+            return this;
+        }
+
+
         
         #endregion
 

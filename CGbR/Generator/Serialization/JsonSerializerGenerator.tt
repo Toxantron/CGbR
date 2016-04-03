@@ -1,0 +1,137 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Runtime.Serialization" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="Model" type="CGbR.ClassModel" #>
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public string ToJson()
+        {
+            var builder = new StringBuilder();
+            var stringWriter = new StringWriter(builder);
+
+            using (var writer = new JsonTextWriter(stringWriter))
+            {
+                IncludeJson(writer);
+
+                return builder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public void IncludeJson(JsonWriter writer)
+        {
+            writer.WriteStartObject();
+
+<#
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
+    {
+#>
+            writer.WritePropertyName("<#= property.Name #>");
+<#
+        if (property.IsCollection)
+        {
+#>
+            writer.WriteStartArray();
+            for (var i = 0; i < <#= property.Name #>?.Length; i++)
+            {
+<#
+        }
+        var target = $"{property.Name}{(property.IsCollection ? "[i]" : string.Empty)}";  
+#>
+            <#= property.IsCollection ? "\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.WriteValue({target})" #>;
+<#
+        if (property.IsCollection)
+        {
+#>
+            }
+            writer.WriteEndArray();
+<#            
+        }
+#>
+    
+<#
+    }
+#>
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public <#= Model.Name #> FromJson(string json)
+        {
+            using (var reader = new JsonTextReader(new StringReader(json)))
+            {
+                return FromJson(reader);
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public <#= Model.Name #> FromJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                // Break on EndObject
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
+
+                // Only look for properties
+                if (reader.TokenType != JsonToken.PropertyName)
+                    continue;
+
+                switch ((string) reader.Value)
+                {
+<#
+    // We start with the easy properties and move on to collections
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
+                                  .Where(p => !p.IsCollection))
+    {
+#>
+                    case "<#= property.Name #>":
+                        <#= property.Name #> = <#= Converter(property) #>;
+                        break;
+
+<#
+    }
+
+    // And for the fun part collections
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
+                                  .Where(p => p.IsCollection))
+    {
+        var varName = property.Name.ToLower();
+#>
+                    case "<#= property.Name #>":
+                        var <#= varName #> = new List<<#= property.PropertyType #>>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            <#= varName #>.Add(<#= Converter(property) #>);
+                        <#= property.Name #> = <#= varName #>.ToArray();
+                        break;
+
+<#
+    }
+#>
+                }
+            }
+
+            return this;
+        }
+
+<#+
+
+    // Generate converter string for given property
+    private static string Converter(PropertyModel property)
+    {
+        var converter = property.ValueType == ValueType.Class
+            ? $"new {property.PropertyType}().FromJson(reader)"
+            : $"({property.PropertyType}) reader.ReadAsInt32()";
+        return converter;
+    }
+#>

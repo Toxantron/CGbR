@@ -15,6 +15,7 @@ namespace CGbR
         public string[] Usings { get; } = 
         {
             "System",
+            "System.Collections.Generic",
             "System.IO",
             "System.Text",
             "Newtonsoft.Json"
