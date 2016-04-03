@@ -50,9 +50,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <None Include="DummyClasses\Plain.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="RegexParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />

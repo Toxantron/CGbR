@@ -12,7 +12,7 @@ namespace CGbR
     {
         // Regex used to parse source file
         private readonly Regex _namespaceRegex = new Regex(@"namespace (?<namespace>(?:\w\.?)*)");
-        private readonly Regex _attributeRegex = new Regex(@"\[(?<attributeName>\w+) ?\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
+        private readonly Regex _attributeRegex = new Regex(@"\[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
         private readonly Regex _classRegex = new Regex(@"(?<accessModifier>[public|internal]) partial class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
         private readonly Regex _propRegex = new Regex(@" public (?<type>\w+)(?<isCollection>\[(?<dimensions>, ?)*\])? (?<name>\w+)");
 
