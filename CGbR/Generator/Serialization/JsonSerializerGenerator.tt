@@ -37,20 +37,25 @@
         if (property.IsCollection)
         {
 #>
-            writer.WriteStartArray();
-            for (var i = 0; i < <#= property.Name #>?.Length; i++)
+            if (<#= property.Name #> == null)
+                writer.WriteNull();
+            else
             {
+                writer.WriteStartArray();
+                for (var i = 0; i < <#= property.Name #>.Length; i++)
+                {
 <#
         }
         var target = $"{property.Name}{(property.IsCollection ? "[i]" : string.Empty)}";  
 #>
-            <#= property.IsCollection ? "\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.WriteValue({target})" #>;
+            <#= property.IsCollection ? "\t\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.WriteValue({target})" #>;
 <#
         if (property.IsCollection)
         {
 #>
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
 <#            
         }
 #>
@@ -94,13 +99,10 @@
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
                                   .Where(p => !p.IsCollection))
     {
-        var converter = property.ValueType == ValueType.Class
-            ? $"new {property.PropertyType}().FromJson(reader)"
-            : $"Convert.To{property.ValueType}(reader.Value)";
 #>
                     case "<#= property.Name #>":
                         reader.Read();
-                        <#= property.Name #> = <#= converter #>;
+                        <#= property.Name #> = <#= Converter(property) #>;
                         break;
 
 <#
@@ -111,26 +113,17 @@
                                   .Where(p => p.IsCollection))
     {
         var varName = property.Name.ToLower();
+        var condition = property.ValueType == ValueType.Class
+            ? "== JsonToken.StartObject"
+            : "!= JsonToken.EndArray";
 #>
                     case "<#= property.Name #>":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
                         var <#= varName #> = new List<<#= property.PropertyType #>>();
-<#
-        if (property.ValueType == ValueType.Class)
-        {
-#>
-                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            <#= varName #>.Add(new <#= property.PropertyType #>().FromJson(reader));
-<#
-        }
-        else
-        {
-#>
-                        reader.Read(); // Skip array opener
-                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            <#= varName #>.Add(Convert.To<#= property.ValueType #>(reader.Value));
-<#            
-        }
-#>
+                        while (reader.Read() && reader.TokenType <#= condition #>)
+                            <#= varName #>.Add(<#= Converter(property) #>);
                         <#= property.Name #> = <#= varName #>.ToArray();
                         break;
 
@@ -142,3 +135,13 @@
 
             return this;
         }
+<#+
+    // Converter for different property types
+    private static string Converter(PropertyModel property)
+    {
+        var converter = property.ValueType == ValueType.Class
+            ? $"new {property.PropertyType}().FromJson(reader)"
+            : $"Convert.To{property.ValueType}(reader.Value)";
+        return converter;
+    }
+#>

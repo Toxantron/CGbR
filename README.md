@@ -119,20 +119,30 @@ public void IncludeJson(JsonWriter writer)
     writer.WriteValue(Number);
     
     writer.WritePropertyName("Partials");
-    writer.WriteStartArray();
-    for (var i = 0; i < Partials?.Length; i++)
+    if (Partials == null)
+        writer.WriteNull();
+    else
     {
-        Partials[i].IncludeJson(writer);
+        writer.WriteStartArray();
+        for (var i = 0; i < Partials.Length; i++)
+        {
+            Partials[i].IncludeJson(writer);
+        }
+        writer.WriteEndArray();
     }
-    writer.WriteEndArray();
     
     writer.WritePropertyName("Numbers");
-    writer.WriteStartArray();
-    for (var i = 0; i < Numbers?.Length; i++)
+    if (Numbers == null)
+        writer.WriteNull();
+    else
     {
-        writer.WriteValue(Numbers[i]);
+        writer.WriteStartArray();
+        for (var i = 0; i < Numbers.Length; i++)
+        {
+            writer.WriteValue(Numbers[i]);
+        }
+        writer.WriteEndArray();
     }
-    writer.WriteEndArray();
     
     writer.WriteEndObject();
 }
@@ -156,15 +166,20 @@ public Root FromJson(JsonReader reader)
                 break;
 
             case "Partials":
+				reader.Read(); // Read token where array should begin
+                if (reader.TokenType == JsonToken.Null)
+                    break;
                 var partials = new List<Partial>();
-                while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                while (reader.Read() && reader.TokenType == JsonToken.StartObject)
                     partials.Add(new Partial().FromJson(reader));
                 Partials = partials.ToArray();
                 break;
 
             case "Numbers":
+				reader.Read(); // Read token where array should begin
+                if (reader.TokenType == JsonToken.Null)
+                    break;
                 var numbers = new List<ulong>();
-                reader.Read(); // Skip array opener
                 while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                     numbers.Add(Convert.ToUInt64(reader.Value));
                 Numbers = numbers.ToArray();
