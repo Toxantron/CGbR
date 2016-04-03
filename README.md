@@ -20,7 +20,7 @@ It has literally zero overhead by using the class definition as a scheme to dete
 The code was optimized over several iterations and will create serialize/deserialize objects of binary size of around 1500 
 bytes in a matter of less then 30 micro seconds.
 
-*Concept:*
+**Concept:**
 Consider the following classes input for the serializer
 ```c#
 [DataContract]
