@@ -52,6 +52,7 @@ public class Partial
 ```
 
 The resulting array would look like this:
+
 | Position | Property    |
 | -------- | ----------- |
 | 0 - 3    | Id     |
