@@ -163,10 +163,10 @@ namespace CGbR.GeneratorTests
                         break;
 
                     case "Numbers":
-                        var numbers = new List<int>();
+                        var numbers = new List<ulong>();
                         reader.Read(); // Skip array opener
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            numbers.Add(Convert.ToInt32(reader.Value));
+                            numbers.Add(Convert.ToUInt64(reader.Value));
                         Numbers = numbers.ToArray();
                         break;
 

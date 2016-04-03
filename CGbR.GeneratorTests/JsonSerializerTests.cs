@@ -18,7 +18,7 @@ namespace CGbR.GeneratorTests
                     new Partial {Id = 1},
                     new Partial {Id = 2}
                 },
-                Numbers = new[] {10, 12, 16}
+                Numbers = new ulong[] {10, 12, 16}
             };
 
             // Act
@@ -45,7 +45,7 @@ namespace CGbR.GeneratorTests
             Assert.AreEqual(1, deserialized.Partials[0].Id);
             Assert.AreEqual(2, deserialized.Partials[1].Id);
             Assert.AreEqual(3, deserialized.Numbers.Length);
-            Assert.AreEqual(38, deserialized.Numbers.Sum());
+            Assert.AreEqual(38, deserialized.Numbers.Sum(i => (int)i));
         }
     }
 }
