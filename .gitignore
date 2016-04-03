@@ -2,6 +2,10 @@
 bin
 obj
 
+# Ignore nuget
+packages
+
 # Ignore user preferences for mono-develop and Visual Studio
 *.userprefs
 *.suo
+*.user

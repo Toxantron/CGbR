@@ -13,7 +13,7 @@ namespace CGbR
 		/// </summary>
 		public ClassModel (string name) : base(name)
 		{
-			Attributes = new List<AttributeModel> ();
+            Properties = new List<PropertyModel>();
 		}
 
         /// <summary>
@@ -31,11 +31,10 @@ namespace CGbR
         /// </summary>
         public string[] Interfaces { get; set; }
 
-        /// <summary>
-        /// Attributes defined for this class
-        /// </summary>
-        /// <value>The attributes.</value>
-        public IList<AttributeModel> Attributes { get; private set; }
+	    /// <summary>
+	    /// All properties of the class
+	    /// </summary>
+	    public IList<PropertyModel> Properties { get; private set; }
 	}
 }
 

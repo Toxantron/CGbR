@@ -1,17 +1,36 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR", "CGbR\CGbR.csproj", "{F42BA2ED-3B24-49A1-B6CF-B1676038141B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.ParserTests", "CGbR.ParserTests\CGbR.ParserTests.csproj", "{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Debug|x86.ActiveCfg = Debug|x86
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Debug|x86.Build.0 = Debug|x86
+		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Release|Any CPU.ActiveCfg = Release|x86
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Release|x86.ActiveCfg = Release|x86
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Release|x86.Build.0 = Release|x86
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Debug|x86.Build.0 = Debug|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Release|x86.ActiveCfg = Release|Any CPU
+		{40B5DD16-F48D-4BE7-B4A8-FBEE185722E5}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

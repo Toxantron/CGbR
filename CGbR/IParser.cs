@@ -7,6 +7,11 @@ namespace CGbR
 	/// </summary>
 	public interface IParser
 	{
+        /// <summary>
+        /// Name of the parsers
+        /// </summary>
+        string Name { get; }
+
 		/// <summary>
 		/// Parse all classes from a file
 		/// </summary>

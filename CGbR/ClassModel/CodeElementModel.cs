@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CGbR
 {
@@ -14,16 +15,19 @@ namespace CGbR
 		public CodeElementModel (string name)
 		{
 			Name = name;
-		}
+            Attributes = new List<AttributeModel>();
+        }
 
 		/// <summary>
 		/// Name of the element
 		/// </summary>
-		public string Name 
-		{
-			get;
-			set;
-		}
-	}
+		public string Name { get; set; }
+
+        /// <summary>
+        /// Attributes defined for this class
+        /// </summary>
+        /// <value>The attributes.</value>
+        public IList<AttributeModel> Attributes { get; private set; }
+    }
 }
 

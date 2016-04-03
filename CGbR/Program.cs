@@ -10,12 +10,22 @@ namespace CGbR
     /// Application entry point
     /// </summary>
 	public class MainClass
-	{
+    {
 
         /// <summary>
         /// Directory the generated is executed on
         /// </summary>
         private static string _directory;
+
+        /// <summary>
+        /// Outer frame for generated classes
+        /// </summary>
+        private static ClassSkeleton _skeleton;
+
+        /// <summary>
+        /// Project namespace
+        /// </summary>
+        private static string _namespace;
 
         /// <summary>
         /// Parse used to extract class models from files
@@ -31,15 +41,17 @@ namespace CGbR
         /// Entry method for the application
         /// </summary>
         /// <param name="args"></param>
-		public static void Main (string[] args)
-		{
+		public static void Main(string[] args)
+        {
             // Only argument is the project directory. Everyting else shall be in the config
             _directory = args[0];
+            _skeleton = new ClassSkeleton();
 
             // Read configuration for this project
+            _namespace = "Test";
 
             // Initialize local strategies
-            _parser = null;
+            _parser = new RegexParser();
             _generators = new IGenerator[0];
 
             // Parse all files in directory recursive
@@ -51,7 +63,7 @@ namespace CGbR
 
             // Generate global classes that build on multiple files
             GenerateGlobalClasses(files);
-		}
+        }
 
         /// <summary>
         /// Parse all files in a directory and then recursivly go through the sub directories
@@ -61,7 +73,8 @@ namespace CGbR
         private static void ParseFilesInDirectory(string directory, ICollection<ParsedFile> files)
         {
             // Parse all files
-            foreach (var file in Directory.GetFiles(directory))
+            foreach (var file in Directory.GetFiles(directory).Where(f => Path.GetExtension(f) == ".cs")
+                                                              .Where(f => !f.Contains(".Generated.")))
             {
                 var model = _parser.ParseFile(file);
                 files.Add(new ParsedFile
@@ -92,22 +105,10 @@ namespace CGbR
                 // Find all matching generators and collect their code fragments
                 var fragments = (from gen in _generators.OfType<ILocalGenerator>()
                                  where gen.CanExtend(model)
-                                 select new GeneratorPartial
-                                 {
-                                     GeneratorName = gen.Name,
-                                     Usings = gen.Usings,
-                                     Code = gen.Extend(model)
-                                 }).ToArray();
-                
+                                 select new GeneratorPartial(gen, gen.Extend(model)));
+
                 // Initialize and execute the class skeleton template
-                var template = new ClassSkeleton();
-                template.Session = new Dictionary<string, object>
-                {
-                    { "ClassName", model.Name },
-                    { "Namespace", model.Namespace },
-                    { "Fragments", fragments }
-                };
-                var code = template.TransformText();
+                var code = GenerateClass(model.Name, model.Namespace, fragments.ToArray());
 
                 // Write file
                 var fileName = Path.GetFileNameWithoutExtension(file.Name);
@@ -122,8 +123,46 @@ namespace CGbR
         /// <param name="files"></param>
         private static void GenerateGlobalClasses(IEnumerable<ParsedFile> files)
         {
+            var models = files.Select(f => f.ClassModel).ToArray();
+            // Determine all global classes and generate their code
+            var globalClasses = (from generator in _generators.OfType<IGlobalGenerator>()
+                                 let matchingClasses = models.Where(generator.ClassFilter).ToList()
+                                 where matchingClasses.Count > 0
+                                 let globalPartial = new GeneratorPartial(generator, generator.Extend(matchingClasses))
+                                 group globalPartial by generator.ClassName into globalClass
+                                 select globalClass);
 
+            // Generate code for all global classes
+            foreach (var globalClass in globalClasses)
+            {
+                var className = globalClass.Key;
 
+                // Execute code generator
+                var code = GenerateClass(className, _namespace, globalClass.ToArray());
+                
+                // Write to file on root level
+                var fileName = Path.Combine(_directory, className, ".Generated.cs");
+            }
+        }
+
+        /// <summary>
+        /// Generate class code from name, namespace and fragements of code from the different generators
+        /// </summary>
+        /// <param name="className">Name of the class to generate</param>
+        /// <param name="namespace">Namespace the class should be in</param>
+        /// <param name="fragments">Fragments of code from the different generators</param>
+        /// <returns>Source code of the generated class</returns>
+        private static string GenerateClass(string className, string @namespace, GeneratorPartial[] fragments)
+        {
+            // Initialize new session for the template
+            _skeleton.Session = new Dictionary<string, object>
+            {
+                { "ClassName", className },
+                { "Namespace", @namespace },
+                { "Fragments", fragments }
+            };
+
+            return _skeleton.TransformText();
         }
 
         /// <summary>
