@@ -29,6 +29,11 @@
         public string PropertyType { get; set; }
 
         /// <summary>
+        /// Simple enum representation
+        /// </summary>
+        public ValueType ValueType { get; set; }
+
+        /// <summary>
         /// Value of the property if set
         /// </summary>
         public string Value { get; set; }

@@ -17,11 +17,6 @@ namespace CGbR
         /// </summary>
         protected IGenerator[] Generators { get; private set; }
 
-        /// <summary>
-        /// Outer generator template
-        /// </summary>
-        private readonly ClassSkeleton _skeleton = new ClassSkeleton();
-
         /// <see cref="IGeneratorMode"/>
         public abstract GeneratorMode Mode { get; }
 
@@ -63,15 +58,16 @@ namespace CGbR
         protected string GenerateClass(string className, string @namespace, GeneratorPartial[] fragments)
         {
             // Initialize new session for the template
-            _skeleton.Session = new Dictionary<string, object>
+            var skeleton = new ClassSkeleton();
+            skeleton.Session = new Dictionary<string, object>
             {
                 { "ClassName", className },
                 { "Namespace", @namespace },
                 { "Fragments", fragments }
             };
-            _skeleton.Initialize();
+            skeleton.Initialize();
 
-            return _skeleton.TransformText();
+            return skeleton.TransformText();
         }
 
         /// <summary>

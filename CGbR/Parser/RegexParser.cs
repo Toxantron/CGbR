@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace CGbR
@@ -106,9 +107,11 @@ namespace CGbR
                 return;
 
             // Create property model
+            var type = match.Groups["type"].Value;
             var property = new PropertyModel(match.Groups["name"].Value)
             {
-                PropertyType = match.Groups["type"].Value,
+                PropertyType = type,
+                ValueType = DetermineType(type),
                 IsCollection = match.Groups["isCollection"].Success,
                 Dimensions = match.Groups["dimensions"].Captures.Count + 1
             };
@@ -117,6 +120,24 @@ namespace CGbR
             ParseAttributes(file, index, property);
 
             model.Properties.Add(property);
+        }
+
+        /// <summary>
+        /// Parse the enum representation of a type
+        /// </summary>
+        /// <param name="typeString">Type to parse</param>
+        private static ValueType DetermineType(string typeString)
+        {
+            var enumType = typeof(ValueType);
+            var values = Enum.GetNames(enumType);
+            foreach (var value in values)
+            {
+                var member = enumType.GetMember(value);
+                var attribute = member[0].GetCustomAttribute<CodeRepresentationAttribute>();
+                if (attribute != null && attribute.Representations.Contains(typeString))
+                    return (ValueType)Enum.Parse(typeof(ValueType), value);
+            }
+            return ValueType.Class;
         }
 
         /// <summary>

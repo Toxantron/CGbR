@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 namespace CGbR.GeneratorTests
 {
     [DataContract]
-    public partial class Test
+    public partial class Root
     {
         [DataMember]
         public int Number { get; set; }
+
+        [DataMember]
+        public Partial[] Partials { get; set; }
+
+        [DataMember]
+        public int[] Numbers { get; set; }
     }
 }

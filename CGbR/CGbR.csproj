@@ -38,15 +38,24 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassModel\CodeRepresentationAttribute.cs" />
     <Compile Include="ClassModel\PropertyModel.cs" />
+    <Compile Include="ClassModel\ValueType.cs" />
     <Compile Include="GeneratorPartial.cs" />
-    <Compile Include="Generator\BinarySerializer.cs" />
-    <Compile Include="Generator\BinarySerializerGenerator.cs">
+    <Compile Include="Generator\BinarySerializer\BinarySerializer.cs" />
+    <Compile Include="Generator\BinarySerializer\BinarySerializerGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BinarySerializerGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Generator\GeneratorFactory.cs" />
+    <Compile Include="Generator\GeneratorTools.cs" />
+    <Compile Include="Generator\JsonSerializer\JsonSerializer.cs" />
+    <Compile Include="Generator\JsonSerializer\JsonSerializerGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JsonSerializerGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="IGlobalGenerator.cs" />
     <Compile Include="ILocalGenerator.cs" />
     <Compile Include="IGeneratorMode.cs" />
@@ -72,9 +81,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="Generator\BinarySerializerGenerator.tt">
+    <Content Include="Generator\BinarySerializer\BinarySerializerGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>BinarySerializerGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>CGbR</CustomToolNamespace>
+    </Content>
+    <Content Include="Generator\JsonSerializer\JsonSerializerGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>JsonSerializerGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>CGbR</CustomToolNamespace>
     </Content>
   </ItemGroup>
   <ItemGroup>

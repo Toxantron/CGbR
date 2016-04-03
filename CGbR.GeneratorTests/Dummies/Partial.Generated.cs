@@ -4,14 +4,17 @@
  * For questions or bug reports please refer to https://github.com/Toxantron/CGbR or contact the distributor of the
  * 3rd party generator target.
  */
+using Newtonsoft.Json;
 using System;
+using System.IO;
+using System.Text;
 
 namespace CGbR.GeneratorTests
 {
     /// <summary>
     /// Auto generated class by CGbR project
     /// </summary>
-    public partial class Test
+    public partial class Partial
     {
         #region BinarySerializer
 
@@ -39,7 +42,7 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
-            Buffer.BlockCopy(BitConverter.GetBytes(Number), 0, bytes, index, 4);
+            //Buffer.BlockCopy(BitConverter.GetBytes(Id), 0, bytes, index, 4);
             index += 4;
 
             return bytes;
@@ -48,7 +51,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from byte array
         /// </summary>
-        public Test FromBytes(byte[] bytes)
+        public Partial FromBytes(byte[] bytes)
         {
             var index = 0;            
             return FromBytes(bytes, ref index); 
@@ -57,10 +60,43 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from segment in byte array
         /// </summary>
-        public Test FromBytes(byte[] bytes, ref int index)
+        public Partial FromBytes(byte[] bytes, ref int index)
         {
 
             return this;
+        }
+        
+        #endregion
+
+        #region JsonSerializer
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public string ToJson()
+        {
+            var builder = new StringBuilder();
+            var writer = new StringWriter(builder);
+
+            using (var json = new JsonTextWriter(writer))
+            {
+                IncludeJson(json);
+
+                return builder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public void IncludeJson(JsonWriter json)
+        {
+            json.WriteStartObject();
+
+            json.WritePropertyName("Id");
+            json.WriteValue(Id);
+    
+            json.WriteEndObject();
         }
         
         #endregion

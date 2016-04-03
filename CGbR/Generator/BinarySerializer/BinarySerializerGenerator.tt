@@ -30,10 +30,10 @@
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
 <#
-    foreach (var model in Model.Properties)
+    foreach (var model in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
 #>
-            Buffer.BlockCopy(BitConverter.GetBytes(<#= model.Name #>), 0, bytes, index, 4);
+            //Buffer.BlockCopy(BitConverter.GetBytes(<#= model.Name #>), 0, bytes, index, 4);
             index += 4;
 
 <#

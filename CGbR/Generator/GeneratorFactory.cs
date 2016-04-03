@@ -10,6 +10,7 @@ namespace CGbR
     {
         private static readonly IGenerator[] Generators = {
             new BinarySerializer(), 
+            new JsonSerializer(), 
         };
 
         /// <summary>

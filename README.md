@@ -9,6 +9,14 @@ performing dynamic parsing operations in the pre-build stage. Using C# partial c
 that contains performance optimized non-dynamic C# methods and properties based on attributes and interfaces defined in the original
 class. 
 
+**Quick links:**
+1. [Modes of operation](#modes-of-operation)
+2. [Serialization](#serialization)
+2.1 [Binary](#binary-datacontract-serializer)
+2.2 [JSON](#json-datacontract-serializer)
+3. [Dependency Injection](#dependency-injection)
+4. [Developers](#developers)
+
 ## Modes of operations
 The tool supports 3 modes of operation. It can run on a single file or a project/solution directory. The first one is meant
 to be used within VisualStudio as a custom tool for a single file and the others are used as pre-build events or build
@@ -70,3 +78,67 @@ The resulting array would look like this:
 | 18 - 25  | Partial[1].BigValue |
 | ...      | ... |
 | 8 + n*9  | Price |
+
+### JSON DataContract Serializer
+Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [JSON .Net](http://www.newtonsoft.com/json)
+from Newtonsoft. It uses the internal JsonWriter and JsonReader classes to write the string.It just replaces the reflection 
+serializer classes with generated serialize and deserialize methods.
+
+Class definition with DataMember as usual:
+```c#
+[DataContract]
+public partial class Root
+{
+    [DataMember]
+    public int Number { get; set; }
+
+    [DataMember]
+    public Partial[] Partials { get; set; }
+}
+
+[DataContract]
+public partial class Partial
+{
+    [DataMember]
+    public short Id { get; set; }
+}
+```
+
+Generates the following code:
+```c#
+// In Root.Generated.cs
+public void IncludeJson(JsonWriter json)
+{
+    json.WriteStartObject();
+
+    json.WritePropertyName("Number");
+    json.WriteValue(Number);
+    
+    json.WritePropertyName("Partials");
+    json.WriteStartArray();
+    for (var i = 0; i < Partials.Length; i++)
+    {
+        Partials[i].IncludeJson(json);
+    }
+    json.WriteEndArray();
+    
+    json.WriteEndObject();
+}
+
+// In Partial.Generated.cs
+public void IncludeJson(JsonWriter json)
+{
+    json.WriteStartObject();
+
+    json.WritePropertyName("Id");
+    json.WriteValue(Id);
+    
+    json.WriteEndObject();
+}
+```
+
+## Dependency Injection
+CGbR can also be used to generate dependency injection.
+
+## Developers
+Detailed guides on how to write custom generators follow soon.
