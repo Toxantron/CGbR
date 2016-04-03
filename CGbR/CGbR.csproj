@@ -39,10 +39,18 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassModel\PropertyModel.cs" />
     <Compile Include="GeneratorPartial.cs" />
+    <Compile Include="Generator\BinarySerializer.cs" />
+    <Compile Include="Generator\BinarySerializerGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BinarySerializerGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\GeneratorFactory.cs" />
     <Compile Include="IGlobalGenerator.cs" />
     <Compile Include="ILocalGenerator.cs" />
     <Compile Include="Parser\ParserFactory.cs" />
@@ -63,7 +71,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Generators\" />
+    <Content Include="Generator\BinarySerializerGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>BinarySerializerGenerator.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassSkeleton.tt">

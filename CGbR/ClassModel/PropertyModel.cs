@@ -14,6 +14,21 @@
         }
 
         /// <summary>
+        /// Flag if this property is a collection
+        /// </summary>
+        public bool IsCollection { get; set; }
+
+        /// <summary>
+        /// Number of dimensions the collection has
+        /// </summary>
+        public int Dimensions { get; set; }
+
+        /// <summary>
+        /// Type of the property
+        /// </summary>
+        public string PropertyType { get; set; }
+
+        /// <summary>
         /// Value of the property if set
         /// </summary>
         public string Value { get; set; }

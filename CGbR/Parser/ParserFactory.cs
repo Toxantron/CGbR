@@ -16,9 +16,11 @@ namespace CGbR
         {
             switch (name)
             {
-                case "Regex": return new RegexParser();
+                case "Regex":
+                    return new RegexParser();
 
-                default: throw new ArgumentException($"Parser named '{name}' not found!", nameof(name));
+                default:
+                    throw new ArgumentException($"Parser named '{name}' not found!", nameof(name));
             }
         }
     }

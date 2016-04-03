@@ -11,6 +11,7 @@ namespace CGbR
     /// </summary>
 	public class MainClass
     {
+        #region Fields
 
         /// <summary>
         /// Directory the generated is executed on
@@ -37,6 +38,8 @@ namespace CGbR
         /// </summary>
         private static IGenerator[] _generators;
 
+        #endregion
+
         /// <summary>
         /// Entry method for the application
         /// </summary>
@@ -48,15 +51,18 @@ namespace CGbR
             _skeleton = new ClassSkeleton();
 
             // Read configuration for this project
-            _namespace = "Test";
+            _namespace = args[1];
 
             // Initialize local strategies
-            _parser = new RegexParser();
-            _generators = new IGenerator[0];
+            _parser = ParserFactory.Resolve("Regex");
+            _generators = GeneratorFactory.ResolveAll();
 
             // Parse all files in directory recursive
             var files = new List<ParsedFile>();
             ParseFilesInDirectory(_directory, files);
+
+            // Link classes of this project
+            LinkReferences(files);
 
             // Generate all local partials
             GenerateLocalPartials(files);
@@ -77,6 +83,9 @@ namespace CGbR
                                                               .Where(f => !f.Contains(".Generated.")))
             {
                 var model = _parser.ParseFile(file);
+                if (model == null)
+                    continue;
+
                 files.Add(new ParsedFile
                 {
                     Name = file,
@@ -88,6 +97,25 @@ namespace CGbR
             foreach (var subdirectory in Directory.GetDirectories(directory))
             {
                 ParseFilesInDirectory(subdirectory, files);
+            }
+        }
+
+        /// <summary>
+        /// Link class references
+        /// </summary>
+        /// <param name="files">Parsed files</param>
+        private static void LinkReferences(ICollection<ParsedFile> files)
+        {
+            foreach (var file in files)
+            {
+                // Find references classes in list of all classes
+                var references = (from model in files.Select(f => f.ClassModel)
+                                  from reference in file.ClassModel.References
+                                  where reference.Name == model.Name
+                                  select model);
+
+                // Overwrite flat references with real instances
+                file.ClassModel.References = references.ToList();
             }
         }
 
@@ -111,8 +139,8 @@ namespace CGbR
                 var code = GenerateClass(model.Name, model.Namespace, fragments.ToArray());
 
                 // Write file
-                var fileName = Path.GetFileNameWithoutExtension(file.Name);
-                fileName = Path.Combine(fileName, ".Generated.cs");
+                var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";
+                fileName = Path.Combine(Path.GetDirectoryName(file.Name), fileName);
                 File.WriteAllText(fileName, code);
             }
         }
@@ -139,9 +167,10 @@ namespace CGbR
 
                 // Execute code generator
                 var code = GenerateClass(className, _namespace, globalClass.ToArray());
-                
+
                 // Write to file on root level
                 var fileName = Path.Combine(_directory, className, ".Generated.cs");
+                File.WriteAllText(fileName, code);
             }
         }
 
@@ -161,6 +190,7 @@ namespace CGbR
                 { "Namespace", @namespace },
                 { "Fragments", fragments }
             };
+            _skeleton.Initialize();
 
             return _skeleton.TransformText();
         }

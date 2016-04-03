@@ -14,6 +14,7 @@ namespace CGbR
 		public ClassModel (string name) : base(name)
 		{
             Properties = new List<PropertyModel>();
+            References = new List<ClassModel>();
 		}
 
         /// <summary>
@@ -35,6 +36,11 @@ namespace CGbR
 	    /// All properties of the class
 	    /// </summary>
 	    public IList<PropertyModel> Properties { get; private set; }
+
+        /// <summary>
+        /// Classes referenced by this class
+        /// </summary>
+	    public IList<ClassModel> References { get; set; }
 	}
 }
 

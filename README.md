@@ -19,3 +19,47 @@ The binary DataContract serializer target generates code that maps single object
 It has literally zero overhead by using the class definition as a scheme to determine which byte represents which property.
 The code was optimized over several iterations and will create serialize/deserialize objects of binary size of around 1500 
 bytes in a matter of less then 30 micro seconds.
+
+*Concept:*
+Consider the following classes input for the serializer
+```c#
+[DataContract]
+public class Root
+{
+	[DataMember]
+	public int Id { get; set; }
+	
+	[DataMember]
+	public ushort Number { get; set; }
+	
+	[DataMember]
+	public Partial[] Partials { get; set; }
+	
+	
+	[DataMember]
+	public double Price { get; set; }
+}
+
+[DataContract]
+public class Partial
+{
+	[DataMember]
+	public byte Index { get; set; }
+	
+	[DataMember]
+	public long BigValue { get; set; }
+}
+```
+
+The resulting array would look like this:
+| Position | Property    |
+--------------------------
+| 0 - 3    | Id     |
+| 4 - 5    | Number |
+| 6 - 7    | Partials.Length |
+| 8        | Partial[0].Index |
+| 9 - 16   | Partial[0].BigValue |
+| 17       | Partial[1].Index |
+| 18 - 25  | Partial[1].BigValue |
+| ...      | ... |
+| 8 + n*9  | Price |

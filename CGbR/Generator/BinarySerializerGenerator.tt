@@ -1,0 +1,61 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Runtime.Serialization" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="Model" type="CGbR.ClassModel" #>
+        /// <summary>
+        /// Binary size of the object
+        /// </summary>
+        public int Size
+        {
+            get { return 4; }
+        }
+
+        /// <summary>
+        /// Convert object to bytes
+        /// </summary>
+        public byte[] ToBytes()
+        {
+            var index = 0;
+            var bytes = new byte[Size];
+
+            return ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        public byte[] ToBytes(byte[] bytes, ref int index)
+        {
+<#
+    foreach (var model in Model.Properties)
+    {
+#>
+            Buffer.BlockCopy(BitConverter.GetBytes(<#= model.Name #>), 0, bytes, index, 4);
+            index += 4;
+
+<#
+    }
+#>
+            return bytes;
+        }
+
+        /// <summary>
+        /// Create object from byte array
+        /// </summary>
+        public <#= Model.Name #> FromBytes(byte[] bytes)
+        {
+            var index = 0;            
+            return FromBytes(bytes, ref index); 
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        public <#= Model.Name #> FromBytes(byte[] bytes, ref int index)
+        {
+
+            return this;
+        }

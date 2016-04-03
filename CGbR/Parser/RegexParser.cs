@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -37,10 +38,15 @@ namespace CGbR
                     @namespace = match.Groups["namespace"].Value;
 
                 // First we must find the class definition
-                if (model == null && !TryParseClass(file, i, @namespace, out model))
+                if (model == null)
+                {
+                    ParseClass(file, i, @namespace, out model);
                     continue;
+                }
+                    
 
                 // Look for attributes that mark payload fields
+                ParseProperty(file, i, model);
             }
 
             return model;
@@ -54,14 +60,14 @@ namespace CGbR
         /// <param name="namespace">Namespace of the class</param>
         /// <param name="model">Result model</param>
         /// <returns>True if parsing succeeded</returns>
-        private bool TryParseClass(string[] file, int index, string @namespace, out ClassModel model)
-        {
+        private void ParseClass(string[] file, int index, string @namespace, out ClassModel model)
+        { 
             model = null;
 
             // Try to match current line as class definition
             var match = _classRegex.Match(file[index]);
             if (!match.Success)
-                return false;
+                return;
 
             // Get base type and interfaces
             var baseGroup = match.Groups["baseType"];
@@ -82,10 +88,49 @@ namespace CGbR
                 Interfaces = interfaces
             };
 
+            // Add attributes by moving up the lines
+            ParseAttributes(file, index, model);
+        }
+
+        /// <summary>
+        /// Try parsing a property from the current line
+        /// </summary>
+        /// <param name="file">All text lines of the file</param>
+        /// <param name="index">Current index in the file</param>
+        /// <param name="model">Class model</param>
+        private void ParseProperty(string[] file, int index, ClassModel model)
+        {
+            // Try parsing property
+            var match = _propRegex.Match(file[index]);
+            if (!match.Success)
+                return;
+
+            // Create property model
+            var property = new PropertyModel(match.Groups["name"].Value)
+            {
+                PropertyType = match.Groups["type"].Value,
+                IsCollection = match.Groups["isCollection"].Success,
+                Dimensions = match.Groups["dimensions"].Captures.Count + 1
+            };
+
+            // Add attributes by moving up the lines
+            ParseAttributes(file, index, property);
+
+            model.Properties.Add(property);
+        }
+
+        /// <summary>
+        /// Look for attributes in the previous lines
+        /// </summary>
+        /// <param name="file">All lines of the fie</param>
+        /// <param name="index">Current index in file</param>
+        /// <param name="model">Model to add attributes to</param>
+        private void ParseAttributes(string[] file, int index, CodeElementModel model)
+        {
             // Keep going back in the file to look for attributes
             for (var line = index - 1; line >= 0; line--)
             {
-                match = _attributeRegex.Match(file[line]);
+                var match = _attributeRegex.Match(file[line]);
                 if (!match.Success)
                     break;
 
@@ -112,8 +157,6 @@ namespace CGbR
                     attribute.Properties.Add(property);
                 }
             }
-
-            return true;
         }
     }
 }
