@@ -121,7 +121,7 @@
                         reader.Read(); // Read token where array should begin
                         if (reader.TokenType == JsonToken.Null)
                             break;
-                        var <#= varName #> = new List<<#= property.PropertyType #>>();
+                        var <#= varName #> = new List<<#= property.ElementType #>>();
                         while (reader.Read() && reader.TokenType <#= condition #>)
                             <#= varName #>.Add(<#= Converter(property) #>);
                         <#= property.Name #> = <#= varName #>.ToArray();
@@ -140,7 +140,7 @@
     private static string Converter(PropertyModel property)
     {
         var converter = property.ValueType == ValueType.Class
-            ? $"new {property.PropertyType}().FromJson(reader)"
+            ? $"new {property.ElementType}().FromJson(reader)"
             : $"Convert.To{property.ValueType}(reader.Value)";
         return converter;
     }

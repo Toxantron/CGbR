@@ -19,6 +19,11 @@
         public bool IsCollection { get; set; }
 
         /// <summary>
+        /// Type of collection that was used
+        /// </summary>
+        public string CollectionType { get; set; }
+
+        /// <summary>
         /// Number of dimensions the collection has
         /// </summary>
         public int Dimensions { get; set; }
@@ -26,7 +31,7 @@
         /// <summary>
         /// Type of the property
         /// </summary>
-        public string PropertyType { get; set; }
+        public string ElementType { get; set; }
 
         /// <summary>
         /// Simple enum representation

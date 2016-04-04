@@ -255,7 +255,7 @@ namespace CGbR
             this.Write(" = new List<");
             
             #line 124 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(property.PropertyType));
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.ElementType));
             
             #line default
             #line hidden
@@ -313,7 +313,7 @@ namespace CGbR
     private static string Converter(PropertyModel property)
     {
         var converter = property.ValueType == ValueType.Class
-            ? $"new {property.PropertyType}().FromJson(reader)"
+            ? $"new {property.ElementType}().FromJson(reader)"
             : $"Convert.To{property.ValueType}(reader.Value)";
         return converter;
     }

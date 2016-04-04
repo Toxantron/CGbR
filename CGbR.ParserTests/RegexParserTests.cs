@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace CGbR.ParserTests
@@ -129,12 +130,40 @@ namespace CGbR.ParserTests
             Assert.AreEqual(2, model.Properties.Count, "Number of properties does not match!");
             var prop = model.Properties[0];
             Assert.AreEqual("WithoutAtt", prop.Name, "Name of first property does not match!");
-            Assert.AreEqual("int", prop.PropertyType, "Type of property does not match");
+            Assert.AreEqual("int", prop.ElementType, "Type of property does not match");
             Assert.AreEqual(0, prop.Attributes.Count, "First property does not have attributes");
             prop = model.Properties[1];
             Assert.AreEqual("WithAtt", prop.Name, "Name of first property does not match!");
-            Assert.AreEqual("ushort", prop.PropertyType, "Type of property does not match");
+            Assert.AreEqual("ushort", prop.ElementType, "Type of property does not match");
             Assert.AreEqual(1, prop.Attributes.Count, "Second property should have attributes");
+        }
+
+        [Test]
+        public void ParseList()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    public partial class Test
+    {
+        [DataMember]
+        public IList<ushort> Numbers { get; set; }
+    }
+}
+";
+            File.WriteAllText("List.cs", code);
+
+            // Act
+            var parsed = parser.ParseFile("List.cs");
+
+            // Assert
+            Assert.AreEqual(1, parsed.Properties.Count);
+            var prop = parsed.Properties.First();
+            Assert.AreEqual("Numbers", prop.Name);
+            Assert.AreEqual("ushort", prop.ElementType);
+            Assert.AreEqual("IList", prop.CollectionType);
         }
     }
 }

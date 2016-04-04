@@ -14,9 +14,9 @@ namespace CGbR
     {
         // Regex used to parse source file
         private readonly Regex _namespaceRegex = new Regex(@"namespace (?<namespace>(?:\w\.?)*)");
-        private readonly Regex _attributeRegex = new Regex(@"\[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
-        private readonly Regex _classRegex = new Regex(@"(?<accessModifier>[public|internal]) partial class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
-        private readonly Regex _propRegex = new Regex(@" public (?<type>\w+)(?<isCollection>\[(?<dimensions>, ?)*\])? (?<name>\w+)");
+        private readonly Regex _attributeRegex = new Regex(@" \[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
+        private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal])) partial class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
+        private readonly Regex _propRegex = new Regex(@" public (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>\w+)");
 
         /// <seealso cref="IParser"/>
         public string Name { get; } = "Regex";
@@ -108,11 +108,14 @@ namespace CGbR
 
             // Create property model
             var type = match.Groups["type"].Value;
+            var collGroup = match.Groups["collectionType"];
+            var arrayGroup = match.Groups["isArray"];
             var property = new PropertyModel(match.Groups["name"].Value)
             {
-                PropertyType = type,
+                ElementType = type,
                 ValueType = DetermineType(type),
-                IsCollection = match.Groups["isCollection"].Success,
+                IsCollection = collGroup.Success | arrayGroup.Success,
+                CollectionType = arrayGroup.Success ? "Array" : collGroup.Value,
                 Dimensions = match.Groups["dimensions"].Captures.Count + 1
             };
 
