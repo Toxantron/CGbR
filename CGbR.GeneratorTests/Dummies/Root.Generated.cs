@@ -182,7 +182,7 @@ namespace CGbR.GeneratorTests
                         var numbers = new List<ulong>();
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             numbers.Add(Convert.ToUInt64(reader.Value));
-                        Numbers = numbers.ToArray();
+                        Numbers = numbers;
                         break;
 
                 }

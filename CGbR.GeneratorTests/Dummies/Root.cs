@@ -16,6 +16,6 @@ namespace CGbR.GeneratorTests
         public Partial[] Partials { get; set; }
 
         [DataMember]
-        public ulong[] Numbers { get; set; }
+        public IList<ulong> Numbers { get; set; }
     }
 }

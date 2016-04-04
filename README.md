@@ -97,7 +97,7 @@ public partial class Root
     public Partial[] Partials { get; set; }
 
     [DataMember]
-    public ulong[] Numbers { get; set; }
+    public IList<ulong> Numbers { get; set; }
 }
 
 [DataContract]
@@ -124,9 +124,9 @@ public void IncludeJson(JsonWriter writer)
     else
     {
         writer.WriteStartArray();
-        for (var i = 0; i < Partials.Length; i++)
+        foreach (var value in Partials)
         {
-            Partials[i].IncludeJson(writer);
+            value.IncludeJson(writer);
         }
         writer.WriteEndArray();
     }
@@ -137,9 +137,9 @@ public void IncludeJson(JsonWriter writer)
     else
     {
         writer.WriteStartArray();
-        for (var i = 0; i < Numbers.Length; i++)
+        foreach (var value in Numbers)
         {
-            writer.WriteValue(Numbers[i]);
+            writer.WriteValue(value);
         }
         writer.WriteEndArray();
     }
@@ -166,7 +166,7 @@ public Root FromJson(JsonReader reader)
                 break;
 
             case "Partials":
-				reader.Read(); // Read token where array should begin
+                reader.Read(); // Read token where array should begin
                 if (reader.TokenType == JsonToken.Null)
                     break;
                 var partials = new List<Partial>();
@@ -176,13 +176,13 @@ public Root FromJson(JsonReader reader)
                 break;
 
             case "Numbers":
-				reader.Read(); // Read token where array should begin
+                reader.Read(); // Read token where array should begin
                 if (reader.TokenType == JsonToken.Null)
                     break;
                 var numbers = new List<ulong>();
                 while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                     numbers.Add(Convert.ToUInt64(reader.Value));
-                Numbers = numbers.ToArray();
+                Numbers = numbers;
                 break;
 
         }

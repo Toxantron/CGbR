@@ -77,7 +77,7 @@ namespace CGbR.GeneratorTests
             Assert.AreEqual(2, deserialized.Partials.Length, "Failed to parse class array");
             Assert.AreEqual(1, deserialized.Partials[0].Id);
             Assert.AreEqual(2, deserialized.Partials[1].Id);
-            Assert.AreEqual(3, deserialized.Numbers.Length);
+            Assert.AreEqual(3, deserialized.Numbers.Count);
             Assert.AreEqual(38, deserialized.Numbers.Sum(i => (int)i));
         }
 
@@ -94,7 +94,7 @@ namespace CGbR.GeneratorTests
             Assert.NotNull(deserialized);
             Assert.AreEqual(10, deserialized.Number);
             Assert.AreEqual(0, deserialized.Partials.Length);
-            Assert.AreEqual(0, deserialized.Numbers.Length);
+            Assert.AreEqual(0, deserialized.Numbers.Count);
         }
 
         [Test]
