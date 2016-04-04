@@ -42,11 +42,11 @@
             else
             {
                 writer.WriteStartArray();
-                for (var i = 0; i < <#= property.Name #>.Length; i++)
+                foreach (var value in <#= property.Name #>)
                 {
 <#
         }
-        var target = $"{property.Name}{(property.IsCollection ? "[i]" : string.Empty)}";  
+        var target = property.IsCollection ? "value" : property.Name; 
 #>
             <#= property.IsCollection ? "\t\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.WriteValue({target})" #>;
 <#
@@ -124,7 +124,7 @@
                         var <#= varName #> = new List<<#= property.ElementType #>>();
                         while (reader.Read() && reader.TokenType <#= condition #>)
                             <#= varName #>.Add(<#= Converter(property) #>);
-                        <#= property.Name #> = <#= varName #>.ToArray();
+                        <#= property.Name #> = <#= varName #><#= GeneratorTools.ToCollection(property) #>;
                         break;
 
 <#

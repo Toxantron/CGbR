@@ -87,19 +87,20 @@ namespace CGbR
             #line default
             #line hidden
             this.Write(" == null)\r\n                writer.WriteNull();\r\n            else\r\n            {\r\n" +
-                    "                writer.WriteStartArray();\r\n                for (var i = 0; i < ");
+                    "                writer.WriteStartArray();\r\n                foreach (var value in" +
+                    " ");
             
             #line 45 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
-            this.Write(".Length; i++)\r\n                {\r\n");
+            this.Write(")\r\n                {\r\n");
             
             #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 
         }
-        var target = $"{property.Name}{(property.IsCollection ? "[i]" : string.Empty)}";  
+        var target = property.IsCollection ? "value" : property.Name; 
 
             
             #line default
@@ -294,7 +295,13 @@ namespace CGbR
             
             #line default
             #line hidden
-            this.Write(".ToArray();\r\n                        break;\r\n\r\n");
+            
+            #line 127 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(GeneratorTools.ToCollection(property)));
+            
+            #line default
+            #line hidden
+            this.Write(";\r\n                        break;\r\n\r\n");
             
             #line 130 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 

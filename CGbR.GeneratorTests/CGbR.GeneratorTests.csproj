@@ -41,6 +41,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dummies\DifferentCollections.cs" />
+    <Compile Include="Dummies\DifferentCollections.Generated.cs" />
     <Compile Include="Dummies\Partial.cs" />
     <Compile Include="Dummies\Partial.Generated.cs" />
     <Compile Include="Dummies\Root.cs" />

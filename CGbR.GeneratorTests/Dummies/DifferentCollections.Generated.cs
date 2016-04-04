@@ -15,7 +15,7 @@ namespace CGbR.GeneratorTests
     /// <summary>
     /// Auto generated class by CGbR project
     /// </summary>
-    public partial class Root
+    public partial class DifferentCollections
     {
         #region BinarySerializer
 
@@ -43,13 +43,13 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
-            //Buffer.BlockCopy(BitConverter.GetBytes(Number), 0, bytes, index, 4);
+            //Buffer.BlockCopy(BitConverter.GetBytes(Integers), 0, bytes, index, 4);
             index += 4;
 
-            //Buffer.BlockCopy(BitConverter.GetBytes(Partials), 0, bytes, index, 4);
+            //Buffer.BlockCopy(BitConverter.GetBytes(Doubles), 0, bytes, index, 4);
             index += 4;
 
-            //Buffer.BlockCopy(BitConverter.GetBytes(Numbers), 0, bytes, index, 4);
+            //Buffer.BlockCopy(BitConverter.GetBytes(Longs), 0, bytes, index, 4);
             index += 4;
 
             return bytes;
@@ -58,7 +58,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from byte array
         /// </summary>
-        public Root FromBytes(byte[] bytes)
+        public DifferentCollections FromBytes(byte[] bytes)
         {
             var index = 0;            
             return FromBytes(bytes, ref index); 
@@ -67,7 +67,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from segment in byte array
         /// </summary>
-        public Root FromBytes(byte[] bytes, ref int index)
+        public DifferentCollections FromBytes(byte[] bytes, ref int index)
         {
 
             return this;
@@ -100,29 +100,39 @@ namespace CGbR.GeneratorTests
         {
             writer.WriteStartObject();
 
-            writer.WritePropertyName("Number");
-            writer.WriteValue(Number);
-    
-            writer.WritePropertyName("Partials");
-            if (Partials == null)
+            writer.WritePropertyName("Integers");
+            if (Integers == null)
                 writer.WriteNull();
             else
             {
                 writer.WriteStartArray();
-                foreach (var value in Partials)
+                foreach (var value in Integers)
                 {
-            		value.IncludeJson(writer);
+            		writer.WriteValue(value);
                 }
                 writer.WriteEndArray();
             }
     
-            writer.WritePropertyName("Numbers");
-            if (Numbers == null)
+            writer.WritePropertyName("Doubles");
+            if (Doubles == null)
                 writer.WriteNull();
             else
             {
                 writer.WriteStartArray();
-                foreach (var value in Numbers)
+                foreach (var value in Doubles)
+                {
+            		writer.WriteValue(value);
+                }
+                writer.WriteEndArray();
+            }
+    
+            writer.WritePropertyName("Longs");
+            if (Longs == null)
+                writer.WriteNull();
+            else
+            {
+                writer.WriteStartArray();
+                foreach (var value in Longs)
                 {
             		writer.WriteValue(value);
                 }
@@ -135,7 +145,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Convert object to JSON string
         /// </summary>
-        public Root FromJson(string json)
+        public DifferentCollections FromJson(string json)
         {
             using (var reader = new JsonTextReader(new StringReader(json)))
             {
@@ -146,7 +156,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public Root FromJson(JsonReader reader)
+        public DifferentCollections FromJson(JsonReader reader)
         {
             while (reader.Read())
             {
@@ -160,29 +170,34 @@ namespace CGbR.GeneratorTests
 
                 switch ((string) reader.Value)
                 {
-                    case "Number":
-                        reader.Read();
-                        Number = Convert.ToInt32(reader.Value);
-                        break;
-
-                    case "Partials":
+                    case "Integers":
                         reader.Read(); // Read token where array should begin
                         if (reader.TokenType == JsonToken.Null)
                             break;
-                        var partials = new List<Partial>();
-                        while (reader.Read() && reader.TokenType == JsonToken.StartObject)
-                            partials.Add(new Partial().FromJson(reader));
-                        Partials = partials.ToArray();
-                        break;
-
-                    case "Numbers":
-                        reader.Read(); // Read token where array should begin
-                        if (reader.TokenType == JsonToken.Null)
-                            break;
-                        var numbers = new List<ulong>();
+                        var integers = new List<int>();
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            numbers.Add(Convert.ToUInt64(reader.Value));
-                        Numbers = numbers.ToArray();
+                            integers.Add(Convert.ToInt32(reader.Value));
+                        Integers = integers;
+                        break;
+
+                    case "Doubles":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var doubles = new List<double>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            doubles.Add(Convert.ToDouble(reader.Value));
+                        Doubles = doubles;
+                        break;
+
+                    case "Longs":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var longs = new List<long>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            longs.Add(Convert.ToInt64(reader.Value));
+                        Longs = longs.ToArray();
                         break;
 
                 }

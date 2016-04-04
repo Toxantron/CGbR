@@ -43,5 +43,39 @@ namespace CGbR
         {
             return element.Attributes.Any(att => att.Name.Replace("Attribute", string.Empty) == shortName);
         }
+
+
+        /// <summary>
+        /// Generate code that creates collection instance
+        /// </summary>
+        /// <param name="property">Property to generate</param>
+        /// <param name="length">Optional length of the collection</param>
+        /// <returns>Collection construtor string</returns>
+        public static string CollectionConstructor(PropertyModel property, int length = 0)
+        {
+            switch (property.CollectionType)
+            {
+                case "Array":
+                    return $"new {property.ElementType}[{length}]";
+                default:
+                    return $"new List<{property.ElementType}>()";
+            }
+        }
+
+        /// <summary>
+        /// Linq extension to transform IEnumerable to target type
+        /// </summary>
+        /// <param name="property">Property to get extension for</param>
+        /// <returns></returns>
+        public static string ToCollection(PropertyModel property)
+        {
+            switch (property.CollectionType)
+            {
+                case "Array":
+                    return ".ToArray()";
+                default:
+                    return string.Empty;
+            }
+        }
     }
 }
