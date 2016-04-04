@@ -7,7 +7,7 @@ fast boilerplate code over and over again.
 The idea of CGbR (**C**ode **G**enerator **b**eats **R**eflection) is to combine these two offering a reflection similar API but 
 performing dynamic parsing operations in the pre-build stage. Using C# partial classes it generates a file _<file_name>.Generated.cs_ 
 that contains performance optimized non-dynamic C# methods and properties based on attributes and interfaces defined in the original
-class. 
+class. This makes it the perfect choice for performance critical applications, limited hardware capabilties and embedded projects with AOT compilation.
 
 **Quick links:**
 
