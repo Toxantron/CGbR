@@ -67,6 +67,9 @@ namespace CGbR.Benchmarks
             var deserialized = JsonConvert.DeserializeObject<Root>(json);
             json = deserialized.ToJson();
             deserialized = new Root().FromJson(json);
+            
+            // Test size
+            Console.WriteLine("String size: {0}", json.Length);
 
             var watch = new Stopwatch();
             // Classic json
@@ -92,7 +95,6 @@ namespace CGbR.Benchmarks
             deserialized =new Root().FromJson(json);
             watch.Stop();
             Console.WriteLine("Deserialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
-
 
             Console.WriteLine("{0}", deserialized.PartialsArray.Length);
         }

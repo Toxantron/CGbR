@@ -82,7 +82,7 @@ The resulting array would look like this:
 
 ### JSON DataContract Serializer
 Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
-from Newtonsoft. It uses the internal JsonWriter and JsonReader classes to write the string.It just replaces the reflection 
+from Newtonsoft. While writing JSON is done directly it uses JsonReader classes to parse the string. It replaces the reflection 
 serializer classes with generated serialize and deserialize methods.
 
 Class definition with DataMember as usual:
