@@ -11,59 +11,61 @@
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var stringWriter = new StringWriter(builder);
-
-            using (var writer = new JsonTextWriter(stringWriter))
-            {
-                IncludeJson(writer);
-
-                return builder.ToString();
-            }
+            IncludeJson(builder);
+            return builder.ToString();
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter writer)
+        public void IncludeJson(StringBuilder writer)
         {
-            writer.WriteStartObject();
+            writer.Append('{');
 
 <#
+    var first = true;
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
+        
 #>
-            writer.WritePropertyName("<#= property.Name #>");
+            writer.Append("<#= first ? string.Empty : "," #>\"<#= property.Name #>\":");
 <#
         if (property.IsCollection)
         {
 #>
             if (<#= property.Name #> == null)
-                writer.WriteNull();
+                writer.Append("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Append('[');
                 foreach (var value in <#= property.Name #>)
                 {
 <#
         }
-        var target = property.IsCollection ? "value" : property.Name; 
+        var target = property.IsCollection ? "value" : property.Name;
+        if (property.ValueType == ValueType.String)
+            target = $"string.Format(\"\\\"{{0}}\\\"\", {target})";
+        else if(property.ValueType != ValueType.Class)
+            target = $"{target}.ToString(CultureInfo.InvariantCulture)";
 #>
-            <#= property.IsCollection ? "\t\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.WriteValue({target})" #>;
+            <#= property.IsCollection ? "\t\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.Append({target})" #>;
 <#
         if (property.IsCollection)
         {
 #>
+                    writer.Append(',');
                 }
-                writer.WriteEndArray();
+                writer.Append(']');
             }
 <#            
         }
 #>
     
 <#
+        first = false;
     }
 #>
-            writer.WriteEndObject();
+            writer.Append('}');
         }
 
         /// <summary>

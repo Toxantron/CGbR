@@ -24,12 +24,14 @@ namespace CGbR.Benchmarks
         /// </summary>
         private static Root GenerateBigObject()
         {
+            var random = new Random();
+
             var root = new Root
             {
-                Number = 1228612,
-                Price = 691861841.12412,
-                SmallNumber = 17,
-                Description = "Höajäineväiownväwevni iwvöqwbvoibvowiv",
+                Number = random.Next(),
+                Price = random.Next() / (double)random.Next(),
+                SmallNumber = (ushort)random.Next(ushort.MaxValue - 1),
+                Description = " whägwbvwoibv    wivb  oovwwweenq ponqnv",
                 PartialsArray = new Partial[30],
                 PartialsList = new List<Partial>()
             };
@@ -38,16 +40,16 @@ namespace CGbR.Benchmarks
             {
                 var partial = new Partial
                 {
-                    Id = 67571274172,
-                    Price = (float)660412.1212,
-                    Name = "jLBVWUBVOWBVWEVBBVWEV",
+                    Id = random.Next(),
+                    Price = random.Next() / (float)random.Next(),
+                    Name = "jLBVWUBVOWBVWEVB1zh7771h31p9BVWEV",
                     DecimalNumbers = new List<double>()
                 };
                 var numbers = new List<ulong>();
                 for (var j = 0; j < 10; j++)
                 {
-                    numbers.Add(818616126518619);
-                    partial.DecimalNumbers.Add(1724182754.125125);
+                    numbers.Add((ushort)(random.Next()*3));
+                    partial.DecimalNumbers.Add(random.Next() / (double)random.Next());
                 }
                 partial.SomeNumbers = numbers;
 
@@ -62,15 +64,15 @@ namespace CGbR.Benchmarks
         {
             // Run once for the JIT
             var json = JsonConvert.SerializeObject(testObject);
-            json = testObject.ToJson();
             var deserialized = JsonConvert.DeserializeObject<Root>(json);
+            json = deserialized.ToJson();
             deserialized = new Root().FromJson(json);
 
             var watch = new Stopwatch();
             // Classic json
             Console.WriteLine("Reflection json");
             watch.Start();
-            json = JsonConvert.SerializeObject(testObject);
+            json = JsonConvert.SerializeObject(deserialized);
             watch.Stop();
             Console.WriteLine("Serialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
 
@@ -78,12 +80,11 @@ namespace CGbR.Benchmarks
             deserialized = JsonConvert.DeserializeObject<Root>(json);
             watch.Stop();
             Console.WriteLine("Deserialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
-            Console.WriteLine("{0}", deserialized.PartialsArray.Length);
 
             // Generated json
             Console.WriteLine("Generated json");
             watch.Restart();
-            json = testObject.ToJson();
+            json = deserialized.ToJson();
             watch.Stop();
             Console.WriteLine("Serialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
 
@@ -91,6 +92,8 @@ namespace CGbR.Benchmarks
             deserialized =new Root().FromJson(json);
             watch.Stop();
             Console.WriteLine("Deserialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
+
+
             Console.WriteLine("{0}", deserialized.PartialsArray.Length);
         }
     }

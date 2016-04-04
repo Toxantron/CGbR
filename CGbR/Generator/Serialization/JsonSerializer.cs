@@ -17,6 +17,7 @@ namespace CGbR
             "System",
             "System.Collections.Generic",
             "System.IO",
+            "System.Globalization",
             "System.Text",
             "Newtonsoft.Json"
         };

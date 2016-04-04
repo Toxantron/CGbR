@@ -7,6 +7,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -89,59 +90,55 @@ namespace CGbR.Benchmarks
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var stringWriter = new StringWriter(builder);
-
-            using (var writer = new JsonTextWriter(stringWriter))
-            {
-                IncludeJson(writer);
-
-                return builder.ToString();
-            }
+            IncludeJson(builder);
+            return builder.ToString();
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter writer)
+        public void IncludeJson(StringBuilder writer)
         {
-            writer.WriteStartObject();
+            writer.Append('{');
 
-            writer.WritePropertyName("Id");
-            writer.WriteValue(Id);
+            writer.Append("\"Id\":");
+            writer.Append(Id.ToString(CultureInfo.InvariantCulture));
     
-            writer.WritePropertyName("Price");
-            writer.WriteValue(Price);
+            writer.Append(",\"Price\":");
+            writer.Append(Price.ToString(CultureInfo.InvariantCulture));
     
-            writer.WritePropertyName("Name");
-            writer.WriteValue(Name);
+            writer.Append(",\"Name\":");
+            writer.Append(string.Format("\"{0}\"", Name));
     
-            writer.WritePropertyName("DecimalNumbers");
+            writer.Append(",\"DecimalNumbers\":");
             if (DecimalNumbers == null)
-                writer.WriteNull();
+                writer.Append("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Append('[');
                 foreach (var value in DecimalNumbers)
                 {
-            		writer.WriteValue(value);
+            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Append(',');
                 }
-                writer.WriteEndArray();
+                writer.Append(']');
             }
     
-            writer.WritePropertyName("SomeNumbers");
+            writer.Append(",\"SomeNumbers\":");
             if (SomeNumbers == null)
-                writer.WriteNull();
+                writer.Append("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Append('[');
                 foreach (var value in SomeNumbers)
                 {
-            		writer.WriteValue(value);
+            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Append(',');
                 }
-                writer.WriteEndArray();
+                writer.Append(']');
             }
     
-            writer.WriteEndObject();
+            writer.Append('}');
         }
 
         /// <summary>

@@ -7,6 +7,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -92,62 +93,58 @@ namespace CGbR.Benchmarks
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var stringWriter = new StringWriter(builder);
-
-            using (var writer = new JsonTextWriter(stringWriter))
-            {
-                IncludeJson(writer);
-
-                return builder.ToString();
-            }
+            IncludeJson(builder);
+            return builder.ToString();
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter writer)
+        public void IncludeJson(StringBuilder writer)
         {
-            writer.WriteStartObject();
+            writer.Append('{');
 
-            writer.WritePropertyName("Number");
-            writer.WriteValue(Number);
+            writer.Append("\"Number\":");
+            writer.Append(Number.ToString(CultureInfo.InvariantCulture));
     
-            writer.WritePropertyName("Price");
-            writer.WriteValue(Price);
+            writer.Append(",\"Price\":");
+            writer.Append(Price.ToString(CultureInfo.InvariantCulture));
     
-            writer.WritePropertyName("Description");
-            writer.WriteValue(Description);
+            writer.Append(",\"Description\":");
+            writer.Append(string.Format("\"{0}\"", Description));
     
-            writer.WritePropertyName("PartialsList");
+            writer.Append(",\"PartialsList\":");
             if (PartialsList == null)
-                writer.WriteNull();
+                writer.Append("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Append('[');
                 foreach (var value in PartialsList)
                 {
             		value.IncludeJson(writer);
+                    writer.Append(',');
                 }
-                writer.WriteEndArray();
+                writer.Append(']');
             }
     
-            writer.WritePropertyName("PartialsArray");
+            writer.Append(",\"PartialsArray\":");
             if (PartialsArray == null)
-                writer.WriteNull();
+                writer.Append("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Append('[');
                 foreach (var value in PartialsArray)
                 {
             		value.IncludeJson(writer);
+                    writer.Append(',');
                 }
-                writer.WriteEndArray();
+                writer.Append(']');
             }
     
-            writer.WritePropertyName("SmallNumber");
-            writer.WriteValue(SmallNumber);
+            writer.Append(",\"SmallNumber\":");
+            writer.Append(SmallNumber.ToString(CultureInfo.InvariantCulture));
     
-            writer.WriteEndObject();
+            writer.Append('}');
         }
 
         /// <summary>

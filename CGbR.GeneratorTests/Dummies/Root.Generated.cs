@@ -7,6 +7,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -83,12 +84,9 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            var stringWriter = new StringWriter(builder);
-
-            using (var writer = new JsonTextWriter(stringWriter))
+            using (var writer = new StringWriter(builder))
             {
                 IncludeJson(writer);
-
                 return builder.ToString();
             }
         }
@@ -96,40 +94,42 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(JsonWriter writer)
+        public void IncludeJson(StringWriter writer)
         {
-            writer.WriteStartObject();
+            writer.Write('{');
 
-            writer.WritePropertyName("Number");
-            writer.WriteValue(Number);
+            writer.Write("\"Number\":");
+            writer.Write(Number.ToString(CultureInfo.InvariantCulture));
     
-            writer.WritePropertyName("Partials");
+            writer.Write(",\"Partials\":");
             if (Partials == null)
-                writer.WriteNull();
+                writer.Write("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Write('[');
                 foreach (var value in Partials)
                 {
             		value.IncludeJson(writer);
+                    writer.Write(',');
                 }
-                writer.WriteEndArray();
+                writer.Write(']');
             }
     
-            writer.WritePropertyName("Numbers");
+            writer.Write(",\"Numbers\":");
             if (Numbers == null)
-                writer.WriteNull();
+                writer.Write("null");
             else
             {
-                writer.WriteStartArray();
+                writer.Write('[');
                 foreach (var value in Numbers)
                 {
-            		writer.WriteValue(value);
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
                 }
-                writer.WriteEndArray();
+                writer.Write(']');
             }
     
-            writer.WriteEndObject();
+            writer.Write('}');
         }
 
         /// <summary>

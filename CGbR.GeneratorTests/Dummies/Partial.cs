@@ -2,10 +2,10 @@
 
 namespace CGbR.GeneratorTests
 {
-[DataContract]
-public partial class Partial
-{
-    [DataMember]
-    public short Id { get; set; }
-}
+    [DataContract]
+    public partial class Partial
+    {
+        [DataMember]
+        public short Id { get; set; }
+    }
 }

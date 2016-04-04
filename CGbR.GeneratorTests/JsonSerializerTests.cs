@@ -25,7 +25,7 @@ namespace CGbR.GeneratorTests
             var json = root.ToJson();
 
             // Assert
-            const string expected = "{\"Number\":10,\"Partials\":[{\"Id\":1},{\"Id\":2}],\"Numbers\":[10,12,16]}";
+            const string expected = "{\"Number\":10,\"Partials\":[{\"Id\":1},{\"Id\":2},],\"Numbers\":[10,12,16,]}";
             Assert.AreEqual(expected, json, "Failed to serialize string");
         }
 
