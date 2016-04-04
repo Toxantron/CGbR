@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.GeneratorTests", "CGbR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.ParserTests", "CGbR.ParserTests\CGbR.ParserTests.csproj", "{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Benchmarks", "CGbR.Benchmarks\CGbR.Benchmarks.csproj", "{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,14 @@ Global
 		{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}.Release|x86.ActiveCfg = Release|Any CPU
 		{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}.Release|x86.Build.0 = Release|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Debug|x86.Build.0 = Debug|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Release|x86.ActiveCfg = Release|Any CPU
+		{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
