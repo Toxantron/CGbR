@@ -111,40 +111,42 @@ public partial class Partial
 Generates the following code:
 ```c#
 // In Root.Generated.cs
-public void IncludeJson(JsonWriter writer)
+public void IncludeJson(StringBuilder writer)
 {
-    writer.WriteStartObject();
+    writer.Append('{');
 
-    writer.WritePropertyName("Number");
-    writer.WriteValue(Number);
+    writer.Append("\"Number\":");
+    writer.Append(Number.ToString(CultureInfo.InvariantCulture));
     
-    writer.WritePropertyName("Partials");
+    writer.Append(",\"Partials\":");
     if (Partials == null)
-        writer.WriteNull();
+        writer.Append("null");
     else
     {
-        writer.WriteStartArray();
+        writer.Append('[');
         foreach (var value in Partials)
         {
             value.IncludeJson(writer);
+            writer.Append(',');
         }
-        writer.WriteEndArray();
+        writer.Append(']');
     }
     
-    writer.WritePropertyName("Numbers");
+    writer.Append(",\"Numbers\":");
     if (Numbers == null)
-        writer.WriteNull();
+        writer.Append("null");
     else
     {
-        writer.WriteStartArray();
+        writer.Append('[');
         foreach (var value in Numbers)
         {
-            writer.WriteValue(value);
+            writer.Append(value.ToString(CultureInfo.InvariantCulture));
+            writer.Append(',');
         }
-        writer.WriteEndArray();
+        writer.Append(']');
     }
     
-    writer.WriteEndObject();
+    writer.Append('}');
 }
 public Root FromJson(JsonReader reader)
 {
@@ -192,14 +194,14 @@ public Root FromJson(JsonReader reader)
 }
 
 // In Partial.Generated.cs
-public void IncludeJson(JsonWriter writer)
+public void IncludeJson(StringBuilder writer)
 {
-    writer.WriteStartObject();
+    writer.Append('{');
 
-    writer.WritePropertyName("Id");
-    writer.WriteValue(Id);
+    writer.Append("\"Id\":");
+    writer.Append(Id.ToString(CultureInfo.InvariantCulture));
     
-    writer.WriteEndObject();
+    writer.Append('}');
 }
 public Partial FromJson(JsonReader reader)
 {

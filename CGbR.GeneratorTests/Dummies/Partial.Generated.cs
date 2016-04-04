@@ -78,24 +78,21 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder))
-            {
-                IncludeJson(writer);
-                return builder.ToString();
-            }
+            IncludeJson(builder);
+            return builder.ToString();
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(StringWriter writer)
+        public void IncludeJson(StringBuilder writer)
         {
-            writer.Write('{');
+            writer.Append('{');
 
-            writer.Write("\"Id\":");
-            writer.Write(Id.ToString(CultureInfo.InvariantCulture));
+            writer.Append("\"Id\":");
+            writer.Append(Id.ToString(CultureInfo.InvariantCulture));
     
-            writer.Write('}');
+            writer.Append('}');
         }
 
         /// <summary>

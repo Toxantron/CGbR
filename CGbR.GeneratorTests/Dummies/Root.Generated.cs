@@ -84,52 +84,49 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder))
-            {
-                IncludeJson(writer);
-                return builder.ToString();
-            }
+            IncludeJson(builder);
+            return builder.ToString();
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(StringWriter writer)
+        public void IncludeJson(StringBuilder writer)
         {
-            writer.Write('{');
+            writer.Append('{');
 
-            writer.Write("\"Number\":");
-            writer.Write(Number.ToString(CultureInfo.InvariantCulture));
+            writer.Append("\"Number\":");
+            writer.Append(Number.ToString(CultureInfo.InvariantCulture));
     
-            writer.Write(",\"Partials\":");
+            writer.Append(",\"Partials\":");
             if (Partials == null)
-                writer.Write("null");
+                writer.Append("null");
             else
             {
-                writer.Write('[');
+                writer.Append('[');
                 foreach (var value in Partials)
                 {
             		value.IncludeJson(writer);
-                    writer.Write(',');
+                    writer.Append(',');
                 }
-                writer.Write(']');
+                writer.Append(']');
             }
     
-            writer.Write(",\"Numbers\":");
+            writer.Append(",\"Numbers\":");
             if (Numbers == null)
-                writer.Write("null");
+                writer.Append("null");
             else
             {
-                writer.Write('[');
+                writer.Append('[');
                 foreach (var value in Numbers)
                 {
-            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
-                    writer.Write(',');
+            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Append(',');
                 }
-                writer.Write(']');
+                writer.Append(']');
             }
     
-            writer.Write('}');
+            writer.Append('}');
         }
 
         /// <summary>

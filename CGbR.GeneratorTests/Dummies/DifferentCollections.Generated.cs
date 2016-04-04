@@ -84,63 +84,60 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder))
-            {
-                IncludeJson(writer);
-                return builder.ToString();
-            }
+            IncludeJson(builder);
+            return builder.ToString();
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(StringWriter writer)
+        public void IncludeJson(StringBuilder writer)
         {
-            writer.Write('{');
+            writer.Append('{');
 
-            writer.Write("\"Integers\":");
+            writer.Append("\"Integers\":");
             if (Integers == null)
-                writer.Write("null");
+                writer.Append("null");
             else
             {
-                writer.Write('[');
+                writer.Append('[');
                 foreach (var value in Integers)
                 {
-            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
-                    writer.Write(',');
+            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Append(',');
                 }
-                writer.Write(']');
+                writer.Append(']');
             }
     
-            writer.Write(",\"Doubles\":");
+            writer.Append(",\"Doubles\":");
             if (Doubles == null)
-                writer.Write("null");
+                writer.Append("null");
             else
             {
-                writer.Write('[');
+                writer.Append('[');
                 foreach (var value in Doubles)
                 {
-            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
-                    writer.Write(',');
+            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Append(',');
                 }
-                writer.Write(']');
+                writer.Append(']');
             }
     
-            writer.Write(",\"Longs\":");
+            writer.Append(",\"Longs\":");
             if (Longs == null)
-                writer.Write("null");
+                writer.Append("null");
             else
             {
-                writer.Write('[');
+                writer.Append('[');
                 foreach (var value in Longs)
                 {
-            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
-                    writer.Write(',');
+            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Append(',');
                 }
-                writer.Write(']');
+                writer.Append(']');
             }
     
-            writer.Write('}');
+            writer.Append('}');
         }
 
         /// <summary>
