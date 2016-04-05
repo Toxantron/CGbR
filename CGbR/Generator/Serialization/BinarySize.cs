@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace CGbR
 {
@@ -59,6 +60,35 @@ namespace CGbR
                     sum += OfProperty(property);
             }
             return sum;
+        }
+
+        /// <summary>
+        /// Check if the binary size of a property is fixed or variable
+        /// </summary>
+        /// <param name="property">Property that shall be checked</param>
+        /// <returns>True if property is of variable size</returns>
+        public static bool IsVariable(PropertyModel property)
+        {
+            // All collection and strings are variable
+            if (property.IsCollection || property.ValueType == ValueType.String)
+                return true;
+
+            // Same applies for classes
+            if (property.ValueType == ValueType.Class)
+                return true;
+
+            // Everything else is static
+            return false;
+        }
+
+        /// <summary>
+        /// Check if the binary size of a class is fixed or variable
+        /// </summary>
+        /// <param name="model">Class that shall be checked</param>
+        /// <returns>True if class is of variable size</returns>
+        public static bool IsVariable(ClassModel model)
+        {
+            return model.Properties.Any(IsVariable);
         }
     }
 }

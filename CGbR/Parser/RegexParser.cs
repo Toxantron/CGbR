@@ -44,7 +44,7 @@ namespace CGbR
                     ParseClass(file, i, @namespace, out model);
                     continue;
                 }
-                    
+
 
                 // Look for attributes that mark payload fields
                 ParseProperty(file, i, model);
@@ -62,7 +62,7 @@ namespace CGbR
         /// <param name="model">Result model</param>
         /// <returns>True if parsing succeeded</returns>
         private void ParseClass(string[] file, int index, string @namespace, out ClassModel model)
-        { 
+        {
             model = null;
 
             // Try to match current line as class definition
@@ -118,6 +118,10 @@ namespace CGbR
                 CollectionType = arrayGroup.Success ? "Array" : collGroup.Value,
                 Dimensions = match.Groups["dimensions"].Captures.Count + 1
             };
+
+            // Add references
+            if (property.ValueType == ValueType.Class && model.References.All(r => r.Name != type))
+                model.References.Add(new ClassModel(type));
 
             // Add attributes by moving up the lines
             ParseAttributes(file, index, property);

@@ -24,10 +24,14 @@ to be used within VisualStudio as a custom tool for a single file and the others
 targets. Choice is made automatically based on the first argument. For files of type ".cs" and the others look for a 
 ".csproj" or ".sln" file in the given path.
 
+* **Project Mode**: Add ``Path\To\Exe\cgbr.exe $(ProjectDir)`` to your project and include the generated files after pressing rebuild.
+
 ## Serialization
 The perfect usage scenario and actually the origin of CGbR is serializing and deserializing objects. In the original
 project performance gains from generated static code over the original reflection API were somewhere between factor of
 100 and 700.
+Sample code can be found in the [Generator tests](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
+and you will also find [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) comparing the different serializers.
 
 ### Binary DataContract Serializer
 The binary DataContract serializer target generates code that maps single objects or object structure onto byte arrays.
@@ -83,151 +87,9 @@ The resulting array would look like this:
 ### JSON DataContract Serializer
 Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
 from Newtonsoft. While writing JSON is done directly it uses JsonReader classes to parse the string. It replaces the reflection 
-serializer classes with generated serialize and deserialize methods.
+serializer classes with generated serialize and deserialize methods. Please refer to the [sample code](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
+and [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) for further information.
 
-Class definition with DataMember as usual:
-```c#
-[DataContract]
-public partial class Root
-{
-    [DataMember]
-    public int Number { get; set; }
-
-    [DataMember]
-    public Partial[] Partials { get; set; }
-
-    [DataMember]
-    public IList<ulong> Numbers { get; set; }
-}
-
-[DataContract]
-public partial class Partial
-{
-    [DataMember]
-    public short Id { get; set; }
-}
-```
-
-Generates the following code:
-```c#
-// In Root.Generated.cs
-public void IncludeJson(StringBuilder writer)
-{
-    writer.Append('{');
-
-    writer.Append("\"Number\":");
-    writer.Append(Number.ToString(CultureInfo.InvariantCulture));
-    
-    writer.Append(",\"Partials\":");
-    if (Partials == null)
-        writer.Append("null");
-    else
-    {
-        writer.Append('[');
-        foreach (var value in Partials)
-        {
-            value.IncludeJson(writer);
-            writer.Append(',');
-        }
-        writer.Append(']');
-    }
-    
-    writer.Append(",\"Numbers\":");
-    if (Numbers == null)
-        writer.Append("null");
-    else
-    {
-        writer.Append('[');
-        foreach (var value in Numbers)
-        {
-            writer.Append(value.ToString(CultureInfo.InvariantCulture));
-            writer.Append(',');
-        }
-        writer.Append(']');
-    }
-    
-    writer.Append('}');
-}
-public Root FromJson(JsonReader reader)
-{
-    while (reader.Read())
-    {
-        // Break on EndObject
-        if (reader.TokenType == JsonToken.EndObject)
-            break;
-
-        // Only look for properties
-        if (reader.TokenType != JsonToken.PropertyName)
-            continue;
-
-        switch ((string) reader.Value)
-        {
-            case "Number":
-                reader.Read();
-                Number = Convert.ToInt32(reader.Value);
-                break;
-
-            case "Partials":
-                reader.Read(); // Read token where array should begin
-                if (reader.TokenType == JsonToken.Null)
-                    break;
-                var partials = new List<Partial>();
-                while (reader.Read() && reader.TokenType == JsonToken.StartObject)
-                    partials.Add(new Partial().FromJson(reader));
-                Partials = partials.ToArray();
-                break;
-
-            case "Numbers":
-                reader.Read(); // Read token where array should begin
-                if (reader.TokenType == JsonToken.Null)
-                    break;
-                var numbers = new List<ulong>();
-                while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                    numbers.Add(Convert.ToUInt64(reader.Value));
-                Numbers = numbers;
-                break;
-
-        }
-    }
-
-    return this;
-}
-
-// In Partial.Generated.cs
-public void IncludeJson(StringBuilder writer)
-{
-    writer.Append('{');
-
-    writer.Append("\"Id\":");
-    writer.Append(Id.ToString(CultureInfo.InvariantCulture));
-    
-    writer.Append('}');
-}
-public Partial FromJson(JsonReader reader)
-{
-    while (reader.Read())
-    {
-        // Break on EndObject
-        if (reader.TokenType == JsonToken.EndObject)
-            break;
-
-        // Only look for properties
-        if (reader.TokenType != JsonToken.PropertyName)
-            continue;
-
-        switch ((string) reader.Value)
-        {
-            case "Id":
-                reader.Read();
-                Id = Convert.ToInt16(reader.Value);
-                break;
-
-        }
-    }
-
-    return this;
-}
-```
 
 ## Dependency Injection
 CGbR can also be used to generate dependency injection.

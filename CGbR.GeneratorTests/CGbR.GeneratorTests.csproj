@@ -41,6 +41,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dummies\ByteProperties.cs" />
+    <Compile Include="Dummies\ByteProperties.Generated.cs" />
     <Compile Include="Dummies\DifferentCollections.cs" />
     <Compile Include="Dummies\DifferentCollections.Generated.cs" />
     <Compile Include="Dummies\Partial.cs" />
@@ -49,6 +51,7 @@
     <Compile Include="JsonSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dummies\Root.Generated.cs" />
+    <Compile Include="SizeCalculationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

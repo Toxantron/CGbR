@@ -233,7 +233,7 @@ namespace CGbR
 
     }
 
-    // And for the fun part collections
+    // And for the fun part collections but first with only one dimension
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
                                   .Where(p => p.IsCollection))
     {
@@ -292,6 +292,12 @@ namespace CGbR
             this.Write(");\r\n                        ");
             
             #line 129 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Dimensions > 1 ? "// TODO: " : string.Empty));
+            
+            #line default
+            #line hidden
+            
+            #line 129 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
@@ -309,7 +315,14 @@ namespace CGbR
             
             #line default
             #line hidden
-            this.Write(";\r\n                        break;\r\n\r\n");
+            this.Write(";");
+            
+            #line 129 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Dimensions > 1 ? "<-- Figure this out!" : string.Empty));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n                        break;\r\n\r\n");
             
             #line 132 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
 

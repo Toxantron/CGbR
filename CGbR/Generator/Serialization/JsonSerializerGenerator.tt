@@ -110,7 +110,7 @@
 <#
     }
 
-    // And for the fun part collections
+    // And for the fun part collections but first with only one dimension
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute))
                                   .Where(p => p.IsCollection))
     {
@@ -126,7 +126,7 @@
                         var <#= varName #> = new List<<#= property.ElementType #>>();
                         while (reader.Read() && reader.TokenType <#= condition #>)
                             <#= varName #>.Add(<#= Converter(property) #>);
-                        <#= property.Name #> = <#= varName #><#= GeneratorTools.ToCollection(property) #>;
+                        <#= property.Dimensions > 1 ? "// TODO: " : string.Empty #><#= property.Name #> = <#= varName #><#= GeneratorTools.ToCollection(property) #>;<#= property.Dimensions > 1 ? "<-- Figure this out!" : string.Empty #>
                         break;
 
 <#

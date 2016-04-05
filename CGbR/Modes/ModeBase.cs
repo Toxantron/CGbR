@@ -108,6 +108,11 @@ namespace CGbR
             /// Classes that were found
             /// </summary>
             public ClassModel ClassModel { get; set; }
+
+            /// <summary>
+            /// String override for better debugging
+            /// </summary>
+            public override string ToString() => $"{ClassModel.Namespace} at {Name}";
         }
     }
 }

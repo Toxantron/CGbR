@@ -16,6 +16,7 @@ namespace CGbR
         public string[] Usings { get; } = 
         {
             "System",
+            "System.Linq"
         };
 
         /// <seealso cref="ILocalGenerator"/>

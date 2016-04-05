@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace CGbR.Benchmarks
@@ -20,12 +21,23 @@ namespace CGbR.Benchmarks
     {
         #region BinarySerializer
 
+        private static Encoding _encoder = new UTF8Encoding();
+
         /// <summary>
         /// Binary size of the object
         /// </summary>
         public int Size
         {
-            get { return 4; }
+            get 
+            { 
+                var size = 18;
+                // Add size for collections and strings
+                size += Name.Length;
+                size += DecimalNumbers.Count * 8;
+                size += SomeNumbers.Count() * 8;
+  
+                return size;              
+            }
         }
 
         /// <summary>
@@ -44,21 +56,20 @@ namespace CGbR.Benchmarks
         /// </summary>
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
-            //Buffer.BlockCopy(BitConverter.GetBytes(Id), 0, bytes, index, 4);
-            index += 4;
-
-            //Buffer.BlockCopy(BitConverter.GetBytes(Price), 0, bytes, index, 4);
-            index += 4;
-
-            //Buffer.BlockCopy(BitConverter.GetBytes(Name), 0, bytes, index, 4);
-            index += 4;
-
-            //Buffer.BlockCopy(BitConverter.GetBytes(DecimalNumbers), 0, bytes, index, 4);
-            index += 4;
-
-            //Buffer.BlockCopy(BitConverter.GetBytes(SomeNumbers), 0, bytes, index, 4);
-            index += 4;
-
+            // Convert Id
+            // Convert Price
+            // Convert Name
+            // Two bytes length information for each dimension
+            Buffer.BlockCopy(BitConverter.GetBytes((short)Name.Length), 0, bytes, index, 2);
+            index += 2;
+            // Convert DecimalNumbers
+            // Two bytes length information for each dimension
+            Buffer.BlockCopy(BitConverter.GetBytes((short)DecimalNumbers.Count), 0, bytes, index, 2);
+            index += 2;
+            // Convert SomeNumbers
+            // Two bytes length information for each dimension
+            Buffer.BlockCopy(BitConverter.GetBytes((short)SomeNumbers.Count()), 0, bytes, index, 2);
+            index += 2;
             return bytes;
         }
 
@@ -76,9 +87,9 @@ namespace CGbR.Benchmarks
         /// </summary>
         public Partial FromBytes(byte[] bytes, ref int index)
         {
-
             return this;
         }
+
         
         #endregion
 

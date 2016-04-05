@@ -3,12 +3,12 @@
 namespace CGbR.GeneratorTests
 {
     [DataContract]
-    public partial class Partial
+    public partial class ByteProperties
     {
         [DataMember]
-        public short Id { get; set; }
+        public byte SingleByte { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public byte[] Bytes { get; set; }
     }
 }

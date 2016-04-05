@@ -17,7 +17,7 @@ namespace CGbR.GeneratorTests
     /// <summary>
     /// Auto generated class by CGbR project
     /// </summary>
-    public partial class Root
+    public partial class ByteProperties
     {
         #region BinarySerializer
 
@@ -30,10 +30,9 @@ namespace CGbR.GeneratorTests
         {
             get 
             { 
-                var size = 8;
+                var size = 3;
                 // Add size for collections and strings
-                size += Partials.Sum(entry => entry.Size);
-                size += Numbers.Count * 8;
+                size += Bytes.Length;
   
                 return size;              
             }
@@ -55,33 +54,22 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
-            // Convert Number
-            Buffer.BlockCopy(BitConverter.GetBytes(Number), 0, bytes, index, 4);;
-            index += 4;
-            // Convert Partials
+            // Convert SingleByte
+            bytes[index] = SingleByte;
+            index += 1;
+            // Convert Bytes
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Partials == null ? 0 : Partials.Length)), 0, bytes, index, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Bytes == null ? 0 : Bytes.Length)), 0, bytes, index, 2);
             index += 2;
-            foreach(var value in Partials ?? Enumerable.Empty<Partial>())
-            {
-            	value.ToBytes(bytes, ref index);
-            }
-            // Convert Numbers
-            // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Numbers == null ? 0 : Numbers.Count)), 0, bytes, index, 2);
-            index += 2;
-            foreach(var value in Numbers ?? Enumerable.Empty<ulong>())
-            {
-            	Buffer.BlockCopy(BitConverter.GetBytes(value), 0, bytes, index, 8);;
-            	index += 8;
-            }
+            Buffer.BlockCopy(Bytes, 0, bytes, index, Bytes.Length);;
+            index += Bytes.Length;
             return bytes;
         }
 
         /// <summary>
         /// Create object from byte array
         /// </summary>
-        public Root FromBytes(byte[] bytes)
+        public ByteProperties FromBytes(byte[] bytes)
         {
             var index = 0;            
             return FromBytes(bytes, ref index); 
@@ -90,7 +78,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from segment in byte array
         /// </summary>
-        public Root FromBytes(byte[] bytes, ref int index)
+        public ByteProperties FromBytes(byte[] bytes, ref int index)
         {
             return this;
         }
@@ -117,30 +105,16 @@ namespace CGbR.GeneratorTests
         {
             writer.Append('{');
 
-            writer.Append("\"Number\":");
-            writer.Append(Number.ToString(CultureInfo.InvariantCulture));
+            writer.Append("\"SingleByte\":");
+            writer.Append(SingleByte.ToString(CultureInfo.InvariantCulture));
     
-            writer.Append(",\"Partials\":");
-            if (Partials == null)
+            writer.Append(",\"Bytes\":");
+            if (Bytes == null)
                 writer.Append("null");
             else
             {
                 writer.Append('[');
-                foreach (var value in Partials)
-                {
-            		value.IncludeJson(writer);
-                    writer.Append(',');
-                }
-                writer.Append(']');
-            }
-    
-            writer.Append(",\"Numbers\":");
-            if (Numbers == null)
-                writer.Append("null");
-            else
-            {
-                writer.Append('[');
-                foreach (var value in Numbers)
+                foreach (var value in Bytes)
                 {
             		writer.Append(value.ToString(CultureInfo.InvariantCulture));
                     writer.Append(',');
@@ -154,7 +128,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Convert object to JSON string
         /// </summary>
-        public Root FromJson(string json)
+        public ByteProperties FromJson(string json)
         {
             using (var reader = new JsonTextReader(new StringReader(json)))
             {
@@ -165,7 +139,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public Root FromJson(JsonReader reader)
+        public ByteProperties FromJson(JsonReader reader)
         {
             while (reader.Read())
             {
@@ -179,29 +153,19 @@ namespace CGbR.GeneratorTests
 
                 switch ((string) reader.Value)
                 {
-                    case "Number":
+                    case "SingleByte":
                         reader.Read();
-                        Number = Convert.ToInt32(reader.Value);
+                        SingleByte = Convert.ToByte(reader.Value);
                         break;
 
-                    case "Partials":
+                    case "Bytes":
                         reader.Read(); // Read token where array should begin
                         if (reader.TokenType == JsonToken.Null)
                             break;
-                        var partials = new List<Partial>();
-                        while (reader.Read() && reader.TokenType == JsonToken.StartObject)
-                            partials.Add(new Partial().FromJson(reader));
-                        Partials = partials.ToArray();
-                        break;
-
-                    case "Numbers":
-                        reader.Read(); // Read token where array should begin
-                        if (reader.TokenType == JsonToken.Null)
-                            break;
-                        var numbers = new List<ulong>();
+                        var bytes = new List<byte>();
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            numbers.Add(Convert.ToUInt64(reader.Value));
-                        Numbers = numbers;
+                            bytes.Add(Convert.ToByte(reader.Value));
+                        Bytes = bytes.ToArray();
                         break;
 
                 }

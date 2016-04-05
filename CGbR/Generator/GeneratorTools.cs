@@ -77,5 +77,29 @@ namespace CGbR
                     return string.Empty;
             }
         }
+
+        /// <summary>
+        /// Code fragement that returns size of the collection
+        /// </summary>
+        /// <param name="property">Collection property</param>
+        /// <param name="dimension">Optional dimension parameter</param>
+        /// <returns>Code fragement</returns>
+        public static string CollectionSize(PropertyModel property, int dimension = -1)
+        {
+            if (property.ValueType == ValueType.String)
+                return "Length";
+
+            switch (property.CollectionType)
+            {
+                case "Array":
+                    return dimension < 0 ? "Length" : $"GetLength({dimension})";
+                case "ICollection":
+                case "IList":
+                case "List":
+                    return "Count";
+                default:
+                    return "Count()";
+            }
+        }
     }
 }

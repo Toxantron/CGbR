@@ -5,12 +5,49 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Model" type="CGbR.ClassModel" #>
+        private static Encoding _encoder = new UTF8Encoding();
+
         /// <summary>
         /// Binary size of the object
         /// </summary>
         public int Size
         {
-            get { return 4; }
+            get 
+            { 
+                var size = <#= BinarySize.OfClass(Model) #>;
+                // Add size for collections and strings
+<#
+    foreach (var property in Model.Properties.Where(BinarySize.IsVariable))
+    {
+        string entrySize;
+        switch (property.ValueType)
+        {
+			case ValueType.Class:
+				// Find class from other messages
+                var child = Model.References.First(r => r.Name == property.ElementType);
+				if(property.IsCollection)
+					entrySize = BinarySize.IsVariable(child) ? "Sum(entry => entry.Size)" : $"{GeneratorTools.CollectionSize(property)} * {BinarySize.OfClass(child)}";
+				else
+					entrySize = "Size";
+				break;
+			case ValueType.String:
+                // Flexible strings are only included as their length because the length field is part of the fixed size
+                entrySize = "Length";
+                break;
+            case ValueType.Byte:
+                entrySize = "Length";
+                break;
+			default:
+                entrySize = $"{GeneratorTools.CollectionSize(property)} * {BinarySize.OfProperty(property)}";
+				break;
+        }
+#>
+                size += <#= property.Name #>.<#= entrySize #>;
+<#
+    }
+ #>  
+                return size;              
+            }
         }
 
         /// <summary>
@@ -30,13 +67,12 @@
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
 <#
-    foreach (var model in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
 #>
-            //Buffer.BlockCopy(BitConverter.GetBytes(<#= model.Name #>), 0, bytes, index, 4);
-            index += 4;
-
+            // Convert <#= property.Name #>
 <#
+        ToBytes(property);          
     }
 #>
             return bytes;
@@ -56,6 +92,105 @@
         /// </summary>
         public <#= Model.Name #> FromBytes(byte[] bytes, ref int index)
         {
-
             return this;
         }
+<#+
+    //---------------------------------------------
+    // Generate a byte conversion for this field 
+    //--------------------------------------------
+    private void ToBytes(PropertyModel property)
+    {
+        // Indentation throughout the method
+        var indent = property.IsCollection && property.ValueType != ValueType.Byte ? "\t" : string.Empty;
+
+        // Optional length prefix
+        GenerateLengthPrefix(property);
+
+        CollectionWrapper(property, true);
+
+        // Now we add the real value
+        var target = property.IsCollection ? "value" : property.Name;
+        string conversion, increment;
+        switch (property.ValueType)
+        {
+            case ValueType.String:
+                target = $"({target} ?? string.Empty)";
+                conversion = BlockCopy(false, $"_encoder.GetBytes{target}", $"{target}.Length");
+                increment = $"{target}.Length";
+                break;
+            case ValueType.Class:
+                conversion = $"{target}.ToBytes(bytes, ref index)";
+                increment = null;
+                break;
+            case ValueType.Byte:
+                conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
+                increment = property.IsCollection ? $"{property.Name}.Length" : "1";
+                break;
+            default:
+                conversion = BlockCopy(true, target, BinarySize.OfProperty(property).ToString("D"));
+                increment = BinarySize.OfProperty(property).ToString("D");
+                break;
+        }
+#>
+            <#= indent #><#= conversion #>;
+<#+
+        if (!string.IsNullOrEmpty(increment))
+        {
+#>
+            <#= indent #>index += <#= increment #>;
+<#+
+        }
+
+        CollectionWrapper(property, false);
+    }
+
+    //-------------------------------------------------------
+    // Generate 2 byte length prefix for collection length 
+    //-------------------------------------------------------
+    private void GenerateLengthPrefix(PropertyModel property)
+    {
+        if (!property.IsCollection && property.ValueType != ValueType.String)
+            return;
+        
+#>
+            // Two bytes length information for each dimension
+<#+
+        for (var dimension = 0; dimension < property.Dimensions; dimension++)
+        {
+#>
+            <#= BlockCopy(true, $"(ushort)({property.Name} == null ? 0 : {property.Name}.{GeneratorTools.CollectionSize(property, property.Dimensions > 1 ? dimension : -1 )})", "2") #>
+            index += 2;
+<#+   
+        }  
+    }
+
+    //--------------------------------------
+    // Generate the Buffer.BlockCopy code
+    //--------------------------------------
+    private static string BlockCopy(bool bitConverter, string source, string length)
+    {
+        return $"Buffer.BlockCopy({(bitConverter ? "BitConverter.GetBytes(" : string.Empty)}{source}{(bitConverter ? ")" : string.Empty)}, 0, bytes, index, {length});";
+    }
+
+
+    // Code fragments wrapping a collection
+    private void CollectionWrapper(PropertyModel property, bool start)
+    {
+        if (!property.IsCollection || property.ValueType == ValueType.Byte)
+            return;
+
+        if (start)
+        {
+#>
+            foreach(var value in <#= property.Name #> ?? Enumerable.Empty<<#= property.ElementType #>>())
+            {
+<#+
+        }
+        else
+        {
+#>
+            }
+<#+
+        }
+    }
+#>
