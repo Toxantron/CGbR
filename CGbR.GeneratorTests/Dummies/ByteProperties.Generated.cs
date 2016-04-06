@@ -94,35 +94,38 @@ namespace CGbR.GeneratorTests
         public string ToJson()
         {
             var builder = new StringBuilder();
-            IncludeJson(builder);
-            return builder.ToString();
+            using(var writer = new StringWriter(builder))
+            {
+                IncludeJson(writer);
+                return builder.ToString();
+            }
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(StringBuilder writer)
+        public void IncludeJson(TextWriter writer)
         {
-            writer.Append('{');
+            writer.Write('{');
 
-            writer.Append("\"SingleByte\":");
-            writer.Append(SingleByte.ToString(CultureInfo.InvariantCulture));
+            writer.Write("\"SingleByte\":");
+            writer.Write(SingleByte.ToString(CultureInfo.InvariantCulture));
     
-            writer.Append(",\"Bytes\":");
+            writer.Write(",\"Bytes\":");
             if (Bytes == null)
-                writer.Append("null");
+                writer.Write("null");
             else
             {
-                writer.Append('[');
+                writer.Write('[');
                 foreach (var value in Bytes)
                 {
-            		writer.Append(value.ToString(CultureInfo.InvariantCulture));
-                    writer.Append(',');
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
                 }
-                writer.Append(']');
+                writer.Write(']');
             }
     
-            writer.Append('}');
+            writer.Write('}');
         }
 
         /// <summary>

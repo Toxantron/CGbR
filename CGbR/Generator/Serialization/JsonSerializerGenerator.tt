@@ -11,16 +11,19 @@
         public string ToJson()
         {
             var builder = new StringBuilder();
-            IncludeJson(builder);
-            return builder.ToString();
+            using(var writer = new StringWriter(builder))
+            {
+                IncludeJson(writer);
+                return builder.ToString();
+            }
         }
 
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public void IncludeJson(StringBuilder writer)
+        public void IncludeJson(TextWriter writer)
         {
-            writer.Append('{');
+            writer.Write('{');
 
 <#
     var first = true;
@@ -28,16 +31,16 @@
     {
         
 #>
-            writer.Append("<#= first ? string.Empty : "," #>\"<#= property.Name #>\":");
+            writer.Write("<#= first ? string.Empty : "," #>\"<#= property.Name #>\":");
 <#
         if (property.IsCollection)
         {
 #>
             if (<#= property.Name #> == null)
-                writer.Append("null");
+                writer.Write("null");
             else
             {
-                writer.Append('[');
+                writer.Write('[');
                 foreach (var value in <#= property.Name #>)
                 {
 <#
@@ -48,14 +51,14 @@
         else if(property.ValueType != ValueType.Class)
             target = $"{target}.ToString(CultureInfo.InvariantCulture)";
 #>
-            <#= property.IsCollection ? "\t\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.Append({target})" #>;
+            <#= property.IsCollection ? "\t\t" : string.Empty #><#= property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.Write({target})" #>;
 <#
         if (property.IsCollection)
         {
 #>
-                    writer.Append(',');
+                    writer.Write(',');
                 }
-                writer.Append(']');
+                writer.Write(']');
             }
 <#            
         }
@@ -65,7 +68,7 @@
         first = false;
     }
 #>
-            writer.Append('}');
+            writer.Write('}');
         }
 
         /// <summary>
