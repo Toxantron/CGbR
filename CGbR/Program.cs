@@ -29,7 +29,7 @@ namespace CGbR
                 return;
 
             // Initialize local strategies
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
             var generators = GeneratorFactory.ResolveAll();
 
             // Prepare mode
