@@ -72,17 +72,17 @@ public class Partial
 
 The resulting array would look like this:
 
-| Position | Property    |
-| -------- | ----------- |
-| 0 - 3    | Id     |
-| 4 - 5    | Number |
-| 6 - 7    | Partials.Length |
-| 8        | Partial[0].Index |
-| 9 - 16   | Partial[0].BigValue |
-| 17       | Partial[1].Index |
-| 18 - 25  | Partial[1].BigValue |
-| ...      | ... |
-| 8 + n*9  | Price |
+| Position | Property    | Length |
+| -------- | ----------- |--------|
+| 0 - 3    | Id     | 4 |
+| 4 - 5    | Number | 2 |
+| 6 - 7    | Partials.Length | 2 |
+| 8        | Partial[0].Index | 1 |
+| 9 - 16   | Partial[0].BigValue | 8 |
+| 17       | Partial[1].Index | 1 |
+| 18 - 25  | Partial[1].BigValue | 8 |
+| ...      | ... | |
+| 8 + n*9  | Price | 8 |
 
 ### JSON DataContract Serializer
 Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
