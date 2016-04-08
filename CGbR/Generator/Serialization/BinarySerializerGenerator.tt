@@ -2,6 +2,7 @@
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Runtime.Serialization" #>
+<#@ import namespace="System.Security.Cryptography.X509Certificates" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Model" type="CGbR.ClassModel" #>
@@ -66,6 +67,9 @@
         /// </summary>
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
+            if (index + Size > bytes.Length)
+                throw new ArgumentOutOfRangeException("");
+
 <#
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
@@ -94,6 +98,36 @@
         {
             return this;
         }
+
+<#
+        // -------------------------------------------------------------------
+        // Generate fast inline methods to write primitive types the the array
+        // -------------------------------------------------------------------
+
+    foreach (ValueType value in Enum.GetValues(typeof(ValueType)))
+    {
+        // Only those we actually need or ushort for collections
+        if ((value != ValueType.UInt16 || Model.Properties.All(p => !p.IsCollection))
+         && Model.Properties.All(p => p.ValueType != value))
+            continue;
+
+        var name = value.ToString("G");
+#>
+        /// <summary>
+        /// Writer property of type <#= name #> to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(<#= value.ToString("F") #> value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((<#= value.ToString("G") #>*)(b + index)) = value;
+        }
+<#
+        // Only for primitive reference types
+        if (value >= ValueType.UInt64)
+            break;
+
+    }
+#>
 <#+
     //---------------------------------------------
     // Generate a byte conversion for this field 
@@ -121,6 +155,10 @@
             case ValueType.Class:
                 conversion = $"{target}.ToBytes(bytes, ref index)";
                 increment = null;
+                break;
+            case ValueType.Boolean:
+                conversion = $"bytes[index] = {target} ? (byte)1 : (byte)0";
+                increment = "1";
                 break;
             case ValueType.Byte:
                 conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
@@ -182,9 +220,25 @@
         if (start)
         {
 #>
-            foreach(var value in <#= property.Name #> ?? Enumerable.Empty<<#= property.ElementType #>>())
+            // Skip null collections
+            if (<#= property.Name #> != null)
+<#+
+            if (GeneratorTools.SupportsForLoop(property))
+            {
+#>
+            for(var i = 0; index < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property) #>; index++)
+            {
+                var value = <#= property.Name #>[i];
+<#+
+            }
+            else
+            {
+#>
+            foreach(var value in <#= property.Name #>)
             {
 <#+
+
+            }
         }
         else
         {

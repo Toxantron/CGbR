@@ -101,5 +101,23 @@ namespace CGbR
                     return "Count()";
             }
         }
+
+        /// <summary>
+        /// Check of this collection supports for-loop and indexed acces
+        /// </summary>
+        /// <param name="property">Collection that should be checked</param>
+        /// <returns>True if for loop is supported.Otherwise false</returns>
+        public static bool SupportsForLoop(PropertyModel property)
+        {
+            switch (property.CollectionType)
+            {
+                case "List":
+                case "IList":
+                case "ICollection":
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

@@ -15,7 +15,15 @@ namespace CGbR
         /// <returns>Size of the propety in bytes</returns>
         public static int OfProperty(PropertyModel model)
         {
-            switch (model.ValueType)
+            return OfType(model.ValueType);
+        }
+
+        /// <summary>
+        /// Get the binary size of a given value type
+        /// </summary>
+        public static int OfType(ValueType type)
+        {
+            switch (type)
             {
                 case ValueType.Char:
                 case ValueType.Boolean:
