@@ -57,12 +57,13 @@ namespace CGbR.GeneratorTests
         {
             if (index + Size > bytes.Length)
                 throw new ArgumentOutOfRangeException("");
+
             // Convert Number
-            Buffer.BlockCopy(BitConverter.GetBytes(Number), 0, bytes, index, 4);;
+            Include(Number, bytes, index);;
             index += 4;
             // Convert Partials
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Partials == null ? 0 : Partials.Length)), 0, bytes, index, 2);
+            Include((ushort)(Partials == null ? 0 : Partials.Length), bytes, index);
             index += 2;
             // Skip null collections
             if (Partials != null)
@@ -72,14 +73,14 @@ namespace CGbR.GeneratorTests
             }
             // Convert Numbers
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Numbers == null ? 0 : Numbers.Count)), 0, bytes, index, 2);
+            Include((ushort)(Numbers == null ? 0 : Numbers.Count), bytes, index);
             index += 2;
             // Skip null collections
             if (Numbers != null)
             for(var i = 0; index < Numbers.Count; index++)
             {
                 var value = Numbers[i];
-            	Buffer.BlockCopy(BitConverter.GetBytes(value), 0, bytes, index, 8);;
+            	Include(value, bytes, index);;
             	index += 8;
             }
             return bytes;
@@ -103,6 +104,14 @@ namespace CGbR.GeneratorTests
         }
 
         /// <summary>
+        /// Writer property of type Int16 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Int16 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Int16*)(b + index)) = value;
+        }
+        /// <summary>
         /// Writer property of type UInt16 to bytes by using pointer opertations
         /// </summary>
         private static unsafe void Include(UInt16 value, byte[] bytes, int index)
@@ -117,6 +126,38 @@ namespace CGbR.GeneratorTests
         {
             fixed(byte* b = bytes)
                 *((Int32*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type UInt32 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(UInt32 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((UInt32*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Single to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Single value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Single*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Double to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Double value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Double*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Int64 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Int64 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Int64*)(b + index)) = value;
         }
         /// <summary>
         /// Writer property of type UInt64 to bytes by using pointer opertations

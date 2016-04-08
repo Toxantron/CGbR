@@ -106,9 +106,8 @@
 
     foreach (ValueType value in Enum.GetValues(typeof(ValueType)))
     {
-        // Only those we actually need or ushort for collections
-        if ((value != ValueType.UInt16 || Model.Properties.All(p => !p.IsCollection))
-         && Model.Properties.All(p => p.ValueType != value))
+        // Only primitve types with at least 2 bytes
+        if (value < ValueType.Int16 || value > ValueType.UInt64)
             continue;
 
         var name = value.ToString("G");
@@ -122,10 +121,6 @@
                 *((<#= value.ToString("G") #>*)(b + index)) = value;
         }
 <#
-        // Only for primitive reference types
-        if (value >= ValueType.UInt64)
-            break;
-
     }
 #>
 <#+
@@ -148,8 +143,7 @@
         switch (property.ValueType)
         {
             case ValueType.String:
-                target = $"({target} ?? string.Empty)";
-                conversion = BlockCopy(false, $"_encoder.GetBytes{target}", $"{target}.Length");
+                conversion = $"if ({target} != null)  " + BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
                 increment = $"{target}.Length";
                 break;
             case ValueType.Class:
@@ -161,7 +155,7 @@
                 increment = "1";
                 break;
             case ValueType.Byte:
-                conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
+                conversion = property.IsCollection ? $"if ({property.Name} != null) " + BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
                 increment = property.IsCollection ? $"{property.Name}.Length" : "1";
                 break;
             default:
@@ -207,7 +201,9 @@
     //--------------------------------------
     private static string BlockCopy(bool bitConverter, string source, string length)
     {
-        return $"Buffer.BlockCopy({(bitConverter ? "BitConverter.GetBytes(" : string.Empty)}{source}{(bitConverter ? ")" : string.Empty)}, 0, bytes, index, {length});";
+        return bitConverter 
+            ? $"Include({source}, bytes, index);"
+            : $"Buffer.BlockCopy({source}, 0, bytes, index, {length});";
     }
 
 

@@ -58,38 +58,39 @@ namespace CGbR.GeneratorTests
         {
             if (index + Size > bytes.Length)
                 throw new ArgumentOutOfRangeException("");
+
             // Convert Integers
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Integers == null ? 0 : Integers.Count())), 0, bytes, index, 2);
+            Include((ushort)(Integers == null ? 0 : Integers.Count()), bytes, index);
             index += 2;
             // Skip null collections
             if (Integers != null)
             foreach(var value in Integers)
             {
-            	Buffer.BlockCopy(BitConverter.GetBytes(value), 0, bytes, index, 4);;
+            	Include(value, bytes, index);;
             	index += 4;
             }
             // Convert Doubles
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Doubles == null ? 0 : Doubles.Count)), 0, bytes, index, 2);
+            Include((ushort)(Doubles == null ? 0 : Doubles.Count), bytes, index);
             index += 2;
             // Skip null collections
             if (Doubles != null)
             for(var i = 0; index < Doubles.Count; index++)
             {
                 var value = Doubles[i];
-            	Buffer.BlockCopy(BitConverter.GetBytes(value), 0, bytes, index, 8);;
+            	Include(value, bytes, index);;
             	index += 8;
             }
             // Convert Longs
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Longs == null ? 0 : Longs.Length)), 0, bytes, index, 2);
+            Include((ushort)(Longs == null ? 0 : Longs.Length), bytes, index);
             index += 2;
             // Skip null collections
             if (Longs != null)
             foreach(var value in Longs)
             {
-            	Buffer.BlockCopy(BitConverter.GetBytes(value), 0, bytes, index, 8);;
+            	Include(value, bytes, index);;
             	index += 8;
             }
             return bytes;
@@ -113,6 +114,14 @@ namespace CGbR.GeneratorTests
         }
 
         /// <summary>
+        /// Writer property of type Int16 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Int16 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Int16*)(b + index)) = value;
+        }
+        /// <summary>
         /// Writer property of type UInt16 to bytes by using pointer opertations
         /// </summary>
         private static unsafe void Include(UInt16 value, byte[] bytes, int index)
@@ -129,6 +138,22 @@ namespace CGbR.GeneratorTests
                 *((Int32*)(b + index)) = value;
         }
         /// <summary>
+        /// Writer property of type UInt32 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(UInt32 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((UInt32*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Single to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Single value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Single*)(b + index)) = value;
+        }
+        /// <summary>
         /// Writer property of type Double to bytes by using pointer opertations
         /// </summary>
         private static unsafe void Include(Double value, byte[] bytes, int index)
@@ -143,6 +168,14 @@ namespace CGbR.GeneratorTests
         {
             fixed(byte* b = bytes)
                 *((Int64*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type UInt64 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(UInt64 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((UInt64*)(b + index)) = value;
         }
 
         

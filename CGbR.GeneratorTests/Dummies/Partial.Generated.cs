@@ -56,15 +56,16 @@ namespace CGbR.GeneratorTests
         {
             if (index + Size > bytes.Length)
                 throw new ArgumentOutOfRangeException("");
+
             // Convert Id
-            Buffer.BlockCopy(BitConverter.GetBytes(Id), 0, bytes, index, 2);;
+            Include(Id, bytes, index);;
             index += 2;
             // Convert Name
             // Two bytes length information for each dimension
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)(Name == null ? 0 : Name.Length)), 0, bytes, index, 2);
+            Include((ushort)(Name == null ? 0 : Name.Length), bytes, index);
             index += 2;
-            Buffer.BlockCopy(_encoder.GetBytes(Name ?? string.Empty), 0, bytes, index, (Name ?? string.Empty).Length);;
-            index += (Name ?? string.Empty).Length;
+            if (Name != null)  Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);;
+            index += Name.Length;
             return bytes;
         }
 
@@ -94,12 +95,60 @@ namespace CGbR.GeneratorTests
                 *((Int16*)(b + index)) = value;
         }
         /// <summary>
-        /// Writer property of type String to bytes by using pointer opertations
+        /// Writer property of type UInt16 to bytes by using pointer opertations
         /// </summary>
-        private static unsafe void Include(String value, byte[] bytes, int index)
+        private static unsafe void Include(UInt16 value, byte[] bytes, int index)
         {
             fixed(byte* b = bytes)
-                *((String*)(b + index)) = value;
+                *((UInt16*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Int32 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Int32 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Int32*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type UInt32 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(UInt32 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((UInt32*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Single to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Single value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Single*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Double to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Double value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Double*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type Int64 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(Int64 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((Int64*)(b + index)) = value;
+        }
+        /// <summary>
+        /// Writer property of type UInt64 to bytes by using pointer opertations
+        /// </summary>
+        private static unsafe void Include(UInt64 value, byte[] bytes, int index)
+        {
+            fixed(byte* b = bytes)
+                *((UInt64*)(b + index)) = value;
         }
 
         
