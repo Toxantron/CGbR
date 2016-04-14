@@ -16,7 +16,8 @@ class. This makes it the perfect choice for performance critical applications, l
   * [Binary](#binary-datacontract-serializer)
   * [JSON](#json-datacontract-serializer)
 3. [Dependency Injection](#dependency-injection)
-4. [Developers](#developers)
+4. [Generated UI](#generated-ui)
+5. [Developers](#developers)
 
 ## Modes of operations
 The tool supports 3 modes of operation. It can run on a single file or a project/solution directory. The first one is meant
@@ -93,6 +94,9 @@ and [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) 
 
 ## Dependency Injection
 CGbR can also be used to generate dependency injection.
+
+## Generated UI
+CGbR could also be used to generate XAML or Forms based on class definitions.
 
 ## Developers
 Detailed guides on how to write custom generators follow soon.
