@@ -76,7 +76,6 @@ namespace CGbR.Benchmarks
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(DecimalNumbers == null ? 0 : DecimalNumbers.Count), bytes, index);
             index += 2;
-            // Skip null collections
             if (DecimalNumbers != null)
             for(var i = 0; i < DecimalNumbers.Count; i++)
             {
@@ -88,7 +87,6 @@ namespace CGbR.Benchmarks
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(SomeNumbers == null ? 0 : SomeNumbers.Count()), bytes, index);
             index += 2;
-            // Skip null collections
             if (SomeNumbers != null)
             foreach(var value in SomeNumbers)
             {

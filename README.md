@@ -13,6 +13,7 @@ class. This makes it the perfect choice for performance critical applications, l
 
 1. [Modes of operation](#modes-of-operation)
 2. [Serialization](#serialization)
+  * [Benchmarks](#benchmarks)
   * [Binary](#binary-datacontract-serializer)
   * [JSON](#json-datacontract-serializer)
 3. [Dependency Injection](#dependency-injection)
@@ -33,6 +34,10 @@ project performance gains from generated static code over the original reflectio
 100 and 700.
 Sample code can be found in the [Generator tests](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
 and you will also find [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) comparing the different serializers.
+
+### Benchmarks
+
+
 
 ### Binary DataContract Serializer
 The binary DataContract serializer target generates code that maps single objects or object structure onto byte arrays.

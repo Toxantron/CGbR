@@ -14,7 +14,12 @@ namespace CGbR.Benchmarks
         {
             var testObject = GenerateBigObject();
 
-            BenchmarkJson(testObject);
+            // Run the JSON benchmark
+            var sizeA = BenchmarkJson(testObject);
+            var sizeB = BenchmarkBinary(testObject);
+
+            if(sizeA == sizeB)
+                Console.WriteLine("Cycle successful!");
 
             Console.ReadLine();
         }
@@ -60,7 +65,7 @@ namespace CGbR.Benchmarks
             return root;
         }
 
-        private static void BenchmarkJson(Root testObject)
+        private static int BenchmarkJson(Root testObject)
         {
             // Run once for the JIT
             var json = JsonConvert.SerializeObject(testObject);
@@ -69,6 +74,8 @@ namespace CGbR.Benchmarks
             deserialized = new Root().FromJson(json);
             
             // Test size
+            Console.WriteLine("JSON Benchmark:");
+            Console.WriteLine("----------------------");
             Console.WriteLine("String size: {0}", json.Length);
 
             var watch = new Stopwatch();
@@ -96,7 +103,41 @@ namespace CGbR.Benchmarks
             watch.Stop();
             Console.WriteLine("Deserialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
 
-            Console.WriteLine("{0}", deserialized.PartialsArray.Length);
+            Console.WriteLine();
+            Console.WriteLine();
+
+            return deserialized.PartialsArray.Length;
+        }
+
+        /// <summary>
+        /// Benmark the speed of the binary serializer
+        /// </summary>
+        /// <param name="testObject"></param>
+        private static int BenchmarkBinary(Root testObject)
+        {
+            // Run once for the JIT
+            var bytes = testObject.ToBytes();
+            var deserialized = new Root().FromBytes(bytes);
+
+            // Run benchmark
+            Console.WriteLine("Binary benchmark:");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("Binary size: {0}", bytes.Length);
+
+            var watch = new Stopwatch();
+            // Serialize to bytes
+            watch.Start();
+            bytes = deserialized.ToBytes();
+            watch.Stop();
+            Console.WriteLine("Serialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
+
+            // Serialize from bytes
+            watch.Restart();
+            deserialized = deserialized.FromBytes(bytes);
+            watch.Stop();
+            Console.WriteLine("Deserialize: {0:F3}ms", watch.Elapsed.TotalMilliseconds);
+
+            return deserialized.PartialsArray.Length;
         }
     }
 }

@@ -76,7 +76,6 @@ namespace CGbR.Benchmarks
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(PartialsList == null ? 0 : PartialsList.Count), bytes, index);
             index += 2;
-            // Skip null collections
             if (PartialsList != null)
             for(var i = 0; i < PartialsList.Count; i++)
             {
@@ -87,7 +86,6 @@ namespace CGbR.Benchmarks
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(PartialsArray == null ? 0 : PartialsArray.Length), bytes, index);
             index += 2;
-            // Skip null collections
             if (PartialsArray != null)
             for(var i = 0; i < PartialsArray.GetLength(0); i++)
             {

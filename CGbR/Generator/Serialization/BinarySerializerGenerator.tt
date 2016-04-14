@@ -202,7 +202,6 @@
         if (start)
         {
 #>
-            // Skip null collections
             if (<#= property.Name #> != null)
 <#+
             if (GeneratorTools.SupportsForLoop(property))
