@@ -65,7 +65,7 @@ namespace CGbR.GeneratorTests
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(Name == null ? 0 : Name.Length), bytes, index);
             index += 2;
-            if (Name != null)  Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);;
+            if (Name != null) Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);;
             index += Name.Length;
             return bytes;
         }
@@ -84,6 +84,15 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public Partial FromBytes(byte[] bytes, ref int index)
         {
+            // Read Id
+            Id = BitConverter.ToInt16(bytes, index);
+            index += 2;
+            // Read Name
+            var nameLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            Name = _encoder.GetString(bytes, index, nameLength);
+            index += nameLength;
+
             return this;
         }
 

@@ -70,7 +70,7 @@ namespace CGbR.Benchmarks
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(Name == null ? 0 : Name.Length), bytes, index);
             index += 2;
-            if (Name != null)  Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);;
+            if (Name != null) Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);;
             index += Name.Length;
             // Convert DecimalNumbers
             // Two bytes length information for each dimension
@@ -112,6 +112,40 @@ namespace CGbR.Benchmarks
         /// </summary>
         public Partial FromBytes(byte[] bytes, ref int index)
         {
+            // Read Id
+            Id = BitConverter.ToInt64(bytes, index);
+            index += 8;
+            // Read Price
+            Price = BitConverter.ToSingle(bytes, index);
+            index += 4;
+            // Read Name
+            var nameLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            Name = _encoder.GetString(bytes, index, nameLength);
+            index += nameLength;
+            // Read DecimalNumbers
+            var decimalnumbersLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempDecimalNumbers = new List<double>(decimalnumbersLength);
+            for (var i = 0; i < decimalnumbersLength; i++)
+            {
+            	var value = BitConverter.ToDouble(bytes, index);
+            	index += 8;
+                tempDecimalNumbers.Add(value);
+            }
+            DecimalNumbers = tempDecimalNumbers;
+            // Read SomeNumbers
+            var somenumbersLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempSomeNumbers = new List<ulong>(somenumbersLength);
+            for (var i = 0; i < somenumbersLength; i++)
+            {
+            	var value = BitConverter.ToUInt64(bytes, index);
+            	index += 8;
+                tempSomeNumbers.Add(value);
+            }
+            SomeNumbers = tempSomeNumbers;
+
             return this;
         }
 

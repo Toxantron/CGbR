@@ -84,6 +84,21 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public ByteProperties FromBytes(byte[] bytes, ref int index)
         {
+            // Read SingleByte
+            SingleByte = bytes[index];
+            index += 1;
+            // Read Bytes
+            var bytesLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempBytes = new byte[bytesLength];
+            for (var i = 0; i < bytesLength; i++)
+            {
+            	var value = bytes[index];
+            	index += 1;
+                tempBytes[i] = value;
+            }
+            Bytes = tempBytes;
+
             return this;
         }
 

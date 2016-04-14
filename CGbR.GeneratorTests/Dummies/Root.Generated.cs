@@ -102,6 +102,32 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public Root FromBytes(byte[] bytes, ref int index)
         {
+            // Read Number
+            Number = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            // Read Partials
+            var partialsLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempPartials = new Partial[partialsLength];
+            for (var i = 0; i < partialsLength; i++)
+            {
+            	var value = new Partial().FromBytes(bytes, ref index);
+            	index += 0;
+                tempPartials[i] = value;
+            }
+            Partials = tempPartials;
+            // Read Numbers
+            var numbersLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempNumbers = new List<ulong>(numbersLength);
+            for (var i = 0; i < numbersLength; i++)
+            {
+            	var value = BitConverter.ToUInt64(bytes, index);
+            	index += 8;
+                tempNumbers.Add(value);
+            }
+            Numbers = tempNumbers;
+
             return this;
         }
 

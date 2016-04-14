@@ -128,6 +128,54 @@ namespace CGbR.GeneratorTests
         /// </summary>
         public DifferentCollections FromBytes(byte[] bytes, ref int index)
         {
+            // Read Integers
+            var integersLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempIntegers = new List<int>(integersLength);
+            for (var i = 0; i < integersLength; i++)
+            {
+            	var value = BitConverter.ToInt32(bytes, index);
+            	index += 4;
+                tempIntegers.Add(value);
+            }
+            Integers = tempIntegers;
+            // Read Doubles
+            var doublesLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempDoubles = new List<double>(doublesLength);
+            for (var i = 0; i < doublesLength; i++)
+            {
+            	var value = BitConverter.ToDouble(bytes, index);
+            	index += 8;
+                tempDoubles.Add(value);
+            }
+            Doubles = tempDoubles;
+            // Read Longs
+            var longsLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempLongs = new long[longsLength];
+            for (var i = 0; i < longsLength; i++)
+            {
+            	var value = BitConverter.ToInt64(bytes, index);
+            	index += 8;
+                tempLongs[i] = value;
+            }
+            Longs = tempLongs;
+            // Read MultiDimension
+            var multidimensionLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var multidimensionWidth = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempMultiDimension = new uint[multidimensionLength,multidimensionWidth];
+            for (var i = 0; i < multidimensionLength; i++)
+            for (var j = 0; j < multidimensionWidth; j++)
+            {
+            	var value = BitConverter.ToUInt32(bytes, index);
+            	index += 4;
+                tempMultiDimension[i,j] = value;
+            }
+            MultiDimension = tempMultiDimension;
+
             return this;
         }
 

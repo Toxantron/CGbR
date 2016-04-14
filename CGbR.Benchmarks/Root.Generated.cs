@@ -70,7 +70,7 @@ namespace CGbR.Benchmarks
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(Description == null ? 0 : Description.Length), bytes, index);
             index += 2;
-            if (Description != null)  Buffer.BlockCopy(_encoder.GetBytes(Description), 0, bytes, index, Description.Length);;
+            if (Description != null) Buffer.BlockCopy(_encoder.GetBytes(Description), 0, bytes, index, Description.Length);;
             index += Description.Length;
             // Convert PartialsList
             // Two bytes length information for each dimension
@@ -89,8 +89,9 @@ namespace CGbR.Benchmarks
             index += 2;
             // Skip null collections
             if (PartialsArray != null)
-            foreach(var value in PartialsArray)
+            for(var i = 0; i < PartialsArray.GetLength(0); i++)
             {
+                var value = PartialsArray[i];
             	value.ToBytes(bytes, ref index);
             }
             // Convert SmallNumber
@@ -113,6 +114,43 @@ namespace CGbR.Benchmarks
         /// </summary>
         public Root FromBytes(byte[] bytes, ref int index)
         {
+            // Read Number
+            Number = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            // Read Price
+            Price = BitConverter.ToDouble(bytes, index);
+            index += 8;
+            // Read Description
+            var descriptionLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            Description = _encoder.GetString(bytes, index, descriptionLength);
+            index += descriptionLength;
+            // Read PartialsList
+            var partialslistLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempPartialsList = new List<Partial>(partialslistLength);
+            for (var i = 0; i < partialslistLength; i++)
+            {
+            	var value = new Partial().FromBytes(bytes, ref index);
+            	index += 0;
+                tempPartialsList.Add(value);
+            }
+            PartialsList = tempPartialsList;
+            // Read PartialsArray
+            var partialsarrayLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempPartialsArray = new Partial[partialsarrayLength];
+            for (var i = 0; i < partialsarrayLength; i++)
+            {
+            	var value = new Partial().FromBytes(bytes, ref index);
+            	index += 0;
+                tempPartialsArray[i] = value;
+            }
+            PartialsArray = tempPartialsArray;
+            // Read SmallNumber
+            SmallNumber = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+
             return this;
         }
 

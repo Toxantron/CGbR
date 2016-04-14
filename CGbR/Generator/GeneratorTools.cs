@@ -51,14 +51,14 @@ namespace CGbR
         /// <param name="property">Property to generate</param>
         /// <param name="length">Optional length of the collection</param>
         /// <returns>Collection construtor string</returns>
-        public static string CollectionConstructor(PropertyModel property, int length = 0)
+        public static string CollectionConstructor(PropertyModel property, string length = "0")
         {
             switch (property.CollectionType)
             {
                 case "Array":
                     return $"new {property.ElementType}[{length}]";
                 default:
-                    return $"new List<{property.ElementType}>()";
+                    return $"new List<{property.ElementType}>({length})";
             }
         }
 

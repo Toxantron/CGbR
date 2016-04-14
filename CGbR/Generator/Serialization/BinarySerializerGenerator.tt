@@ -96,6 +96,16 @@
         /// </summary>
         public <#= Model.Name #> FromBytes(byte[] bytes, ref int index)
         {
+<#
+    foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
+    {
+#>
+            // Read <#= property.Name #>
+<#
+        FromBytes(property);
+    }
+#>
+
             return this;
         }
 <#+
@@ -118,7 +128,7 @@
         switch (property.ValueType)
         {
             case ValueType.String:
-                conversion = $"if ({target} != null)  " + BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
+                conversion = $"if ({target} != null) " + BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
                 increment = $"{target}.Length";
                 break;
             case ValueType.Class:
@@ -181,8 +191,9 @@
             : $"Buffer.BlockCopy({source}, 0, bytes, index, {length});";
     }
 
-
+    //--------------------------------------
     // Code fragments wrapping a collection
+    //--------------------------------------
     private void CollectionWrapper(PropertyModel property, bool start)
     {
         if (!property.IsCollection || property.ValueType == ValueType.Byte)
@@ -224,5 +235,123 @@
             }
 <#+
         }
+    }
+
+    //--------------------------------------
+    // Read property from the byte stream
+    //--------------------------------------
+    private void FromBytes(PropertyModel property)
+    {
+        var target = property.IsCollection ? "var value" : property.Name;
+	    var indent = property.IsCollection ? "\t" : string.Empty;
+
+	    var increment = "0";
+	    string conversion;
+	    switch (property.ValueType)
+	    {
+	        case ValueType.Class:
+	            conversion = $"new {property.ElementType}().FromBytes(bytes, ref index)";
+	            break;
+	        case ValueType.Byte:
+	            conversion = "bytes[index]";
+	            increment = "1";
+	            break;
+		    case ValueType.String:
+	            conversion = $"_encoder.GetString(bytes, index, {FieldLength(property, 0)})";
+	            increment = FieldLength(property, 0);
+			    break;
+	        default:
+			    conversion = $"BitConverter.To{property.ValueType.ToString("G")}(bytes, index)";
+	            increment = BinarySize.OfProperty(property).ToString("D");
+	            break;
+	    }
+
+        GenerateReadLoop(property, true);
+
+#>
+            <#= indent #><#= target #> = <#= conversion #>;
+            <#= indent #>index += <#= increment #>;
+<#+        
+        GenerateReadLoop(property, false);
+        
+    }
+
+    //----------------------------------------
+    // Generate loop for reading collections
+    //----------------------------------------
+    private void GenerateReadLoop(PropertyModel property, bool header)
+    {
+        if (!property.IsCollection && property.ValueType != ValueType.String) 
+            return;
+
+        if (header)
+        {
+            // Read the length
+            for (var dimension = 0; dimension < property.Dimensions; dimension++)
+            {
+#>
+            var <#= FieldLength(property, dimension) #> = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+<#+
+            }
+        }
+
+        if(header && property.IsCollection)
+        {
+            // Create temp object
+#>
+            var temp<#= property.Name #> = <#= GeneratorTools.CollectionConstructor(property, FieldLength(property)) #>;
+<#+ 
+             
+            // Generate the loop
+            var dimensions = new[] { "i", "j", "k" };
+            for (var dimension = 0; dimension < property.Dimensions; dimension++)
+            {
+#>
+            for (var <#= dimensions[dimension] #> = 0; <#= dimensions[dimension] #> < <#= FieldLength(property, dimension) #>; <#= dimensions[dimension] #>++)
+<#+
+            }
+#>
+            {
+<#+           
+        }
+        else if(!header && property.IsCollection)
+        {
+            var collAssignment = property.CollectionType == "Array"
+                ? $"temp{property.Name}[{FieldPosition(property)}] = value" 
+                : $"temp{property.Name}.Add(value)";
+
+#>
+                <#= collAssignment #>;
+            }
+            <#= property.Name #> = temp<#= property.Name #>;
+<#+   
+        }
+    }
+
+    //---------------------------
+    // Generate length variable
+    //---------------------------
+    private static string FieldLength(PropertyModel property)
+    {
+        return string.Join(",", Enumerable.Range(0, property.Dimensions).Select(i => FieldLength(property, i)));
+    }
+
+    //---------------------------
+    // Generate length variable
+    //---------------------------
+    private static string FieldPosition(PropertyModel property)
+    {
+        var dimensions = new[] { "i", "j", "k" };
+        return string.Join(",", Enumerable.Range(0, property.Dimensions).Select(i => dimensions[i]));
+    }
+
+    //---------------------------
+    // Generate length variable
+    //---------------------------
+    private static string FieldLength(CodeElementModel property, int dimension)
+    {
+        var dimensions = new[] {"Length", "Width", "Height"};
+        return property.Name.ToLower() + dimensions[dimension];
     }
 #>
