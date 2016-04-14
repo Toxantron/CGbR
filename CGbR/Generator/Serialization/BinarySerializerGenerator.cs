@@ -223,7 +223,7 @@ namespace CGbR
         {
             case ValueType.String:
                 conversion = $"if ({target} != null) " + BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
-                increment = $"{target}.Length";
+                increment = $"{target} == null ? 0 : {target}.Length";
                 break;
             case ValueType.Class:
                 conversion = $"{target}.ToBytes(bytes, ref index)";
@@ -235,7 +235,7 @@ namespace CGbR
                 break;
             case ValueType.Byte:
                 conversion = property.IsCollection ? $"if ({property.Name} != null) " + BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
-                increment = property.IsCollection ? $"{property.Name}.Length" : "1";
+                increment = property.IsCollection ? $"{property.Name} == null ? 0 : {property.Name}.Length" : "1";
                 break;
             default:
                 conversion = BlockCopy(true, target, BinarySize.OfProperty(property).ToString("D"));
@@ -370,7 +370,7 @@ this.Write(this.ToStringHelper.ToStringWithCulture(BlockCopy(true, $"(ushort)({p
         #line hidden
         
         #line 178 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write("\r\n            index += 2;\r\n");
+this.Write(";\r\n            index += 2;\r\n");
 
         
         #line default
@@ -387,8 +387,8 @@ this.Write("\r\n            index += 2;\r\n");
     private static string BlockCopy(bool bitConverter, string source, string length)
     {
         return bitConverter 
-            ? $"GeneratorByteConverter.Include({source}, bytes, index);"
-            : $"Buffer.BlockCopy({source}, 0, bytes, index, {length});";
+            ? $"GeneratorByteConverter.Include({source}, bytes, index)"
+            : $"Buffer.BlockCopy({source}, 0, bytes, index, {length})";
     }
 
     //--------------------------------------
