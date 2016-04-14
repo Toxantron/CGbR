@@ -46,7 +46,7 @@
                 size += <#= property.Name #>.<#= entrySize #>;
 <#
     }
- #>  
+#>  
                 return size;              
             }
         }
@@ -98,31 +98,6 @@
         {
             return this;
         }
-
-<#
-        // -------------------------------------------------------------------
-        // Generate fast inline methods to write primitive types the the array
-        // -------------------------------------------------------------------
-
-    foreach (ValueType value in Enum.GetValues(typeof(ValueType)))
-    {
-        // Only primitve types with at least 2 bytes
-        if (value < ValueType.Int16 || value > ValueType.UInt64)
-            continue;
-
-        var name = value.ToString("G");
-#>
-        /// <summary>
-        /// Writer property of type <#= name #> to bytes by using pointer opertations
-        /// </summary>
-        private static unsafe void Include(<#= value.ToString("F") #> value, byte[] bytes, int index)
-        {
-            fixed(byte* b = bytes)
-                *((<#= value.ToString("G") #>*)(b + index)) = value;
-        }
-<#
-    }
-#>
 <#+
     //---------------------------------------------
     // Generate a byte conversion for this field 
@@ -202,7 +177,7 @@
     private static string BlockCopy(bool bitConverter, string source, string length)
     {
         return bitConverter 
-            ? $"Include({source}, bytes, index);"
+            ? $"GeneratorByteConverter.Include({source}, bytes, index);"
             : $"Buffer.BlockCopy({source}, 0, bytes, index, {length});";
     }
 
@@ -221,10 +196,17 @@
 <#+
             if (GeneratorTools.SupportsForLoop(property))
             {
+                var dimensions = new[] { "i", "j", "k" };
+                for (var dimension = 0; dimension < property.Dimensions; dimension++)
+                {
+
 #>
-            for(var i = 0; index < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property) #>; index++)
+            for(var <#= dimensions[dimension] #> = 0; <#= dimensions[dimension] #> < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property, dimension) #>; <#= dimensions[dimension] #>++)
+<#+
+                }
+#>
             {
-                var value = <#= property.Name #>[i];
+                var value = <#= property.Name #>[<#= string.Join(",", Enumerable.Range(0, property.Dimensions).Select(i => dimensions[i])) #>];
 <#+
             }
             else

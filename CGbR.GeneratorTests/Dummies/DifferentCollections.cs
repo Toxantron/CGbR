@@ -14,5 +14,8 @@ namespace CGbR.GeneratorTests
 
         [DataMember]
         public long[] Longs { get; set; }
+
+        [DataMember]
+        public uint[,] MultiDimension { get; set; }
     }
 }

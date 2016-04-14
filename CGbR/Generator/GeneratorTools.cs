@@ -114,6 +114,7 @@ namespace CGbR
                 case "List":
                 case "IList":
                 case "ICollection":
+                case "Array":
                     return true;
                 default:
                     return false;

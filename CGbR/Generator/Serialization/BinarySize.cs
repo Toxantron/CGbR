@@ -25,10 +25,10 @@ namespace CGbR
         {
             switch (type)
             {
-                case ValueType.Char:
                 case ValueType.Boolean:
                 case ValueType.Byte:
                     return 1;
+                case ValueType.Char:
                 case ValueType.Int16:
                 case ValueType.UInt16:
                     return 2;
