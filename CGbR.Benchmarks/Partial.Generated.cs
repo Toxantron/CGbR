@@ -58,7 +58,7 @@ namespace CGbR.Benchmarks
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
             if (index + Size > bytes.Length)
-                throw new ArgumentOutOfRangeException("");
+                throw new ArgumentOutOfRangeException("index", "Object does not fit in array");
 
             // Convert Id
             GeneratorByteConverter.Include(Id, bytes, index);

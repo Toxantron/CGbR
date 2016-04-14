@@ -117,7 +117,7 @@ namespace CGbR
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
             if (index + Size > bytes.Length)
-                throw new ArgumentOutOfRangeException("""");
+                throw new ArgumentOutOfRangeException(""index"", ""Object does not fit in array"");
 
 ");
             
