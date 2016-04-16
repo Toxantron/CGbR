@@ -12,7 +12,7 @@ namespace CGbR.ParserTests
         public void InstantiateParser()
         {
             // Act
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
 
             // Assert
             Assert.IsNotNull(parser);
@@ -23,7 +23,7 @@ namespace CGbR.ParserTests
         public void ParsePlain()
         {
             // Arrange
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
             const string code =
 @"namespace Test
 {
@@ -47,7 +47,7 @@ namespace CGbR.ParserTests
         public void ParseComplex()
         {
             // Arrange
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
             const string code =
 @"namespace Test.With.Dots
 {
@@ -74,7 +74,7 @@ namespace CGbR.ParserTests
         public void ParseAttribute()
         {
             // Arrange
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
             const string code =
 @"namespace Test.Attributes
 {
@@ -108,7 +108,7 @@ namespace CGbR.ParserTests
         public void ParseProperties()
         {
             // Arrange
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
             const string code =
 @"namespace Test
 {
@@ -142,7 +142,7 @@ namespace CGbR.ParserTests
         public void ParseList()
         {
             // Arrange
-            var parser = ParserFactory.Resolve("Regex");
+            var parser = ParserFactory.Resolve(".cs");
             const string code =
 @"namespace Test
 {
