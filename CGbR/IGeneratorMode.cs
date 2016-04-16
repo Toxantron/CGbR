@@ -13,9 +13,8 @@
         /// <summary>
         /// Initialize the mode
         /// </summary>
-        /// <param name="parser">Parser used to parse C#</param>
-        /// <param name="generators">Generators that shall be used</param>
-        void Initialize(IParser parser, IGenerator[] generators);
+        /// <param name="args">Arguments passed to the generator</param>
+        bool Initialize(string[] args);
 
         /// <summary>
         /// Execute the generator on given path

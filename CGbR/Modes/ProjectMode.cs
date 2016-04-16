@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CGbR.Configuration;
+using Newtonsoft.Json;
 
 namespace CGbR
 {
@@ -21,6 +24,40 @@ namespace CGbR
 
         /// <see cref="IGeneratorMode"/>
         public override GeneratorMode Mode { get; } = GeneratorMode.Project;
+
+        /// <see cref="IGeneratorMode"/>
+        public override bool Initialize(string[] args)
+        {
+            // Look for the config
+            var path = Path.Combine(args[0], "cgbr.json");
+            if (!File.Exists(path))
+            {
+                Console.WriteLine("Project mode requires a config.");
+                return false;
+            }
+
+            // Read and parse config
+            var configText = File.ReadAllText(path);
+            var config = JsonConvert.DeserializeObject<CgbrConfiguration>(configText);
+
+            // Parser mapppings
+            foreach (var mapping in config.Mappings)
+            {
+                Parsers[mapping.Extension] = ParserFactory.Resolve(mapping.Parser);
+            }
+
+            // Generators
+            foreach (var localGenerator in config.LocalGenerators.Where(gen => gen.IsEnabled))
+            {
+                Generators.Add(GeneratorFactory.Resolve(localGenerator.Name));
+            }
+            foreach (var globalGenerator in config.GlobalGenerators.Where(gen => gen.IsEnabled))
+            {
+                Generators.Add(GeneratorFactory.Resolve(globalGenerator.Name));
+            }
+
+            return true;
+        }
 
         /// <see cref="IGeneratorMode"/>
         public override void Execute(string path)

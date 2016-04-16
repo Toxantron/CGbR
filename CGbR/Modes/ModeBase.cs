@@ -12,22 +12,18 @@ namespace CGbR
         /// <summary>
         /// Parser instance to use
         /// </summary>
-        private IParser _parser;
+        protected IDictionary<string, IParser> Parsers { get; } = new Dictionary<string, IParser>();
 
         /// <summary>
         /// All configured generators
         /// </summary>
-        protected IGenerator[] Generators { get; private set; }
+        protected IList<IGenerator> Generators { get; } = new List<IGenerator>();
 
         /// <see cref="IGeneratorMode"/>
         public abstract GeneratorMode Mode { get; }
 
         /// <see cref="IGeneratorMode"/>
-        public void Initialize(IParser parser, IGenerator[] generators)
-        {
-            _parser = parser;
-            Generators = generators;
-        }
+        public abstract bool Initialize(string[] args);
 
         /// <see cref="IGeneratorMode"/>
         public abstract void Execute(string path);
@@ -39,7 +35,9 @@ namespace CGbR
         /// <returns>Parse file or null</returns>
         protected ParsedFile Parse(string filePath)
         {
-            var model = _parser.ParseFile(filePath);
+            var ext = Path.GetExtension(filePath);
+
+            var model = Parsers[ext].ParseFile(filePath);
             if (model == null)
                 return null;
 

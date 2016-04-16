@@ -2,8 +2,9 @@
 bin
 obj
 
-# Ignore nuget
+# Ignore nuget and IDE folders
 packages
+.vs
 
 # Ignore user preferences for mono-develop and Visual Studio
 *.userprefs

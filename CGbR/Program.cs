@@ -17,9 +17,16 @@ namespace CGbR
         /// <param name="args"></param>
 		public static void Main(string[] args)
         {
+            // Check for minimum requirements
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Insufficient number for arguments. File or directory required");
+                return;
+            }
+
             // Determine mode from argument
             GeneratorMode mode;
-            if(Path.GetExtension(args[0]) == ".cs")
+            if (File.Exists(args[0]))
                 mode = GeneratorMode.File;
             else if (Directory.GetFiles(args[0]).Any(f => Path.GetExtension(f) == ".csproj"))
                 mode = GeneratorMode.Project;
@@ -28,13 +35,10 @@ namespace CGbR
             else
                 return;
 
-            // Initialize local strategies
-            var parser = ParserFactory.Resolve(".cs");
-            var generators = GeneratorFactory.ResolveAll();
-
             // Prepare mode
             var generatorMode = ModeFactory.Resolve(mode);
-            generatorMode.Initialize(parser, generators);
+            if (!generatorMode.Initialize(args))
+                return;
 
             // Execute mode
             generatorMode.Execute(args[0]);

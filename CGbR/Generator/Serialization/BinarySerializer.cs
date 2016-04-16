@@ -17,6 +17,7 @@ namespace CGbR
         {
             "System",
             "System.Linq",
+            "System.Text",
             "CGbR.Lib"
         };
 

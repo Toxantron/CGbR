@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="cgbr.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,22 @@
+﻿{
+  "Enabled": true,
+  "Mappings": [
+    {
+      "Extension": ".cs",
+      "Parser": "Regex"
+    }
+  ],
+  "LocalGenerators": [
+    {
+      "Name": "BinarySerializer",
+      "IsEnabled": true
+    },
+    {
+      "Name": "JsonSerializer",
+      "IsEnabled": true
+    }
+  ],
+  "GlobalGenerators": [
+
+  ]
+}

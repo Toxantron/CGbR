@@ -10,17 +10,17 @@ namespace CGbR
         /// <summary>
         /// Resolve parser by fileExtension
         /// </summary>
-        /// <param name="fileExtension">Name of the parser</param>
+        /// <param name="name">Name of the parser</param>
         /// <returns>Parser instance</returns>
-        public static IParser Resolve(string fileExtension)
+        public static IParser Resolve(string name)
         {
-            switch (fileExtension)
+            switch (name)
             {
-                case ".cs":
+                case "Regex":
                     return new RegexParser();
 
                 default:
-                    throw new ArgumentException($"Parser named '{fileExtension}' not found!", nameof(fileExtension));
+                    throw new ArgumentException($"Parser named '{name}' not found!", nameof(name));
             }
         }
     }

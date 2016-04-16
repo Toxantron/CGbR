@@ -23,10 +23,42 @@ class. This makes it the perfect choice for performance critical applications, l
 ## Modes of operations
 The tool supports 3 modes of operation. It can run on a single file or a project/solution directory. The first one is meant
 to be used within VisualStudio as a custom tool for a single file and the others are used as pre-build events or build
-targets. Choice is made automatically based on the first argument. For files of type ".cs" and the others look for a 
+targets. Choice is made automatically based on the first argument. For filepathes the file mode is chosen and the others look for a 
 ".csproj" or ".sln" file in the given path.
 
-* **Project Mode**: Add ``Path\To\Exe\cgbr.exe $(ProjectDir)`` to your project and include the generated files after pressing rebuild.
+### File Mode
+In the File Mode CGbR operators on a single file only. Instead of a configuration it requires a couple of arguments. The first
+argument is obviously the file. Next cames the name of the parser and all following arguments are interpreted as generator names.
+This might look like this: `$ cgbr.exe Messages/MyMessage.cs Regex BinarySerializer`
+
+### Project mode
+In the Project Mode CGbR operates on the entire directory recursively. Parsers and Generators are selected by a `cgbr.json` config file
+with the following structure.
+
+```json
+{
+  "Enabled": true,
+  "Mappings": [
+    {
+      "Extension": ".cs",
+      "Parser": "Regex"
+    }
+  ],
+  "LocalGenerators": [
+    {
+      "Name": "BinarySerializer",
+      "IsEnabled": true
+    },
+    {
+      "Name": "JsonSerializer",
+      "IsEnabled": true
+    }
+  ],
+  "GlobalGenerators": [
+
+  ]
+}
+```
 
 ## Serialization
 The perfect usage scenario and actually the origin of CGbR is serializing and deserializing objects. In the original

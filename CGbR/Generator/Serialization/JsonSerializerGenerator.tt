@@ -37,7 +37,9 @@
         {
 #>
             if (<#= property.Name #> == null)
+            {
                 writer.Write("null");
+            }
             else
             {
                 writer.Write('[');
