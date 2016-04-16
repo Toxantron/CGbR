@@ -27,6 +27,12 @@ namespace CGbR
         /// </summary>
 	    public string BaseClass { get; set; }
 
+		/// <summary>
+		/// Flag if this is a partial class
+		/// </summary>
+		/// <value><c>true</c> if this instance is partial; otherwise, <c>false</c>.</value>
+		public bool IsPartial { get; set; }
+
         /// <summary>
         /// Interfaces of this class
         /// </summary>

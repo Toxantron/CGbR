@@ -23,7 +23,7 @@ namespace CGbR
         /// <seealso cref="ILocalGenerator"/>
         public bool CanExtend(ClassModel model)
         {
-            return model.HasAttribute(nameof(DataContractAttribute));
+            return model.IsPartial && model.HasAttribute(nameof(DataContractAttribute));
         }
 
         /// <seealso cref="ILocalGenerator"/>
