@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Target Name="BeforeBuild">
-        <Exec Command="$(SolutionDir)packages\CGbR.0.3\tools\cgbr.exe $(ProjectDir)"/>
+        <Exec Command="&quot;$(MSBuildThisFileDirectory)..\tools\cgbr.exe&quot; &quot;$(ProjectDir)&quot;"/>
     </Target>
 </Project>
