@@ -8,24 +8,27 @@ namespace CGbR
     /// </summary>
     internal class FileMode : ModeBase
     {
+        private string _path;
+
         /// <see cref="IGeneratorMode"/>
         public override GeneratorMode Mode { get; } = GeneratorMode.File;
 
         /// <see cref="IGeneratorMode"/>
-        public override bool Initialize(string[] args)
+        public override bool Initialize(string path, string[] args)
         {
             // File mode requires a minimum of 3 arguments
-            if (args.Length < 3)
+            _path = path;
+            if (args.Length < 2)
             {
                 return false;
             }
 
             // Second argument is parser
-            var ext = Path.GetExtension(args[0]);
-            Parsers[ext] = ParserFactory.Resolve(args[1]);
+            var ext = Path.GetExtension(_path);
+            Parsers[ext] = ParserFactory.Resolve(args[0]);
 
             // All following arguments are the active generators
-            for (var i = 2; i < args.Length; i++)
+            for (var i = 1; i < args.Length; i++)
             {
                 Generators.Add(GeneratorFactory.Resolve(args[i]));
             }
@@ -34,10 +37,10 @@ namespace CGbR
         }
 
         /// <see cref="IGeneratorMode"/>
-        public override void Execute(string path)
+        public override void Execute()
         {
             // Parse file
-            var file = Parse(path);
+            var file = Parse(_path);
             GenerateLocalPartial(file);
         }
     }

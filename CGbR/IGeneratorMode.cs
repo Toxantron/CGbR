@@ -13,14 +13,14 @@
         /// <summary>
         /// Initialize the mode
         /// </summary>
+        /// <param name="path">Path to run generator on</param>
         /// <param name="args">Arguments passed to the generator</param>
-        bool Initialize(string[] args);
+        bool Initialize(string path, string[] args);
 
         /// <summary>
         /// Execute the generator on given path
         /// </summary>
-        /// <param name="path">Path of the generator</param>
-        void Execute(string path);
+        void Execute();
     }
 
     /// <summary>

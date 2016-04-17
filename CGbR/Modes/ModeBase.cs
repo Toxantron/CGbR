@@ -23,10 +23,10 @@ namespace CGbR
         public abstract GeneratorMode Mode { get; }
 
         /// <see cref="IGeneratorMode"/>
-        public abstract bool Initialize(string[] args);
+        public abstract bool Initialize(string path, string[] args);
 
         /// <see cref="IGeneratorMode"/>
-        public abstract void Execute(string path);
+        public abstract void Execute();
 
         /// <summary>
         /// Parse classes in file at this path

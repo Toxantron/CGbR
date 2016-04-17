@@ -26,18 +26,20 @@ namespace CGbR
         public override GeneratorMode Mode { get; } = GeneratorMode.Project;
 
         /// <see cref="IGeneratorMode"/>
-        public override bool Initialize(string[] args)
+        public override bool Initialize(string path, string[] args)
         {
+            _directory = path;
+
             // Look for the config
-            var path = Path.Combine(args[0], "cgbr.json");
-            if (!File.Exists(path))
+            var configPath = Path.Combine(_directory, "cgbr.json");
+            if (!File.Exists(configPath))
             {
                 Console.WriteLine("Project mode requires a config.");
                 return false;
             }
 
             // Read and parse config
-            var configText = File.ReadAllText(path);
+            var configText = File.ReadAllText(configPath);
             var config = JsonConvert.DeserializeObject<CgbrConfiguration>(configText);
 
             // Parser mapppings
@@ -60,9 +62,8 @@ namespace CGbR
         }
 
         /// <see cref="IGeneratorMode"/>
-        public override void Execute(string path)
+        public override void Execute()
         {
-            _directory = path;
             _namespace = "Test";
 
             // Parse all files in directory recursive

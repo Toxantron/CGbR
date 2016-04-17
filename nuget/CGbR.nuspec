@@ -2,14 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>CGbR</id>
-        <version>0.3</version>
-        <title>CGbR - Code dynamic, run static</title>
+        <version>0.3.2</version>
         <authors>Thomas Fuchs</authors>
         <licenseUrl>https://github.com/Toxantron/CGbR/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/Toxantron/CGbR</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>CGbR generates code based on the code you write. The generated code is fully reflection free, fast and can be AOT compiled. It can be used to replace reflection for serialization or dependency injection</description>
-        <summary>A lot of frameworks and libraries in .NET use reflection to find classes, look for attributes, read properties etc. and with no doubt reflection is a powerful tool. It does however come at the price o</summary>
+        <description>CGbR generates code based on the code you write. The generated code is fully reflection free, fast and can be AOT compiled. It can be used to replace reflection for serialization or dependency injection.</description>
+        <summary />
         <language>en-US</language>
         <tags>generator json binary serializer</tags>
     </metadata>
@@ -18,5 +17,6 @@
         <file src="cgbr.json" target="content\cgbr.json" />
         <file src="..\bin\CGbR.Lib.dll" target="lib\CGbR.Lib.dll" />
         <file src="..\bin\cgbr.exe" target="tools\cgbr.exe" />
+        <file src="..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />
     </files>
 </package>
