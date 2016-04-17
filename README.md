@@ -1,4 +1,8 @@
 # CGbR - Code dynamic, run static
+[![NuGet](https://img.shields.io/nuget/v/CGbR.svg)](https://www.nuget.org/packages/CGbR/)
+[ ![Codeship Status for Toxantron/CGbR](https://codeship.com/projects/c0472a50-e667-0133-f6be-06b21bf3bd66/status?branch=master)](https://codeship.com/projects/146753)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/Toxantron/CGbR/blob/master/LICENSE)
+
 A lot of frameworks and libraries in .NET use reflection to find classes, look for attributes, read properties etc. 
 and with no doubt reflection is a powerful tool. It does however come at the price of performance. On the other hand
 static C# performs incredibly well when it can be fully compiled but no one really wants to take the time of writing
