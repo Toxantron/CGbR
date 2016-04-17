@@ -1,6 +1,7 @@
 ﻿<#@ template language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Net.Configuration" #>
 <#@ import namespace="System.Runtime.Serialization" #>
 <#@ import namespace="System.Security.Cryptography.X509Certificates" #>
 <#@ import namespace="System.Text" #>
@@ -124,12 +125,14 @@
 
         // Now we add the real value
         var target = property.IsCollection ? "value" : property.Name;
+        var nullable = false;
         string conversion, increment;
         switch (property.ValueType)
         {
             case ValueType.String:
-                conversion = $"if ({target} != null) " + BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
-                increment = $"{target} == null ? 0 : {target}.Length";
+                conversion = BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
+                increment = $"{target}.Length";
+                nullable = true;
                 break;
             case ValueType.Class:
                 conversion = $"{target}.ToBytes(bytes, ref index)";
@@ -140,14 +143,23 @@
                 increment = "1";
                 break;
             case ValueType.Byte:
-                conversion = property.IsCollection ? $"if ({property.Name} != null) " + BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
-                increment = property.IsCollection ? $"{property.Name} == null ? 0 : {property.Name}.Length" : "1";
+                conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
+                increment = property.IsCollection ? $"{property.Name}.Length" : "1";
+                nullable = property.IsCollection;
                 break;
             default:
                 conversion = BlockCopy(true, target, BinarySize.OfProperty(property).ToString("D"));
                 increment = BinarySize.OfProperty(property).ToString("D");
                 break;
         }
+
+        if (nullable || property.IsCollection)
+        {
+            indent += "\t";
+        }
+
+        NullableWrapper(property, nullable, true);
+
 #>
             <#= indent #><#= conversion #>;
 <#+
@@ -157,6 +169,8 @@
             <#= indent #>index += <#= increment #>;
 <#+
         }
+
+        NullableWrapper(property, nullable, false);
 
         CollectionWrapper(property, false);
     }
@@ -192,6 +206,29 @@
     }
 
     //--------------------------------------
+    // Wrap conversion of nullable property
+    //--------------------------------------
+    private void NullableWrapper(PropertyModel property,bool nullable, bool header)
+    {
+        if (!nullable)
+            return;
+
+        if (header)
+        {
+#>
+            if (<#= property.Name #> != null)
+            {
+<#+
+        }
+        else
+        {
+#>
+            }
+<#+
+        }
+    }
+
+    //--------------------------------------
     // Code fragments wrapping a collection
     //--------------------------------------
     private void CollectionWrapper(PropertyModel property, bool start)
@@ -203,6 +240,7 @@
         {
 #>
             if (<#= property.Name #> != null)
+            {
 <#+
             if (GeneratorTools.SupportsForLoop(property))
             {
@@ -211,19 +249,19 @@
                 {
 
 #>
-            for(var <#= dimensions[dimension] #> = 0; <#= dimensions[dimension] #> < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property, dimension) #>; <#= dimensions[dimension] #>++)
+                for(var <#= dimensions[dimension] #> = 0; <#= dimensions[dimension] #> < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property, dimension) #>; <#= dimensions[dimension] #>++)
 <#+
                 }
 #>
-            {
-                var value = <#= property.Name #>[<#= string.Join(",", Enumerable.Range(0, property.Dimensions).Select(i => dimensions[i])) #>];
+                {
+                    var value = <#= property.Name #>[<#= string.Join(",", Enumerable.Range(0, property.Dimensions).Select(i => dimensions[i])) #>];
 <#+
             }
             else
             {
 #>
-            foreach(var value in <#= property.Name #>)
-            {
+                foreach(var value in <#= property.Name #>)
+                {
 <#+
 
             }
@@ -231,6 +269,7 @@
         else
         {
 #>
+                }
             }
 <#+
         }
