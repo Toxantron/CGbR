@@ -13,5 +13,10 @@
         <language>en-US</language>
         <tags>generator json binary serializer</tags>
     </metadata>
-    <files />
+    <files>
+        <file src="cgbr.targets" target="build\cgbr.targets" />
+        <file src="cgbr.json" target="content\cgbr.json" />
+        <file src="..\bin\CGbR.Lib.dll" target="lib\CGbR.Lib.dll" />
+        <file src="..\bin\cgbr.exe" target="tools\cgbr.exe" />
+    </files>
 </package>
