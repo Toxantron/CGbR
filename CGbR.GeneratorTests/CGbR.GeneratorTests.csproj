@@ -67,9 +67,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)bin\cgbr.exe $(ProjectDir)</PreBuildEvent>
-  </PropertyGroup>
   <Import Project="..\packages\CGbR.0.3.2\build\cgbr.targets" Condition="Exists('..\packages\CGbR.0.3.2\build\cgbr.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
