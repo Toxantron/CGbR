@@ -19,7 +19,8 @@
                 var size = <#= BinarySize.OfClass(Model) #>;
                 // Add size for collections and strings
 <#
-    foreach (var property in Model.Properties.Where(BinarySize.IsVariable))
+    foreach (var property in Model.Properties.Where(BinarySize.IsVariable)
+                                             .Where(p => p.HasAttribute(nameof(DataMemberAttribute))))
     {
         string entrySize;
         switch (property.ValueType)
