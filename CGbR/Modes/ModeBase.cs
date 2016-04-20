@@ -62,7 +62,7 @@ namespace CGbR
                              select new GeneratorPartial(gen, gen.Extend(model)));
 
             // Initialize and execute the class skeleton template
-            var code = GenerateClass(model.Name, model.Namespace, fragments.ToArray());
+            var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments.ToArray());
 
             // Write file
             var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";
@@ -74,16 +74,18 @@ namespace CGbR
         /// Generate class code from name, namespace and fragements of code from the different generators
         /// </summary>
         /// <param name="className">Name of the class to generate</param>
+        /// <param name="modifier">Modifier of the class</param>
         /// <param name="namespace">Namespace the class should be in</param>
         /// <param name="fragments">Fragments of code from the different generators</param>
         /// <returns>Source code of the generated class</returns>
-        protected string GenerateClass(string className, string @namespace, GeneratorPartial[] fragments)
+        protected string GenerateClass(string className, AccessModifier modifier, string @namespace, GeneratorPartial[] fragments)
         {
             // Initialize new session for the template
             var skeleton = new ClassSkeleton();
             skeleton.Session = new Dictionary<string, object>
             {
                 { "ClassName", className },
+                { "Modifier", modifier },
                 { "Namespace", @namespace },
                 { "Fragments", fragments }
             };

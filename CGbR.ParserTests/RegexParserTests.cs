@@ -12,7 +12,7 @@ namespace CGbR.ParserTests
         public void InstantiateParser()
         {
             // Act
-            var parser = ParserFactory.Resolve(".cs");
+            var parser = ParserFactory.Resolve("Regex");
 
             // Assert
             Assert.IsNotNull(parser);
@@ -23,7 +23,33 @@ namespace CGbR.ParserTests
         public void ParsePlain()
         {
             // Arrange
-            var parser = ParserFactory.Resolve(".cs");
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    public class Plain
+    {
+    }
+}
+";
+            File.WriteAllText("PlainRegex", code);
+
+            // Act
+            var model = parser.ParseFile("PlainRegex");
+
+            // Assert
+            Assert.IsNotNull(model);
+            Assert.AreEqual("Test", model.Namespace, "Namespace not parsed!");
+            Assert.AreEqual("Plain", model.Name, "Name not parsed!");
+            Assert.IsFalse(model.IsPartial, "Class is not partial!");
+            Assert.AreEqual(AccessModifier.Public, model.AccessModifier, "Failed to parse access modifier");
+        }
+
+        [Test]
+        public void ParsePartial()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
             const string code =
 @"namespace Test
 {
@@ -32,34 +58,62 @@ namespace CGbR.ParserTests
     }
 }
 ";
-            File.WriteAllText("Plain.cs", code);
+            File.WriteAllText("PlainRegex", code);
 
             // Act
-            var model = parser.ParseFile("Plain.cs");
+            var model = parser.ParseFile("PlainRegex");
 
             // Assert
             Assert.IsNotNull(model);
             Assert.AreEqual("Test", model.Namespace, "Namespace not parsed!");
             Assert.AreEqual("Plain", model.Name, "Name not parsed!");
+            Assert.IsTrue(model.IsPartial, "Class is partial!");
+            Assert.AreEqual(AccessModifier.Public, model.AccessModifier, "Failed to parse access modifier");
+        }
+
+        [Test]
+        public void ParseInternal()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    internal class Plain
+    {
+    }
+}
+";
+            File.WriteAllText("PlainRegex", code);
+
+            // Act
+            var model = parser.ParseFile("PlainRegex");
+
+            // Assert
+            Assert.IsNotNull(model);
+            Assert.AreEqual("Test", model.Namespace, "Namespace not parsed!");
+            Assert.AreEqual("Plain", model.Name, "Name not parsed!");
+            Assert.IsFalse(model.IsPartial, "Class is not partial!");
+            Assert.AreEqual(AccessModifier.Internal, model.AccessModifier, "Failed to parse access modifier");
         }
 
         [Test]
         public void ParseComplex()
         {
             // Arrange
-            var parser = ParserFactory.Resolve(".cs");
+            var parser = ParserFactory.Resolve("Regex");
             const string code =
 @"namespace Test.With.Dots
 {
-    public partial class Complex : Base, IInterface
+    public class Complex : Base, IInterface
     {
     }
 }
 ";
-            File.WriteAllText("Complex.cs", code);
+            File.WriteAllText("ComplexRegex", code);
 
             // Act
-            var model = parser.ParseFile("Complex.cs");
+            var model = parser.ParseFile("ComplexRegex");
 
             // Assert
             Assert.IsNotNull(model);
@@ -74,7 +128,7 @@ namespace CGbR.ParserTests
         public void ParseAttribute()
         {
             // Arrange
-            var parser = ParserFactory.Resolve(".cs");
+            var parser = ParserFactory.Resolve("Regex");
             const string code =
 @"namespace Test.Attributes
 {
@@ -84,10 +138,10 @@ namespace CGbR.ParserTests
     }
 }
 ";
-            File.WriteAllText("Attributes.cs", code);
+            File.WriteAllText("AttributesRegex", code);
 
             // Act
-            var model = parser.ParseFile("Attributes.cs");
+            var model = parser.ParseFile("AttributesRegex");
 
             // Assert
             Assert.IsNotNull(model);
@@ -108,33 +162,35 @@ namespace CGbR.ParserTests
         public void ParseProperties()
         {
             // Arrange
-            var parser = ParserFactory.Resolve(".cs");
+            var parser = ParserFactory.Resolve("Regex");
             const string code =
 @"namespace Test
 {
     public partial class Test
     {
-        public int WithoutAtt { get; set; }
+        internal int WithoutAtt { get; set; }
 
         [DataMember]
         public ushort WithAtt { get; set; }
     }
 }
 ";
-            File.WriteAllText("Test.cs", code);
+            File.WriteAllText("TestRegex", code);
 
             // Act
-            var model = parser.ParseFile("Test.cs");
+            var model = parser.ParseFile("TestRegex");
 
             // Assert
             Assert.AreEqual(2, model.Properties.Count, "Number of properties does not match!");
             var prop = model.Properties[0];
             Assert.AreEqual("WithoutAtt", prop.Name, "Name of first property does not match!");
             Assert.AreEqual("int", prop.ElementType, "Type of property does not match");
+            Assert.AreEqual(AccessModifier.Internal, prop.AccessModifier);
             Assert.AreEqual(0, prop.Attributes.Count, "First property does not have attributes");
             prop = model.Properties[1];
             Assert.AreEqual("WithAtt", prop.Name, "Name of first property does not match!");
             Assert.AreEqual("ushort", prop.ElementType, "Type of property does not match");
+            Assert.AreEqual(AccessModifier.Public, prop.AccessModifier);
             Assert.AreEqual(1, prop.Attributes.Count, "Second property should have attributes");
         }
 
@@ -142,7 +198,7 @@ namespace CGbR.ParserTests
         public void ParseList()
         {
             // Arrange
-            var parser = ParserFactory.Resolve(".cs");
+            var parser = ParserFactory.Resolve("Regex");
             const string code =
 @"namespace Test
 {
@@ -153,17 +209,46 @@ namespace CGbR.ParserTests
     }
 }
 ";
-            File.WriteAllText("List.cs", code);
+            File.WriteAllText("ListRegex", code);
 
             // Act
-            var parsed = parser.ParseFile("List.cs");
+            var parsed = parser.ParseFile("ListRegex");
 
             // Assert
             Assert.AreEqual(1, parsed.Properties.Count);
             var prop = parsed.Properties.First();
             Assert.AreEqual("Numbers", prop.Name);
             Assert.AreEqual("ushort", prop.ElementType);
+            Assert.AreEqual(ValueType.UInt16, prop.ValueType);
             Assert.AreEqual("IList", prop.CollectionType);
+            Assert.AreEqual(AccessModifier.Public, parsed.AccessModifier);
+        }
+
+        [Test]
+        public void ParseField()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    public class Test
+    {
+        private long _number;
+    }
+}
+";
+            File.WriteAllText("FieldRegex", code);
+
+            // Act
+            var parsed = parser.ParseFile("FieldRegex");
+
+            // Assert
+            Assert.AreEqual(1, parsed.Properties.Count);
+            var prop = parsed.Properties.First();
+            Assert.AreEqual("_number", prop.Name);
+            Assert.AreEqual("long", prop.ElementType);
+            Assert.AreEqual(ValueType.Int64, prop.ValueType);
         }
     }
 }

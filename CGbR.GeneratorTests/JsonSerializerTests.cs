@@ -10,9 +10,8 @@ namespace CGbR.GeneratorTests
         public void Serialize()
         {
             // Arrange
-            var root = new Root
+            var root = new Root(10)
             {
-                Number = 10,
                 Partials = new[]
                 {
                     new Partial {Id = 1, Name="A"},
@@ -25,7 +24,7 @@ namespace CGbR.GeneratorTests
             var json = root.ToJson();
 
             // Assert
-            const string expected = "{\"Number\":10,\"Partials\":[{\"Id\":1,\"Name\":\"A\"},{\"Id\":2,\"Name\":\"B\"},],\"Numbers\":[10,12,16,]}";
+            const string expected = "{\"_number\":10,\"Partials\":[{\"Id\":1,\"Name\":\"A\"},{\"Id\":2,\"Name\":\"B\"},],\"Numbers\":[10,12,16,]}";
             Assert.AreEqual(expected, json, "Failed to serialize string");
         }
 
@@ -33,13 +32,13 @@ namespace CGbR.GeneratorTests
         public void SerializeNullArray()
         {
             // Arrange 
-            var root = new Root { Number = 10 };
+            var root = new Root(12);
 
             // Act
             var json = root.ToJson();
 
             // Assert
-            const string expected = "{\"Number\":10,\"Partials\":null,\"Numbers\":null}";
+            const string expected = "{\"_number\":12,\"Partials\":null,\"Numbers\":null}";
             Assert.AreEqual(expected, json, "Serializer failed");
         }
 
@@ -47,9 +46,8 @@ namespace CGbR.GeneratorTests
         public void SerializeEmptyArray()
         {
             // Arrange 
-            var root = new Root
+            var root = new Root(15)
             {
-                Number = 10,
                 Partials = new Partial[0],
                 Numbers = new ulong[0]
             };
@@ -58,7 +56,7 @@ namespace CGbR.GeneratorTests
             var json = root.ToJson();
 
             // Assert
-            const string expected = "{\"Number\":10,\"Partials\":[],\"Numbers\":[]}";
+            const string expected = "{\"_number\":15,\"Partials\":[],\"Numbers\":[]}";
             Assert.AreEqual(expected, json, "Serializer failed");
         }
 
@@ -66,14 +64,14 @@ namespace CGbR.GeneratorTests
         public void Deserialize()
         {
             // Arrange
-            const string json = "{\"Number\":10,\"Partials\":[{\"Id\":1},{\"Id\":2}],\"Numbers\":[10,12,16]}";
+            const string json = "{\"_number\":20,\"Partials\":[{\"Id\":1},{\"Id\":2}],\"Numbers\":[10,12,16]}";
 
             // Act
-            var deserialized = new Root().FromJson(json);
+            var deserialized = new Root(0).FromJson(json);
 
             // Assert
             Assert.NotNull(deserialized);
-            Assert.AreEqual(10, deserialized.Number, "Failed to parse number");
+            Assert.AreEqual(20, deserialized.Number, "Failed to parse number");
             Assert.AreEqual(2, deserialized.Partials.Length, "Failed to parse class array");
             Assert.AreEqual(1, deserialized.Partials[0].Id);
             Assert.AreEqual(2, deserialized.Partials[1].Id);
@@ -85,10 +83,10 @@ namespace CGbR.GeneratorTests
         public void DeserializeEmptyArray()
         {
             // Arrange
-            const string json = "{\"Number\":10,\"Partials\":[],\"Numbers\":[]}";
+            const string json = "{\"_number\":10,\"Partials\":[],\"Numbers\":[]}";
 
             // Act
-            var deserialized = new Root().FromJson(json);
+            var deserialized = new Root(0).FromJson(json);
 
             // Assert
             Assert.NotNull(deserialized);
@@ -101,14 +99,14 @@ namespace CGbR.GeneratorTests
         public void DeserializeNullArray()
         {
             // Arrange
-            const string json = "{\"Number\":10,\"Partials\":null,\"Numbers\":null}";
+            const string json = "{\"_number\":30,\"Partials\":null,\"Numbers\":null}";
 
             // Act
-            var deserialized = new Root().FromJson(json);
+            var deserialized = new Root(0).FromJson(json);
 
             // Assert
             Assert.NotNull(deserialized);
-            Assert.AreEqual(10, deserialized.Number);
+            Assert.AreEqual(30, deserialized.Number);
             Assert.IsNull(deserialized.Partials);
             Assert.IsNull(deserialized.Numbers);
         }

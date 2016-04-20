@@ -34,6 +34,11 @@ namespace CGbR
 		public bool IsPartial { get; set; }
 
         /// <summary>
+        /// Access modifier of this type
+        /// </summary>
+	    public AccessModifier AccessModifier { get; set; }
+
+        /// <summary>
         /// Interfaces of this class
         /// </summary>
         public string[] Interfaces { get; set; }

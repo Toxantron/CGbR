@@ -42,6 +42,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassModel\AccessModifier.cs" />
     <Compile Include="ClassModel\TypeAliasAttribute.cs" />
     <Compile Include="ClassModel\PropertyModel.cs" />
     <Compile Include="ClassModel\ValueType.cs" />

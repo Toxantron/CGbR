@@ -136,10 +136,13 @@ namespace CGbR
                 // Find all matching generators and collect their code fragments
                 var fragments = (from gen in Generators.OfType<ILocalGenerator>()
                                  where gen.CanExtend(model)
-                                 select new GeneratorPartial(gen, gen.Extend(model)));
+                                 select new GeneratorPartial(gen, gen.Extend(model))).ToArray();
+
+                if (fragments.Length == 0)
+                    continue;
 
                 // Initialize and execute the class skeleton template
-                var code = GenerateClass(model.Name, model.Namespace, fragments.ToArray());
+                var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments);
 
                 // Write file
                 var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";
@@ -169,7 +172,7 @@ namespace CGbR
                 var className = globalClass.Key;
 
                 // Execute code generator
-                var code = GenerateClass(className, _namespace, globalClass.ToArray());
+                var code = GenerateClass(className, AccessModifier.Public, _namespace, globalClass.ToArray());
 
                 // Write to file on root level
                 var fileName = Path.Combine(_directory, className, ".Generated.cs");

@@ -15,8 +15,8 @@ namespace CGbR
         // Regex used to parse source file
         private readonly Regex _namespaceRegex = new Regex(@"namespace (?<namespace>(?:\w\.?)*)");
         private readonly Regex _attributeRegex = new Regex(@" \[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
-	private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal]))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
-        private readonly Regex _propRegex = new Regex(@" (?<accessModifier>(?:public|internal|private])) (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>\w+)");
+	    private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
+        private readonly Regex _propRegex = new Regex(@" (?<accessModifier>(?:public|internal|private)) (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>_?\w+)");
 
         /// <seealso cref="IParser"/>
         public string Name { get; } = "Regex";
@@ -87,7 +87,8 @@ namespace CGbR
                 Namespace = @namespace,
                 BaseClass = baseType,
                 Interfaces = interfaces,
-				IsPartial = match.Groups["isPartial"].Success
+				IsPartial = match.Groups["isPartial"].Success,
+                AccessModifier = ParseAccessModifier(match.Groups["accessModifier"].Value)
             };
 
             // Add attributes by moving up the lines
@@ -115,6 +116,7 @@ namespace CGbR
             {
                 ElementType = type,
                 ValueType = DetermineType(type),
+                AccessModifier = ParseAccessModifier(match.Groups["accessModifier"].Value),
                 IsCollection = collGroup.Success | arrayGroup.Success,
                 CollectionType = arrayGroup.Success ? "Array" : collGroup.Value,
                 Dimensions = match.Groups["dimensions"].Captures.Count + 1
@@ -128,6 +130,26 @@ namespace CGbR
             ParseAttributes(file, index, property);
 
             model.Properties.Add(property);
+        }
+
+        /// <summary>
+        /// Parse modifier string to enum
+        /// </summary>
+        /// <param name="modifier"></param>
+        /// <returns></returns>
+        private static AccessModifier ParseAccessModifier(string modifier)
+        {
+            switch (modifier)
+            {
+                case "private":
+                    return AccessModifier.Private;
+                case "internal":
+                    return AccessModifier.Internal;
+                case "public":
+                    return AccessModifier.Public;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(modifier), "I have no idea how you managed this");
+            }   
         }
 
         /// <summary>

@@ -14,6 +14,11 @@
         }
 
         /// <summary>
+        /// Access modifier of this type
+        /// </summary>
+        public AccessModifier AccessModifier { get; set; }
+
+        /// <summary>
         /// Flag if this property is a collection
         /// </summary>
         public bool IsCollection { get; set; }

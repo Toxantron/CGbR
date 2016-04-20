@@ -9,8 +9,15 @@ namespace CGbR.GeneratorTests
     [DataContract]
     public partial class Root
     {
+        public Root(int number)
+        {
+            _number = number;
+        }
+
         [DataMember]
-        public int Number { get; set; }
+        private int _number;
+
+        public int Number { get { return _number; } }
 
         [DataMember]
         public Partial[] Partials { get; set; }

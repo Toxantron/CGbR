@@ -5,6 +5,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Namespace" type="System.String" #>
+<#@ parameter name="Modifier" type="CGbR.AccessModifier" #>
 <#@ parameter name="ClassName" type="System.String" #>
 <#@ parameter name="BaseClasses" type="System.String" #>
 <#@ parameter name="Fragments" type="CGbR.GeneratorPartial[]" #>
@@ -28,7 +29,7 @@ namespace <#= Namespace #>
     /// <summary>
     /// Auto generated class by CGbR project
     /// </summary>
-    public partial class <#= ClassName #><#= string.IsNullOrEmpty(BaseClasses) ? string.Empty : " : " + BaseClasses #>
+    <#= Modifier.ToString("G").ToLower() #> partial class <#= ClassName #><#= string.IsNullOrEmpty(BaseClasses) ? string.Empty : " : " + BaseClasses #>
     {
 <#
     foreach (var fragment in Fragments)
