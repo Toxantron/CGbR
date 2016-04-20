@@ -7,8 +7,8 @@
     <ProjectGuid>{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CGbR.ParserTests</RootNamespace>
-    <AssemblyName>CGbR.ParserTests</AssemblyName>
+    <RootNamespace>CGbR.Tests</RootNamespace>
+    <AssemblyName>CGbR.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
