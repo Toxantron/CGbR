@@ -1,6 +1,7 @@
 # CGbR - Code dynamic, run static
 [![NuGet](https://img.shields.io/nuget/v/CGbR.svg)](https://www.nuget.org/packages/CGbR/)
 [![Build status](https://ci.appveyor.com/api/projects/status/9lbxnkji7ifaws2k?svg=true)](https://ci.appveyor.com/project/Toxantron/cgbr)
+[![Coverage Status](https://coveralls.io/repos/github/Toxantron/CGbR/badge.svg?branch=master)](https://coveralls.io/github/Toxantron/CGbR?branch=master)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/Toxantron/CGbR/blob/master/LICENSE)
 
 A lot of frameworks and libraries in .NET use reflection to find classes, look for attributes, read properties etc. 
