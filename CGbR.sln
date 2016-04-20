@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR", "CGbR\CGbR.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.GeneratorTests", "CGbR.GeneratorTests\CGbR.GeneratorTests.csproj", "{E41C63AA-1B24-4E11-B587-68C639196690}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.ParserTests", "CGbR.ParserTests\CGbR.ParserTests.csproj", "{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Tests", "CGbR.Tests\CGbR.Tests.csproj", "{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Benchmarks", "CGbR.Benchmarks\CGbR.Benchmarks.csproj", "{CF88EA2D-3A4A-4E6D-800F-FFAA412BB335}"
 EndProject
