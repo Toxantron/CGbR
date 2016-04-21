@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace CGbR.ParserTests
 {
-    [TestFixture]
+    //[TestFixture]
     public class RegexParserTests
     {
         [Test]
