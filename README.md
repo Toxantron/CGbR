@@ -37,8 +37,7 @@ argument is obviously the file. Next cames the name of the parser and all follow
 This might look like this: `$ cgbr.exe Messages/MyMessage.cs Regex BinarySerializer`
 
 ### Project mode
-In the Project Mode CGbR operates on the entire directory recursively. Parsers and Generators are selected by a `cgbr.json` config file
-with the following structure.
+In the Project Mode CGbR operates on the entire directory recursively. Parsers and Generators are selected by a `cgbr.json` config file with the following structure. This is the default mode activated by adding the nuget package. With each build the generated files are created and must be included into the project.
 
 ```json
 {
@@ -96,7 +95,7 @@ bytes in a matter of less then 30 micro seconds.
 Consider the following classes input for the serializer
 ```c#
 [DataContract]
-public class Root
+public partial class Root
 {
 	[DataMember]
 	public int Id { get; set; }
@@ -113,7 +112,7 @@ public class Root
 }
 
 [DataContract]
-public class Partial
+public partial class Partial
 {
 	[DataMember]
 	public byte Index { get; set; }
