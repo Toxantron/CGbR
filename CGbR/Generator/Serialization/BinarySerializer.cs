@@ -16,6 +16,7 @@ namespace CGbR
         public string[] Usings { get; } = 
         {
             "System",
+            "System.Collections.Generic",
             "System.Linq",
             "System.Text",
             "CGbR.Lib"
