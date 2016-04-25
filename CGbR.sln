@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Benchmarks", "CGbR.Ben
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Lib", "CGbR.Lib\CGbR.Lib.csproj", "{2E0E6AD3-7336-4ED0-BA8A-2C6D0CC99FED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Runner", "CGbR.Runner\CGbR.Runner.csproj", "{2E6CD21F-17F3-4678-8F4A-E26C933BB373}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2E0E6AD3-7336-4ED0-BA8A-2C6D0CC99FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E0E6AD3-7336-4ED0-BA8A-2C6D0CC99FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E0E6AD3-7336-4ED0-BA8A-2C6D0CC99FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E6CD21F-17F3-4678-8F4A-E26C933BB373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E6CD21F-17F3-4678-8F4A-E26C933BB373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E6CD21F-17F3-4678-8F4A-E26C933BB373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E6CD21F-17F3-4678-8F4A-E26C933BB373}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

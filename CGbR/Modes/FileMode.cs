@@ -11,9 +11,6 @@ namespace CGbR
         private string _path;
 
         /// <see cref="IGeneratorMode"/>
-        public override GeneratorMode Mode { get; } = GeneratorMode.File;
-
-        /// <see cref="IGeneratorMode"/>
         public override bool Initialize(string path, string[] args)
         {
             // File mode requires a minimum of 3 arguments

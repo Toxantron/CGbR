@@ -68,14 +68,14 @@
       <Project>{2e0e6ad3-7336-4ed0-ba8a-2c6d0cc99fed}</Project>
       <Name>CGbR.Lib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CGbR\CGbR.csproj">
-      <Project>{f42ba2ed-3b24-49a1-b6cf-b1676038141b}</Project>
-      <Name>CGbR</Name>
+    <ProjectReference Include="..\CGbR.Runner\CGbR.Runner.csproj">
+      <Project>{2e6cd21f-17f3-4678-8f4a-e26c933bb373}</Project>
+      <Name>CGbR.Runner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)bin\cgbr.exe $(ProjectDir)</PreBuildEvent>
+    <PreBuildEvent>$(SolutionDir)bin\cgbr-runner.exe $(ProjectDir)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

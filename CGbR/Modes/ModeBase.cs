@@ -20,9 +20,6 @@ namespace CGbR
         protected IList<IGenerator> Generators { get; } = new List<IGenerator>();
 
         /// <see cref="IGeneratorMode"/>
-        public abstract GeneratorMode Mode { get; }
-
-        /// <see cref="IGeneratorMode"/>
         public abstract bool Initialize(string path, string[] args);
 
         /// <see cref="IGeneratorMode"/>

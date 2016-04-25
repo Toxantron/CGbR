@@ -23,9 +23,6 @@ namespace CGbR
         private string _namespace;
 
         /// <see cref="IGeneratorMode"/>
-        public override GeneratorMode Mode { get; } = GeneratorMode.Project;
-
-        /// <see cref="IGeneratorMode"/>
         public override bool Initialize(string path, string[] args)
         {
             _directory = path;

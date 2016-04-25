@@ -1,25 +1,29 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 
 namespace CGbR
 {
     /// <summary>
     /// Factory to resolve generator mode
     /// </summary>
-    internal class ModeFactory
+    public class ModeFactory
     {
-        public static IGeneratorMode Resolve(GeneratorMode mode)
+        /// <summary>
+        /// Resolve mode for given path argument
+        /// </summary>
+        /// <param name="path">Path the generator shall operate on</param>
+        /// <returns></returns>
+        public static IGeneratorMode Resolve(string path)
         {
-            switch (mode)
-            {
-                case GeneratorMode.File:
-                    return new FileMode();
-                case GeneratorMode.Project:
-                    return new ProjectMode();
-                case GeneratorMode.Solution:
-                    return null;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
+            if (File.Exists(path))
+                return new FileMode();
+            else if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".csproj"))
+                return new ProjectMode();
+            else if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".sln"))
+                return null;
+            else
+                return null;
         }
     }
 }

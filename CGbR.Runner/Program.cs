@@ -24,20 +24,9 @@ namespace CGbR
                 return;
             }
 
-            // Determine mode from argument
-            GeneratorMode mode;
-            var path = args[0].Replace("\"", string.Empty);
-            if (File.Exists(path))
-                mode = GeneratorMode.File;
-            else if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".csproj"))
-                mode = GeneratorMode.Project;
-            else if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".sln"))
-                mode = GeneratorMode.Solution;
-            else
-                return;
-
             // Prepare mode
-            var generatorMode = ModeFactory.Resolve(mode);
+            var path = args[0].Replace("\"", string.Empty);
+            var generatorMode = ModeFactory.Resolve(path);
             if (!generatorMode.Initialize(path, args.Skip(1).ToArray()))
                 return;
 

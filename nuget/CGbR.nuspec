@@ -17,7 +17,8 @@
         <file src="cgbr.json" target="content\cgbr.json" />
         <file src="..\bin\CGbR.Lib.dll" target="lib\CGbR.Lib.dll" />
         <file src="..\bin\CGbR.Lib.XML" target="lib\CGbR.Lib.XML" />
-        <file src="..\bin\cgbr.exe" target="tools\cgbr.exe" />
+        <file src="..\bin\CGbR.dll" target="tools\CGbR.dll" />
+		<file src="..\bin\cgbr-runner.exe" target="tools\cgbr-runner.exe" />
         <file src="..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />
     </files>
 </package>
