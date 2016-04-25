@@ -23,6 +23,12 @@ namespace CGbR
         };
 
         /// <seealso cref="ILocalGenerator"/>
+        public string[] Interfaces { get; } = new[]
+        {
+            "IByteSerializable"
+        };
+
+        /// <seealso cref="ILocalGenerator"/>
         public bool CanExtend(ClassModel model)
         {
             return model.IsPartial && model.HasAttribute(nameof(DataContractAttribute));

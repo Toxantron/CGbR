@@ -16,6 +16,11 @@ namespace CGbR
 		/// Using the generated code requires
 		/// </summary>
 		string[] Usings { get; }
+
+        /// <summary>
+        /// Interfaces the generated code exports
+        /// </summary>
+        string[] Interfaces { get; }
 	}
 }
 

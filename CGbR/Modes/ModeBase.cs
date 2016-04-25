@@ -87,6 +87,7 @@ namespace CGbR
                 { "ClassName", className },
                 { "Modifier", modifier },
                 { "Namespace", @namespace },
+                { "BaseClasses", string.Join(", ", fragments.SelectMany(f => f.Interfaces).Distinct()) },
                 { "Fragments", fragments }
             };
             skeleton.Initialize();

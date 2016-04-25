@@ -22,6 +22,9 @@ namespace CGbR
             "Newtonsoft.Json"
         };
 
+        /// <seealso cref="ILocalGenerator"/>
+        public string[] Interfaces { get; } = new string[0];
+
         /// <see cref="ILocalGenerator"/>
         public bool CanExtend(ClassModel model)
         {

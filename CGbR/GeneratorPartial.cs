@@ -18,6 +18,7 @@ namespace CGbR
         {
             GeneratorName = generator.Name;
             Usings = generator.Usings;
+            Interfaces = generator.Interfaces;
             Code = code;
         }
 
@@ -30,6 +31,11 @@ namespace CGbR
         /// Usings the generated code requires
         /// </summary>
         public string[] Usings { get; private set; }
+
+        /// <summary>
+        /// Interfaces this fragement exports
+        /// </summary>
+        public string[] Interfaces { get; private set; }
 
         /// <summary>
         /// Generated code to insert

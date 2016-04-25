@@ -34,10 +34,6 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CGbR.Lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CGbR.0.3.3\lib\CGbR.Lib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -67,14 +63,20 @@
     <None Include="cgbr.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CGbR.Lib\CGbR.Lib.csproj">
+      <Project>{2e0e6ad3-7336-4ed0-ba8a-2c6d0cc99fed}</Project>
+      <Name>CGbR.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CGbR\CGbR.csproj">
+      <Project>{f42ba2ed-3b24-49a1-b6cf-b1676038141b}</Project>
+      <Name>CGbR</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\CGbR.0.3.3\build\cgbr.targets" Condition="Exists('..\packages\CGbR.0.3.3\build\cgbr.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\CGbR.0.3.3\build\cgbr.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CGbR.0.3.3\build\cgbr.targets'))" />
-  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>$(SolutionDir)bin\cgbr.exe $(ProjectDir)</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

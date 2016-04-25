@@ -67,6 +67,14 @@
         /// <summary>
         /// Convert object to bytes within object tree
         /// </summary>
+        void IByteSerializable.ToBytes(byte[] bytes, ref int index)
+        {
+            ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
         public byte[] ToBytes(byte[] bytes, ref int index)
         {
             if (index + Size > bytes.Length)
@@ -91,6 +99,14 @@
         {
             var index = 0;            
             return FromBytes(bytes, ref index); 
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        void IByteSerializable.FromBytes(byte[] bytes, ref int index)
+        {
+            FromBytes(bytes, ref index);
         }
 
         /// <summary>
