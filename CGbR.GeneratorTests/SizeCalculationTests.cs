@@ -5,8 +5,8 @@ namespace CGbR.GeneratorTests
     [TestFixture]
     public class SizeCalculationTests
     {
-        [TestCase("", 4)]
-        [TestCase("Hello world!", 16)]
+        //[TestCase("", 4)]
+        //[TestCase("Hello world!", 16)]
         public void PartialSize(string name, int expectedSize)
         {
             // Arrange 
