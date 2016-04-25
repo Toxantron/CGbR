@@ -22,8 +22,6 @@ namespace CGbR.Benchmarks
     {
         #region BinarySerializer
 
-        private static Encoding _encoder = new UTF8Encoding();
-
         /// <summary>
         /// Binary size of the object
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace CGbR
 {
@@ -56,7 +57,7 @@ namespace CGbR
         public static int OfClass(ClassModel model)
         {
             var sum = 0;
-            foreach (var property in model.Properties)
+            foreach (var property in model.Properties.Where(p => p.HasAttribute(nameof(DataMemberAttribute))))
             {
                 if (property.IsCollection)
                     // Include 2 bytes length information for each dimension of flexible collections

@@ -22,8 +22,6 @@ namespace CGbR.GeneratorTests
     {
         #region BinarySerializer
 
-        private static Encoding _encoder = new UTF8Encoding();
-
         /// <summary>
         /// Binary size of the object
         /// </summary>
@@ -31,7 +29,7 @@ namespace CGbR.GeneratorTests
         {
             get 
             { 
-                var size = 12;
+                var size = 8;
                 // Add size for collections and strings
                 size += Partials.Sum(entry => entry.Size);
                 size += Numbers.Count * 8;

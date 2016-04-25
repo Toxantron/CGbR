@@ -7,8 +7,6 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Model" type="CGbR.ClassModel" #>
-        private static Encoding _encoder = new UTF8Encoding();
-
         /// <summary>
         /// Binary size of the object
         /// </summary>
