@@ -43,7 +43,7 @@
 				break;
         }
 #>
-                size += <#= property.Name #>.<#= entrySize #>;
+                size += <#= property.Name #> == null ? 0 : <#= property.Name #>.<#= entrySize #>;
 <#
     }
 #>  
@@ -338,7 +338,7 @@
     //----------------------------------------
     private void GenerateReadLoop(PropertyModel property, bool header)
     {
-        if (!property.IsCollection && property.ValueType != ValueType.String) 
+        if (!property.IsCollection) 
             return;
 
         if (header)

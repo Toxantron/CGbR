@@ -80,6 +80,13 @@ namespace CGbR
             
             #line default
             #line hidden
+            this.Write(" == null ? 0 : ");
+            
+            #line 46 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
+            
+            #line default
+            #line hidden
             this.Write(".");
             
             #line 46 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
@@ -836,7 +843,7 @@ this.Write(";\r\n");
     //----------------------------------------
     private void GenerateReadLoop(PropertyModel property, bool header)
     {
-        if (!property.IsCollection && property.ValueType != ValueType.String) 
+        if (!property.IsCollection) 
             return;
 
         if (header)

@@ -26,7 +26,8 @@ namespace CGbR.Lib
         /// </summary>
         /// <param name="instances">Instance to serialize</param>
         /// <returns>Bytes containing the object properties</returns>
-        public static byte[] SerializeMany(ICollection<IByteSerializable> instances)
+        public static byte[] SerializeMany<T>(ICollection<T> instances)
+            where T : IByteSerializable
         {
             var index = 0;
             var bytes = new byte[instances.Sum(i => i.Size)];

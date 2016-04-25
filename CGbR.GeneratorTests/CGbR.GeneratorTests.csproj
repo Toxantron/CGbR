@@ -47,6 +47,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinarySerializerTests.cs" />
     <Compile Include="Dummies\ByteProperties.cs" />
     <Compile Include="Dummies\ByteProperties.Generated.cs" />
     <Compile Include="Dummies\DifferentCollections.cs" />

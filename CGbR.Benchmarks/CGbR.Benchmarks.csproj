@@ -55,12 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BigObjectBenchmark.cs" />
     <Compile Include="Partial.cs" />
     <Compile Include="Partial.Generated.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Root.cs" />
     <Compile Include="Root.Generated.cs" />
+    <Compile Include="SmallNumeric.cs" />
+    <Compile Include="SmallNumeric.Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

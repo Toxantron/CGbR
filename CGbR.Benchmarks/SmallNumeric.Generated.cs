@@ -13,12 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace CGbR.GeneratorTests
+namespace CGbR.Benchmarks
 {
     /// <summary>
     /// Auto generated class by CGbR project
     /// </summary>
-    public partial class ByteProperties : IByteSerializable
+    public partial class SmallNumeric : IByteSerializable
     {
         #region BinarySerializer
 
@@ -29,9 +29,8 @@ namespace CGbR.GeneratorTests
         {
             get 
             { 
-                var size = 3;
+                var size = 6;
                 // Add size for collections and strings
-                size += Bytes == null ? 0 : Bytes.Length;
   
                 return size;              
             }
@@ -64,25 +63,19 @@ namespace CGbR.GeneratorTests
             if (index + Size > bytes.Length)
                 throw new ArgumentOutOfRangeException("index", "Object does not fit in array");
 
-            // Convert SingleByte
-            bytes[index] = SingleByte;
-            index += 1;
-            // Convert Bytes
-            // Two bytes length information for each dimension
-            GeneratorByteConverter.Include((ushort)(Bytes == null ? 0 : Bytes.Length), bytes, index);
+            // Convert Index
+            GeneratorByteConverter.Include(Index, bytes, index);
             index += 2;
-            if (Bytes != null)
-            {
-            	Buffer.BlockCopy(Bytes, 0, bytes, index, Bytes.Length);
-            	index += Bytes.Length;
-            }
+            // Convert Value
+            GeneratorByteConverter.Include(Value, bytes, index);
+            index += 4;
             return bytes;
         }
 
         /// <summary>
         /// Create object from byte array
         /// </summary>
-        public ByteProperties FromBytes(byte[] bytes)
+        public SmallNumeric FromBytes(byte[] bytes)
         {
             var index = 0;            
             return FromBytes(bytes, ref index); 
@@ -99,22 +92,14 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from segment in byte array
         /// </summary>
-        public ByteProperties FromBytes(byte[] bytes, ref int index)
+        public SmallNumeric FromBytes(byte[] bytes, ref int index)
         {
-            // Read SingleByte
-            SingleByte = bytes[index];
-            index += 1;
-            // Read Bytes
-            var bytesLength = BitConverter.ToUInt16(bytes, index);
+            // Read Index
+            Index = BitConverter.ToUInt16(bytes, index);
             index += 2;
-            var tempBytes = new byte[bytesLength];
-            for (var i = 0; i < bytesLength; i++)
-            {
-            	var value = bytes[index];
-            	index += 1;
-                tempBytes[i] = value;
-            }
-            Bytes = tempBytes;
+            // Read Value
+            Value = BitConverter.ToInt32(bytes, index);
+            index += 4;
 
             return this;
         }
@@ -144,24 +129,11 @@ namespace CGbR.GeneratorTests
         {
             writer.Write('{');
 
-            writer.Write("\"SingleByte\":");
-            writer.Write(SingleByte.ToString(CultureInfo.InvariantCulture));
+            writer.Write("\"Index\":");
+            writer.Write(Index.ToString(CultureInfo.InvariantCulture));
     
-            writer.Write(",\"Bytes\":");
-            if (Bytes == null)
-            {
-                writer.Write("null");
-            }
-            else
-            {
-                writer.Write('[');
-                foreach (var value in Bytes)
-                {
-            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
-                    writer.Write(',');
-                }
-                writer.Write(']');
-            }
+            writer.Write(",\"Value\":");
+            writer.Write(Value.ToString(CultureInfo.InvariantCulture));
     
             writer.Write('}');
         }
@@ -169,7 +141,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Convert object to JSON string
         /// </summary>
-        public ByteProperties FromJson(string json)
+        public SmallNumeric FromJson(string json)
         {
             using (var reader = new JsonTextReader(new StringReader(json)))
             {
@@ -180,7 +152,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public ByteProperties FromJson(JsonReader reader)
+        public SmallNumeric FromJson(JsonReader reader)
         {
             while (reader.Read())
             {
@@ -194,19 +166,14 @@ namespace CGbR.GeneratorTests
 
                 switch ((string) reader.Value)
                 {
-                    case "SingleByte":
+                    case "Index":
                         reader.Read();
-                        SingleByte = Convert.ToByte(reader.Value);
+                        Index = Convert.ToUInt16(reader.Value);
                         break;
 
-                    case "Bytes":
-                        reader.Read(); // Read token where array should begin
-                        if (reader.TokenType == JsonToken.Null)
-                            break;
-                        var bytes = new List<byte>();
-                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            bytes.Add(Convert.ToByte(reader.Value));
-                        Bytes = bytes.ToArray();
+                    case "Value":
+                        reader.Read();
+                        Value = Convert.ToInt32(reader.Value);
                         break;
 
                 }

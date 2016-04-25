@@ -31,7 +31,7 @@ namespace CGbR.GeneratorTests
             { 
                 var size = 4;
                 // Add size for collections and strings
-                size += Name.Length;
+                size += Name == null ? 0 : Name.Length;
   
                 return size;              
             }
@@ -98,8 +98,6 @@ namespace CGbR.GeneratorTests
             Id = BitConverter.ToInt16(bytes, index);
             index += 2;
             // Read Name
-            var nameLength = BitConverter.ToUInt16(bytes, index);
-            index += 2;
             Name = GeneratorByteConverter.GetString(bytes, ref index);
 
             return this;

@@ -31,9 +31,9 @@ namespace CGbR.Benchmarks
             { 
                 var size = 18;
                 // Add size for collections and strings
-                size += Name.Length;
-                size += DecimalNumbers.Count * 8;
-                size += SomeNumbers.Count() * 8;
+                size += Name == null ? 0 : Name.Length;
+                size += DecimalNumbers == null ? 0 : DecimalNumbers.Count * 8;
+                size += SomeNumbers == null ? 0 : SomeNumbers.Count() * 8;
   
                 return size;              
             }
@@ -131,8 +131,6 @@ namespace CGbR.Benchmarks
             Price = BitConverter.ToSingle(bytes, index);
             index += 4;
             // Read Name
-            var nameLength = BitConverter.ToUInt16(bytes, index);
-            index += 2;
             Name = GeneratorByteConverter.GetString(bytes, ref index);
             // Read DecimalNumbers
             var decimalnumbersLength = BitConverter.ToUInt16(bytes, index);

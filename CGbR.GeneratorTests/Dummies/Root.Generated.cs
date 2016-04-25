@@ -31,8 +31,8 @@ namespace CGbR.GeneratorTests
             { 
                 var size = 8;
                 // Add size for collections and strings
-                size += Partials.Sum(entry => entry.Size);
-                size += Numbers.Count * 8;
+                size += Partials == null ? 0 : Partials.Sum(entry => entry.Size);
+                size += Numbers == null ? 0 : Numbers.Count * 8;
   
                 return size;              
             }

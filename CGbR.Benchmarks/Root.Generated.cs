@@ -31,9 +31,9 @@ namespace CGbR.Benchmarks
             { 
                 var size = 20;
                 // Add size for collections and strings
-                size += Description.Length;
-                size += PartialsList.Sum(entry => entry.Size);
-                size += PartialsArray.Sum(entry => entry.Size);
+                size += Description == null ? 0 : Description.Length;
+                size += PartialsList == null ? 0 : PartialsList.Sum(entry => entry.Size);
+                size += PartialsArray == null ? 0 : PartialsArray.Sum(entry => entry.Size);
   
                 return size;              
             }
@@ -133,8 +133,6 @@ namespace CGbR.Benchmarks
             Price = BitConverter.ToDouble(bytes, index);
             index += 8;
             // Read Description
-            var descriptionLength = BitConverter.ToUInt16(bytes, index);
-            index += 2;
             Description = GeneratorByteConverter.GetString(bytes, ref index);
             // Read PartialsList
             var partialslistLength = BitConverter.ToUInt16(bytes, index);

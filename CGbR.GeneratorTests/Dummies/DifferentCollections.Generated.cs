@@ -31,11 +31,11 @@ namespace CGbR.GeneratorTests
             { 
                 var size = 12;
                 // Add size for collections and strings
-                size += Integers.Count() * 4;
-                size += Doubles.Count * 8;
-                size += Longs.Length * 8;
-                size += MultiDimension.Length * 4;
-                size += Names.Count;
+                size += Integers == null ? 0 : Integers.Count() * 4;
+                size += Doubles == null ? 0 : Doubles.Count * 8;
+                size += Longs == null ? 0 : Longs.Length * 8;
+                size += MultiDimension == null ? 0 : MultiDimension.Length * 4;
+                size += Names == null ? 0 : Names.Count;
   
                 return size;              
             }
