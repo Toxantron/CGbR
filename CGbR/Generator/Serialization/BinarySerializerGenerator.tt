@@ -35,7 +35,7 @@
 				break;
 			case ValueType.String:
                 // Flexible strings are only included as their length because the length field is part of the fixed size
-                entrySize = "Length";
+                entrySize = property.IsCollection ? GeneratorTools.CollectionSize(property) : "Length";
                 break;
             case ValueType.Byte:
                 entrySize = "Length";
@@ -147,9 +147,8 @@
         switch (property.ValueType)
         {
             case ValueType.String:
-                conversion = BlockCopy(false, $"_encoder.GetBytes({target})", $"{target}.Length");
-                increment = $"{target}.Length";
-                nullable = true;
+                conversion = $"GeneratorByteConverter.Include({target}, bytes, ref index)";
+                increment = null;
                 break;
             case ValueType.Class:
                 conversion = $"{target}.ToBytes(bytes, ref index)";
@@ -197,7 +196,7 @@
     //-------------------------------------------------------
     private void GenerateLengthPrefix(PropertyModel property)
     {
-        if (!property.IsCollection && property.ValueType != ValueType.String)
+        if (!property.IsCollection)
             return;
         
 #>
@@ -300,7 +299,7 @@
         var target = property.IsCollection ? "var value" : property.Name;
 	    var indent = property.IsCollection ? "\t" : string.Empty;
 
-	    var increment = "0";
+	    var increment = string.Empty;
 	    string conversion;
 	    switch (property.ValueType)
 	    {
@@ -312,8 +311,7 @@
 	            increment = "1";
 	            break;
 		    case ValueType.String:
-	            conversion = $"_encoder.GetString(bytes, index, {FieldLength(property, 0)})";
-	            increment = FieldLength(property, 0);
+	            conversion = $"GeneratorByteConverter.GetString(bytes, ref index)";
 			    break;
 	        default:
 			    conversion = $"BitConverter.To{property.ValueType.ToString("G")}(bytes, index)";
@@ -325,8 +323,14 @@
 
 #>
             <#= indent #><#= target #> = <#= conversion #>;
+<#+
+        if (!string.IsNullOrEmpty(increment))
+        {
+#>
             <#= indent #>index += <#= increment #>;
-<#+        
+<#+
+        }
+
         GenerateReadLoop(property, false);
         
     }

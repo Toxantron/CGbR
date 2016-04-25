@@ -31,12 +31,13 @@ namespace CGbR.GeneratorTests
         {
             get 
             { 
-                var size = 10;
+                var size = 12;
                 // Add size for collections and strings
                 size += Integers.Count() * 4;
                 size += Doubles.Count * 8;
                 size += Longs.Length * 8;
                 size += MultiDimension.Length * 4;
+                size += Names.Count;
   
                 return size;              
             }
@@ -123,6 +124,17 @@ namespace CGbR.GeneratorTests
             		index += 4;
                 }
             }
+            // Convert Names
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(Names == null ? 0 : Names.Count), bytes, index);
+            index += 2;
+            if (Names != null)
+            {
+                foreach(var value in Names)
+                {
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
             return bytes;
         }
 
@@ -195,6 +207,16 @@ namespace CGbR.GeneratorTests
                 tempMultiDimension[i,j] = value;
             }
             MultiDimension = tempMultiDimension;
+            // Read Names
+            var namesLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            var tempNames = new List<string>(namesLength);
+            for (var i = 0; i < namesLength; i++)
+            {
+            	var value = GeneratorByteConverter.GetString(bytes, ref index);
+                tempNames.Add(value);
+            }
+            Names = tempNames;
 
             return this;
         }
@@ -288,6 +310,22 @@ namespace CGbR.GeneratorTests
                 writer.Write(']');
             }
     
+            writer.Write(",\"Names\":");
+            if (Names == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in Names)
+                {
+            		writer.Write(string.Format("\"{0}\"", value));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
             writer.Write('}');
         }
 
@@ -357,6 +395,16 @@ namespace CGbR.GeneratorTests
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             multidimension.Add(Convert.ToUInt32(reader.Value));
                         // TODO: MultiDimension = multidimension.ToArray();<-- Figure this out!
+                        break;
+
+                    case "Names":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var names = new List<string>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            names.Add(Convert.ToString(reader.Value));
+                        Names = names;
                         break;
 
                 }

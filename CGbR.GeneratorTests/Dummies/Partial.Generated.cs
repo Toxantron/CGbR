@@ -70,14 +70,7 @@ namespace CGbR.GeneratorTests
             GeneratorByteConverter.Include(Id, bytes, index);
             index += 2;
             // Convert Name
-            // Two bytes length information for each dimension
-            GeneratorByteConverter.Include((ushort)(Name == null ? 0 : Name.Length), bytes, index);
-            index += 2;
-            if (Name != null)
-            {
-            	Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);
-            	index += Name.Length;
-            }
+            GeneratorByteConverter.Include(Name, bytes, ref index);
             return bytes;
         }
 
@@ -109,8 +102,7 @@ namespace CGbR.GeneratorTests
             // Read Name
             var nameLength = BitConverter.ToUInt16(bytes, index);
             index += 2;
-            Name = _encoder.GetString(bytes, index, nameLength);
-            index += nameLength;
+            Name = GeneratorByteConverter.GetString(bytes, ref index);
 
             return this;
         }

@@ -86,7 +86,7 @@ namespace CGbR
         /// <returns>Code fragement</returns>
         public static string CollectionSize(PropertyModel property, int dimension = -1)
         {
-            if (property.ValueType == ValueType.String)
+            if (!property.IsCollection && property.ValueType == ValueType.String)
                 return "Length";
 
             switch (property.CollectionType)
@@ -113,7 +113,6 @@ namespace CGbR
             {
                 case "List":
                 case "IList":
-                case "ICollection":
                 case "Array":
                     return true;
                 default:

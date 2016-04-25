@@ -75,14 +75,7 @@ namespace CGbR.Benchmarks
             GeneratorByteConverter.Include(Price, bytes, index);
             index += 8;
             // Convert Description
-            // Two bytes length information for each dimension
-            GeneratorByteConverter.Include((ushort)(Description == null ? 0 : Description.Length), bytes, index);
-            index += 2;
-            if (Description != null)
-            {
-            	Buffer.BlockCopy(_encoder.GetBytes(Description), 0, bytes, index, Description.Length);
-            	index += Description.Length;
-            }
+            GeneratorByteConverter.Include(Description, bytes, ref index);
             // Convert PartialsList
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(PartialsList == null ? 0 : PartialsList.Count), bytes, index);
@@ -144,8 +137,7 @@ namespace CGbR.Benchmarks
             // Read Description
             var descriptionLength = BitConverter.ToUInt16(bytes, index);
             index += 2;
-            Description = _encoder.GetString(bytes, index, descriptionLength);
-            index += descriptionLength;
+            Description = GeneratorByteConverter.GetString(bytes, ref index);
             // Read PartialsList
             var partialslistLength = BitConverter.ToUInt16(bytes, index);
             index += 2;
@@ -153,7 +145,6 @@ namespace CGbR.Benchmarks
             for (var i = 0; i < partialslistLength; i++)
             {
             	var value = new Partial().FromBytes(bytes, ref index);
-            	index += 0;
                 tempPartialsList.Add(value);
             }
             PartialsList = tempPartialsList;
@@ -164,7 +155,6 @@ namespace CGbR.Benchmarks
             for (var i = 0; i < partialsarrayLength; i++)
             {
             	var value = new Partial().FromBytes(bytes, ref index);
-            	index += 0;
                 tempPartialsArray[i] = value;
             }
             PartialsArray = tempPartialsArray;

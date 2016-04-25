@@ -130,7 +130,6 @@ namespace CGbR.GeneratorTests
             for (var i = 0; i < partialsLength; i++)
             {
             	var value = new Partial().FromBytes(bytes, ref index);
-            	index += 0;
                 tempPartials[i] = value;
             }
             Partials = tempPartials;

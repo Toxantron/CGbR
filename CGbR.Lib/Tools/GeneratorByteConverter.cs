@@ -12,6 +12,8 @@ namespace CGbR.Lib
     /// </summary>
     public static class GeneratorByteConverter
     {
+        private static readonly Encoding Encoder = new UTF8Encoding();
+
         /// <summary>
         /// Writer property of type Int16 to bytes by using pointer opertations
         /// </summary>
@@ -75,6 +77,35 @@ namespace CGbR.Lib
         {
             fixed (byte* b = bytes)
                 *((ulong*)(b + index)) = value;
+        }
+
+        /// <summary>
+        /// Serialize string to byte array
+        /// </summary>
+        public static void Include(string value, byte[] bytes, ref int index)
+        {
+            Include((ushort)(value?.Length ?? 0), bytes, index);
+            index += 2;
+            if (value == null)
+                return;
+
+            Buffer.BlockCopy(Encoder.GetBytes(value), 0, bytes, index, value.Length);
+            index += value.Length;
+        }
+
+        /// <summary>
+        /// Deserialize string from byte array
+        /// </summary>
+        public static string GetString(byte[] bytes, ref int index)
+        {
+            var namesLength = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            if (namesLength == 0)
+                return string.Empty;
+
+            var value = Encoder.GetString(bytes, index, namesLength);
+            index += namesLength;
+            return value;
         }
     }
 }

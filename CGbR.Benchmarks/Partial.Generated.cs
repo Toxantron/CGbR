@@ -75,14 +75,7 @@ namespace CGbR.Benchmarks
             GeneratorByteConverter.Include(Price, bytes, index);
             index += 4;
             // Convert Name
-            // Two bytes length information for each dimension
-            GeneratorByteConverter.Include((ushort)(Name == null ? 0 : Name.Length), bytes, index);
-            index += 2;
-            if (Name != null)
-            {
-            	Buffer.BlockCopy(_encoder.GetBytes(Name), 0, bytes, index, Name.Length);
-            	index += Name.Length;
-            }
+            GeneratorByteConverter.Include(Name, bytes, ref index);
             // Convert DecimalNumbers
             // Two bytes length information for each dimension
             GeneratorByteConverter.Include((ushort)(DecimalNumbers == null ? 0 : DecimalNumbers.Count), bytes, index);
@@ -142,8 +135,7 @@ namespace CGbR.Benchmarks
             // Read Name
             var nameLength = BitConverter.ToUInt16(bytes, index);
             index += 2;
-            Name = _encoder.GetString(bytes, index, nameLength);
-            index += nameLength;
+            Name = GeneratorByteConverter.GetString(bytes, ref index);
             // Read DecimalNumbers
             var decimalnumbersLength = BitConverter.ToUInt16(bytes, index);
             index += 2;

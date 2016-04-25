@@ -17,5 +17,8 @@ namespace CGbR.GeneratorTests
 
         [DataMember]
         public uint[,] MultiDimension { get; set; }
+
+        [DataMember]
+        public ICollection<string> Names { get; set; }
     }
 }
