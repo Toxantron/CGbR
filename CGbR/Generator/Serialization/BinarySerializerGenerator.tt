@@ -163,7 +163,7 @@
                 break;
             default:
                 conversion = BlockCopy(true, target, BinarySize.OfProperty(property).ToString("D"));
-                increment = BinarySize.OfProperty(property).ToString("D");
+                increment = null;
                 break;
         }
 
@@ -204,7 +204,6 @@
         {
 #>
             <#= BlockCopy(true, $"(ushort)({property.Name} == null ? 0 : {property.Name}.{GeneratorTools.CollectionSize(property, property.Dimensions > 1 ? dimension : -1 )})", "2") #>;
-            index += 2;
 <#+   
         }  
     }
@@ -215,7 +214,7 @@
     private static string BlockCopy(bool bitConverter, string source, string length)
     {
         return bitConverter 
-            ? $"GeneratorByteConverter.Include({source}, bytes, index)"
+            ? $"GeneratorByteConverter.Include({source}, bytes, ref index)"
             : $"Buffer.BlockCopy({source}, 0, bytes, index, {length})";
     }
 

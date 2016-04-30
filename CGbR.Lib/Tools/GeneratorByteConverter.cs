@@ -17,66 +17,74 @@ namespace CGbR.Lib
         /// <summary>
         /// Writer property of type Int16 to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(short value, byte[] bytes, int index)
+        public static unsafe void Include(short value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((short*)(b + index)) = value;
+            index += 2;
         }
         /// <summary>
         /// Writer property of type UInt16 to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(ushort value, byte[] bytes, int index)
+        public static unsafe void Include(ushort value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((ushort*)(b + index)) = value;
+            index += 2;
         }
         /// <summary>
         /// Writer property of type Int32 to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(int value, byte[] bytes, int index)
+        public static unsafe void Include(int value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((int*)(b + index)) = value;
+            index += 4;
         }
         /// <summary>
         /// Writer property of type UInt32 to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(uint value, byte[] bytes, int index)
+        public static unsafe void Include(uint value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((uint*)(b + index)) = value;
+            index += 4;
         }
         /// <summary>
         /// Writer property of type Single to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(float value, byte[] bytes, int index)
+        public static unsafe void Include(float value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((float*)(b + index)) = value;
+            index += 4;
         }
         /// <summary>
         /// Writer property of type Double to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(double value, byte[] bytes, int index)
+        public static unsafe void Include(double value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((double*)(b + index)) = value;
+            index += 8;
         }
         /// <summary>
         /// Writer property of type Int64 to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(long value, byte[] bytes, int index)
+        public static unsafe void Include(long value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((long*)(b + index)) = value;
+            index += 8;
         }
         /// <summary>
         /// Writer property of type UInt64 to bytes by using pointer opertations
         /// </summary>
-        public static unsafe void Include(ulong value, byte[] bytes, int index)
+        public static unsafe void Include(ulong value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((ulong*)(b + index)) = value;
+            index += 8;
         }
 
         /// <summary>
@@ -84,8 +92,7 @@ namespace CGbR.Lib
         /// </summary>
         public static void Include(string value, byte[] bytes, ref int index)
         {
-            Include((ushort)(value?.Length ?? 0), bytes, index);
-            index += 2;
+            Include((ushort)(value?.Length ?? 0), bytes, ref index);
             if (value == null)
                 return;
 
