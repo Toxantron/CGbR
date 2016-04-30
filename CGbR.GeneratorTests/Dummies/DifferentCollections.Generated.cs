@@ -35,7 +35,7 @@ namespace CGbR.GeneratorTests
                 size += Doubles == null ? 0 : Doubles.Count * 8;
                 size += Longs == null ? 0 : Longs.Length * 8;
                 size += MultiDimension == null ? 0 : MultiDimension.Length * 4;
-                size += Names == null ? 0 : Names..Sum(s => s.Length + 2);
+                size += Names == null ? 0 : Names.Sum(s => s.Length + 2);
   
                 return size;              
             }

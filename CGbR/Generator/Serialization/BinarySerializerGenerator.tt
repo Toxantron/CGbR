@@ -33,7 +33,7 @@
 				break;
 			case ValueType.String:
                 // Flexible strings are only included as their length because the length field is part of the fixed size
-                entrySize = property.IsCollection ? ".Sum(s => s.Length + 2)" : "Length";
+                entrySize = property.IsCollection ? "Sum(s => s.Length + 2)" : "Length";
                 break;
             case ValueType.Byte:
                 entrySize = "Length";
