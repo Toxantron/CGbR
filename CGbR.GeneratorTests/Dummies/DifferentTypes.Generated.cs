@@ -122,7 +122,7 @@ namespace CGbR.GeneratorTests
             writer.Write('{');
 
             writer.Write("\"Time\":");
-            Time.IncludeJson(writer);
+            //Time.IncludeJson(writer);
     
             writer.Write('}');
         }
@@ -157,7 +157,7 @@ namespace CGbR.GeneratorTests
                 {
                     case "Time":
                         reader.Read();
-                        Time = new DateTime().FromJson(reader);
+                        //Time = new DateTime().FromJson(reader);
                         break;
 
                 }

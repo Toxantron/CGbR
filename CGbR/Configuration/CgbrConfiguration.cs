@@ -15,16 +15,21 @@ namespace CGbR.Configuration
         /// <summary>
         /// Mappings of extension to parser
         /// </summary>
-        public List<ParserMapping> Mappings { get; set; }
+        public ParserMapping[] Mappings { get; set; }
+
+        /// <summary>
+        /// Path to extension libraries
+        /// </summary>
+        public string[] Extensions { get; set; }
 
         /// <summary>
         /// Local generators
         /// </summary>
-        public List<LocalGeneratorConfig> LocalGenerators { get; set; }
+        public LocalGeneratorConfig[] LocalGenerators { get; set; }
 
         /// <summary>
         /// Configuration of global generators
         /// </summary>
-        public List<GlobalGeneratorConfig> GlobalGenerators { get; set; } 
+        public GlobalGeneratorConfig[] GlobalGenerators { get; set; } 
     }
 }

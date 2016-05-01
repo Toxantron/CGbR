@@ -319,7 +319,7 @@ namespace CGbR.GeneratorTests
                 writer.Write('[');
                 foreach (var value in Times)
                 {
-            		value.IncludeJson(writer);
+            		//value.IncludeJson(writer);
                     writer.Write(',');
                 }
                 writer.Write(']');
@@ -418,7 +418,7 @@ namespace CGbR.GeneratorTests
                             break;
                         var times = new List<DateTime>();
                         while (reader.Read() && reader.TokenType == JsonToken.StartObject)
-                            times.Add(new DateTime().FromJson(reader));
+                            //times.Add(new DateTime().FromJson(reader));
                         Times = times;
                         break;
 
