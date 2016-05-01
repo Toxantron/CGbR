@@ -18,7 +18,6 @@ class. This makes it the perfect choice for performance critical applications, l
 
 1. [Modes of operation](#modes-of-operation)
 2. [Serialization](#serialization)
-  * [Benchmarks](#benchmarks)
   * [Binary](#binary-datacontract-serializer)
   * [JSON](#json-datacontract-serializer)
 3. [Dependency Injection](#dependency-injection)
@@ -70,20 +69,6 @@ project performance gains from generated static code over the original reflectio
 100 and 700.
 Sample code can be found in the [Generator tests](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
 and you will also find [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) comparing the different serializers.
-
-### Benchmarks
-The different serializers were put into test to give an overview of performance and size. Those tests were run on a AMD FX-8350 Windows Virtual Machine in Debug and Release mode after an initial JIT run and on an i5 Ubuntu compiled with release and `mono --aot`. Absolute values do not matter as this is more a relative comparison. As you will see the generated version is always faster.
-
-| Test | WindowsVM (Debug) | WindowsVM (Release) | Mono AOT |
-| ---- | ---------------- | ------------------ | --------- |
-| JSON size | 21042 | 21042 | 21042 |
-| Json.NET serialize (ms) | 1,494 | 1,299 | 1,077 |
-| Json.NET deserialize (ms) | 3,016 | 2,356 | 0,828 |
-| Generator Json serialize (ms) | 0,598 | 0,606 | 0,433 |
-| Generator Json deserialize (ms) | 0,651 | 0,576 | 0,670 |
-| Binary size | 12720 | 12720 | 12720 |
-| Binary serialize | 0,123 | 0,041 | 0,059 |
-| Binary deserialize | 0,062 | 0,041 | 0,055 |
 
 ### Binary DataContract Serializer
 The binary DataContract serializer target generates code that maps single objects or object structure onto byte arrays.
