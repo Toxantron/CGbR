@@ -44,6 +44,13 @@ namespace CGbR
             return element.Attributes.Any(att => att.Name.Replace("Attribute", string.Empty) == shortName);
         }
 
+        /// <summary>
+        /// Get reference with given name
+        /// </summary>
+        public static ClassModel GetReference(this ClassModel model, string name)
+        {
+            return model.References.First(r => r.Name == name);
+        }
 
         /// <summary>
         /// Generate code that creates collection instance

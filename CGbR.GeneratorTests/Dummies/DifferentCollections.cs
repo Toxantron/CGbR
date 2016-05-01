@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace CGbR.GeneratorTests
@@ -17,6 +18,9 @@ namespace CGbR.GeneratorTests
 
         [DataMember]
         public uint[,] MultiDimension { get; set; }
+
+        [DataMember]
+        public IList<DateTime> Times { get; set; }
 
         [DataMember]
         public ICollection<string> Names { get; set; }

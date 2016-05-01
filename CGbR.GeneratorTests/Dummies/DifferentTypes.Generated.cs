@@ -18,7 +18,7 @@ namespace CGbR.GeneratorTests
     /// <summary>
     /// Auto generated class by CGbR project
     /// </summary>
-    public partial class Partial : IByteSerializable
+    public partial class DifferentTypes : IByteSerializable
     {
         #region BinarySerializer
 
@@ -29,9 +29,8 @@ namespace CGbR.GeneratorTests
         {
             get 
             { 
-                var size = 4;
+                var size = 8;
                 // Add size for collections and strings
-                size += Name == null ? 0 : Name.Length;
   
                 return size;              
             }
@@ -64,17 +63,15 @@ namespace CGbR.GeneratorTests
             if (index + Size > bytes.Length)
                 throw new ArgumentOutOfRangeException("index", "Object does not fit in array");
 
-            // Convert Id
-            GeneratorByteConverter.Include(Id, bytes, ref index);
-            // Convert Name
-            GeneratorByteConverter.Include(Name, bytes, ref index);
+            // Convert Time
+            GeneratorByteConverter.Include(Time.ToBinary(), bytes, ref index);
             return bytes;
         }
 
         /// <summary>
         /// Create object from byte array
         /// </summary>
-        public Partial FromBytes(byte[] bytes)
+        public DifferentTypes FromBytes(byte[] bytes)
         {
             var index = 0;            
             return FromBytes(bytes, ref index); 
@@ -91,12 +88,10 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Create object from segment in byte array
         /// </summary>
-        public Partial FromBytes(byte[] bytes, ref int index)
+        public DifferentTypes FromBytes(byte[] bytes, ref int index)
         {
-            // Read Id
-            Id = GeneratorByteConverter.ToInt16(bytes, ref index);
-            // Read Name
-            Name = GeneratorByteConverter.GetString(bytes, ref index);
+            // Read Time
+            Time = DateTime.FromBinary(GeneratorByteConverter.ToInt64(bytes, ref index));
 
             return this;
         }
@@ -126,11 +121,8 @@ namespace CGbR.GeneratorTests
         {
             writer.Write('{');
 
-            writer.Write("\"Id\":");
-            writer.Write(Id.ToString(CultureInfo.InvariantCulture));
-    
-            writer.Write(",\"Name\":");
-            writer.Write(string.Format("\"{0}\"", Name));
+            writer.Write("\"Time\":");
+            Time.IncludeJson(writer);
     
             writer.Write('}');
         }
@@ -138,7 +130,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Convert object to JSON string
         /// </summary>
-        public Partial FromJson(string json)
+        public DifferentTypes FromJson(string json)
         {
             using (var reader = new JsonTextReader(new StringReader(json)))
             {
@@ -149,7 +141,7 @@ namespace CGbR.GeneratorTests
         /// <summary>
         /// Include this class in a JSON string
         /// </summary>
-        public Partial FromJson(JsonReader reader)
+        public DifferentTypes FromJson(JsonReader reader)
         {
             while (reader.Read())
             {
@@ -163,14 +155,9 @@ namespace CGbR.GeneratorTests
 
                 switch ((string) reader.Value)
                 {
-                    case "Id":
+                    case "Time":
                         reader.Read();
-                        Id = Convert.ToInt16(reader.Value);
-                        break;
-
-                    case "Name":
-                        reader.Read();
-                        Name = Convert.ToString(reader.Value);
+                        Time = new DateTime().FromJson(reader);
                         break;
 
                 }

@@ -7,6 +7,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Model" type="CGbR.ClassModel" #>
+<#@ parameter name="Tools" type="CGbR.IClassSerializationTools" #>
         /// <summary>
         /// Binary size of the object
         /// </summary>
@@ -14,7 +15,7 @@
         {
             get 
             { 
-                var size = <#= BinarySize.OfClass(Model) #>;
+                var size = <#= BinarySize.OfClass(Model, Tools) #>;
                 // Add size for collections and strings
 <#
     foreach (var property in Model.Properties.Where(BinarySize.IsVariable)
@@ -25,11 +26,9 @@
         {
 			case ValueType.Class:
 				// Find class from other messages
-                var child = Model.References.First(r => r.Name == property.ElementType);
-				if(property.IsCollection)
-					entrySize = BinarySize.IsVariable(child) ? "Sum(entry => entry.Size)" : $"{GeneratorTools.CollectionSize(property)} * {BinarySize.OfClass(child)}";
-				else
-					entrySize = "Size";
+                entrySize = Tools.ReferenceSize(Model, property);
+                if (entrySize == null)
+                    continue;
 				break;
 			case ValueType.String:
                 // Flexible strings are only included as their length because the length field is part of the fixed size
@@ -43,7 +42,7 @@
 				break;
         }
 #>
-                size += <#= property.Name #> == null ? 0 : <#= property.Name #>.<#= entrySize #>;
+                size += <#= property.Name #> == null ? 0 : <#= $"{property.Name}.{entrySize}" #>;
 <#
     }
 #>  
@@ -141,29 +140,25 @@
         // Now we add the real value
         var target = property.IsCollection ? "value" : property.Name;
         var nullable = false;
-        string conversion, increment;
+        string conversion, increment = null;
         switch (property.ValueType)
         {
             case ValueType.String:
                 conversion = $"GeneratorByteConverter.Include({target}, bytes, ref index)";
-                increment = null;
                 break;
             case ValueType.Class:
-                conversion = $"{target}.ToBytes(bytes, ref index)";
-                increment = null;
+                conversion = Tools.ClassToBytes(Model, property);
                 break;
             case ValueType.Boolean:
-                conversion = $"bytes[index] = {target} ? (byte)1 : (byte)0";
-                increment = "1";
+                conversion = $"bytes[index++] = {target} ? (byte)1 : (byte)0";
                 break;
             case ValueType.Byte:
-                conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index] = {target}";
-                increment = property.IsCollection ? $"{property.Name}.Length" : "1";
+                conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index++] = {target}";
+                increment = property.IsCollection ? $"{property.Name}.Length" : null;
                 nullable = property.IsCollection;
                 break;
             default:
                 conversion = BlockCopy(true, target, BinarySize.OfProperty(property).ToString("D"));
-                increment = null;
                 break;
         }
 
@@ -260,9 +255,10 @@
                 var dimensions = new[] { "i", "j", "k" };
                 for (var dimension = 0; dimension < property.Dimensions; dimension++)
                 {
+                    var targetDimension = property.Dimensions > 1 ? dimension : -1;
 
 #>
-                for(var <#= dimensions[dimension] #> = 0; <#= dimensions[dimension] #> < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property, dimension) #>; <#= dimensions[dimension] #>++)
+                for(var <#= dimensions[dimension] #> = 0; <#= dimensions[dimension] #> < <#= property.Name #>.<#= GeneratorTools.CollectionSize(property, targetDimension) #>; <#= dimensions[dimension] #>++)
 <#+
                 }
 #>
@@ -301,18 +297,16 @@
 	    switch (property.ValueType)
 	    {
 	        case ValueType.Class:
-	            conversion = $"new {property.ElementType}().FromBytes(bytes, ref index)";
+	            conversion = Tools.ClassFromBytes(Model, property);
 	            break;
 	        case ValueType.Byte:
-	            conversion = "bytes[index]";
-	            increment = "1";
+	            conversion = "bytes[index++]";
 	            break;
 		    case ValueType.String:
 	            conversion = $"GeneratorByteConverter.GetString(bytes, ref index)";
 			    break;
 	        default:
-			    conversion = $"BitConverter.To{property.ValueType.ToString("G")}(bytes, index)";
-	            increment = BinarySize.OfProperty(property).ToString("D");
+			    conversion = $"GeneratorByteConverter.To{property.ValueType.ToString("G")}(bytes, ref index)";
 	            break;
 	    }
 
@@ -346,8 +340,7 @@
             for (var dimension = 0; dimension < property.Dimensions; dimension++)
             {
 #>
-            var <#= FieldLength(property, dimension) #> = BitConverter.ToUInt16(bytes, index);
-            index += 2;
+            var <#= FieldLength(property, dimension) #> = GeneratorByteConverter.ToUInt16(bytes, ref index);
 <#+
             }
         }

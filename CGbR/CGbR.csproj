@@ -59,6 +59,7 @@
     <Compile Include="Generator\GeneratorFactory.cs" />
     <Compile Include="Generator\GeneratorTools.cs" />
     <Compile Include="Generator\Serialization\BinarySize.cs" />
+    <Compile Include="Generator\Serialization\IClassSerializationTools.cs" />
     <Compile Include="Generator\Serialization\JsonSerializer.cs" />
     <Compile Include="Generator\Serialization\JsonSerializerGenerator.cs">
       <AutoGen>True</AutoGen>

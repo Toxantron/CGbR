@@ -53,8 +53,9 @@ namespace CGbR
         /// Calculate the binary size of a class instance
         /// </summary>
         /// <param name="model">Class model</param>
+        /// <param name="tools">Tools strategy to handle classes</param>
         /// <returns>Fixed size of an instance</returns>
-        public static int OfClass(ClassModel model)
+        public static int OfClass(ClassModel model, IClassSerializationTools tools)
         {
             var sum = 0;
             foreach (var property in model.Properties.Where(p => p.HasAttribute(nameof(DataMemberAttribute))))
@@ -65,6 +66,9 @@ namespace CGbR
                 else if (property.ValueType == ValueType.String)
                     // 2 bytes length for strings as well
                     sum += 2;
+                else if (property.ValueType == ValueType.Class)
+                    // Check if the class reference declares a fixed size
+                    sum += tools.FixedSize(model, property);
                 else
                     sum += OfProperty(property);
             }
