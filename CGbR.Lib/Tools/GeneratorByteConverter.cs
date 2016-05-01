@@ -103,26 +103,81 @@ namespace CGbR.Lib
         /// <summary>
         /// Convert bytes at given position to Int16 and increment index
         /// </summary>
-        public static unsafe short ToInt16(byte[] value, ref int index) 
+        public static short ToInt16(byte[] bytes, ref int index)
         {
-            fixed (byte * pbyte = &value[index]) 
-            {
-                if( index % 2 == 0) 
-                { // data is aligned 
-                    return *((short *) pbyte);
-                }
-                else 
-                {
-                    if (true /* IsLittleEndian */) 
-                    { 
-                        return (short)((*pbyte) | (*(pbyte + 1) << 8)) ;
-                    }
-                    else 
-                    {
-                        return (short)((*pbyte << 8) | (*(pbyte + 1)));                        
-                    }
-                }
-            }
+            var value = BitConverter.ToInt16(bytes, index);
+            index += 2;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static ushort ToUInt16(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToUInt16(bytes, index);
+            index += 2;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static int ToInt32(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static uint ToUInt32(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToUInt32(bytes, index);
+            index += 4;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static float ToSingle(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToSingle(bytes, index);
+            index += 4;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static long ToInt64(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToInt64(bytes, index);
+            index += 8;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static ulong ToUInt64(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToUInt64(bytes, index);
+            index += 8;
+            return value;
+        }
+
+        /// <summary>
+        /// Convert bytes at given position to Int16 and increment index
+        /// </summary>
+        public static double ToDouble(byte[] bytes, ref int index)
+        {
+            var value = BitConverter.ToDouble(bytes, index);
+            index += 8;
+            return value;
         }
 
         /// <summary>
