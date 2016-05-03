@@ -50,17 +50,17 @@ namespace CGbR
         string entrySize;
         switch (property.ValueType)
         {
-			case ValueType.Class:
+			case ModelValueType.Class:
 				// Find class from other messages
                 entrySize = Tools.ReferenceSize(Model, property);
                 if (entrySize == null)
                     continue;
 				break;
-			case ValueType.String:
+			case ModelValueType.String:
                 // Flexible strings are only included as their length because the length field is part of the fixed size
                 entrySize = property.IsCollection ? "Sum(s => s.Length + 2)" : "Length";
                 break;
-            case ValueType.Byte:
+            case ModelValueType.Byte:
                 entrySize = "Length";
                 break;
 			default:
@@ -224,7 +224,7 @@ namespace CGbR
     private void ToBytes(PropertyModel property)
     {
         // Indentation throughout the method
-        var indent = property.IsCollection && property.ValueType != ValueType.Byte ? "\t" : string.Empty;
+        var indent = property.IsCollection && property.ValueType != ModelValueType.Byte ? "\t" : string.Empty;
 
         // Optional length prefix
         GenerateLengthPrefix(property);
@@ -237,16 +237,16 @@ namespace CGbR
         string conversion, increment = null;
         switch (property.ValueType)
         {
-            case ValueType.String:
+            case ModelValueType.String:
                 conversion = $"GeneratorByteConverter.Include({target}, bytes, ref index)";
                 break;
-            case ValueType.Class:
+            case ModelValueType.Class:
                 conversion = Tools.ClassToBytes(Model, property);
                 break;
-            case ValueType.Boolean:
+            case ModelValueType.Boolean:
                 conversion = $"bytes[index++] = {target} ? (byte)1 : (byte)0";
                 break;
-            case ValueType.Byte:
+            case ModelValueType.Byte:
                 conversion = property.IsCollection ? BlockCopy(false, property.Name, $"{property.Name}.Length") : $"bytes[index++] = {target}";
                 increment = property.IsCollection ? $"{property.Name}.Length" : null;
                 nullable = property.IsCollection;
@@ -477,7 +477,7 @@ this.Write("            }\r\n");
     //--------------------------------------
     private void CollectionWrapper(PropertyModel property, bool start)
     {
-        if (!property.IsCollection || property.ValueType == ValueType.Byte)
+        if (!property.IsCollection || property.ValueType == ModelValueType.Byte)
             return;
 
         if (start)
@@ -709,13 +709,13 @@ this.Write("                }\r\n            }\r\n");
 	    string conversion;
 	    switch (property.ValueType)
 	    {
-	        case ValueType.Class:
+	        case ModelValueType.Class:
 	            conversion = Tools.ClassFromBytes(Model, property);
 	            break;
-	        case ValueType.Byte:
+	        case ModelValueType.Byte:
 	            conversion = "bytes[index++]";
 	            break;
-		    case ValueType.String:
+		    case ModelValueType.String:
 	            conversion = $"GeneratorByteConverter.GetString(bytes, ref index)";
 			    break;
 	        default:

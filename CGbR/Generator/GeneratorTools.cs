@@ -47,7 +47,7 @@ namespace CGbR
         /// <summary>
         /// Get reference with given name
         /// </summary>
-        public static ClassModel GetReference(this ClassModel model, string name)
+        public static CodeElementModel GetReference(this ClassModel model, string name)
         {
             return model.References.First(r => r.Name == name);
         }
@@ -93,7 +93,7 @@ namespace CGbR
         /// <returns>Code fragement</returns>
         public static string CollectionSize(PropertyModel property, int dimension = -1)
         {
-            if (!property.IsCollection && property.ValueType == ValueType.String)
+            if (!property.IsCollection && property.ValueType == ModelValueType.String)
                 return "Length";
 
             switch (property.CollectionType)

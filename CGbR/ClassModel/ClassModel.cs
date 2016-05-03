@@ -14,13 +14,8 @@ namespace CGbR
 		public ClassModel (string name) : base(name)
 		{
             Properties = new List<PropertyModel>();
-            References = new List<ClassModel>();
+            References = new List<CodeElementModel>();
 		}
-
-        /// <summary>
-        /// Namespace the class is located in
-        /// </summary>
-        public string Namespace { get; set; }
 
         /// <summary>
         /// Reference to the base class
@@ -51,7 +46,7 @@ namespace CGbR
         /// <summary>
         /// Classes referenced by this class
         /// </summary>
-	    public IList<ClassModel> References { get; set; }
+	    public IList<CodeElementModel> References { get; set; }
 	}
 }
 

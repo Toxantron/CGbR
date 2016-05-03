@@ -15,7 +15,7 @@ namespace CGbR
 		/// <summary>
 		/// Parse all classes from a file
 		/// </summary>
-		ClassModel ParseFile(string file);
+		CodeElementModel ParseFile(string file);
 	}
 }
 

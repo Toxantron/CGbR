@@ -15,39 +15,50 @@ namespace CGbR
         // Regex used to parse source file
         private readonly Regex _namespaceRegex = new Regex(@"namespace (?<namespace>(?:\w\.?)*)");
         private readonly Regex _attributeRegex = new Regex(@" \[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
+
         private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
+        private readonly Regex _enumRegex = new Regex(@" (?<accessModifier>(?:public|internal)) enum (?<enumName>\w+)(?: : )?(?<type>\w+)?");
+
         private readonly Regex _propRegex = new Regex(@" (?<accessModifier>(?:public|internal|private)) (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>_?\w+)");
+        private readonly Regex _memberRegex = new Regex(@" (?<name>\w+)(?: ?= ?)?(?<value>\d+)?");
+
 
         /// <seealso cref="IParser"/>
         public string Name { get; } = "Regex";
 
         /// <seealso cref="IParser"/>
-        public ClassModel ParseFile(string filePath)
+        public CodeElementModel ParseFile(string filePath)
         {
             // Read the file
             var file = File.ReadAllLines(filePath);
 
-            ClassModel model = null;
+            CodeElementModel model = null;
             var @namespace = string.Empty;
             for (var i = 0; i < file.Length; i++)
             {
                 var line = file[i];
 
                 // First find the namespace
-                var match = _namespaceRegex.Match(line);
-                if (match.Success)
-                    @namespace = match.Groups["namespace"].Value;
+                if (string.IsNullOrEmpty(@namespace))
+                {
+                    var match = _namespaceRegex.Match(line);
+                    if (match.Success)
+                        @namespace = match.Groups["namespace"].Value;
+                }
 
                 // First we must find the class definition
                 if (model == null)
                 {
-                    ParseClass(file, i, @namespace, out model);
+                    model = ParseClass(file, i, @namespace) ?? ParseEnum(file, i, @namespace);
                     continue;
                 }
 
+                // Try to parse properties or members
+                if (model is ClassModel)
+                    ParseProperty(file, i, (ClassModel) model);
+                else if (model is EnumModel)
+                    ParseMember(file, i, (EnumModel) model);
 
-                // Look for attributes that mark payload fields
-                ParseProperty(file, i, model);
             }
 
             return model;
@@ -59,16 +70,14 @@ namespace CGbR
         /// <param name="file">Text lines of the file</param>
         /// <param name="index">Index in the file</param>
         /// <param name="namespace">Namespace of the class</param>
-        /// <param name="model">Result model</param>
-        /// <returns>True if parsing succeeded</returns>
-        private void ParseClass(string[] file, int index, string @namespace, out ClassModel model)
+        private CodeElementModel ParseClass(string[] file, int index, string @namespace)
         {
-            model = null;
+            ClassModel model = null;
 
             // Try to match current line as class definition
             var match = _classRegex.Match(file[index]);
             if (!match.Success)
-                return;
+                return model;
 
             // Get base type and interfaces
             var baseGroup = match.Groups["baseType"];
@@ -87,12 +96,43 @@ namespace CGbR
                 Namespace = @namespace,
                 BaseClass = baseType,
                 Interfaces = interfaces,
-		IsPartial = match.Groups["isPartial"].Success,
+                IsPartial = match.Groups["isPartial"].Success,
                 AccessModifier = ParseAccessModifier(match.Groups["accessModifier"].Value)
             };
 
             // Add attributes by moving up the lines
             ParseAttributes(file, index, model);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Try to parse enum from file
+        /// </summary>
+        /// <param name="file">Text lines of the file</param>
+        /// <param name="index">Index in the file</param>
+        /// <param name="namespace">Namespace of the class</param>
+        private CodeElementModel ParseEnum(string[] file, int index, string @namespace)
+        {
+            EnumModel model = null;
+
+            // Try to match current line as class definition
+            var match = _enumRegex.Match(file[index]);
+            if (!match.Success)
+                return model;
+
+            // Create class model
+            var typeMatch = match.Groups["type"];
+            model = new EnumModel(match.Groups["enumName"].Value)
+            {
+                BaseType = typeMatch.Success ? DetermineType(typeMatch.Value) : ModelValueType.Int32,
+                AccessModifier = ParseAccessModifier(match.Groups["accessModifier"].Value)
+            };
+
+            // Add attributes by moving up the lines
+            ParseAttributes(file, index, model);
+
+            return model;
         }
 
         /// <summary>
@@ -123,13 +163,39 @@ namespace CGbR
             };
 
             // Add references
-            if (property.ValueType == ValueType.Class && model.References.All(r => r.Name != type))
+            if (property.ValueType == ModelValueType.Class && model.References.All(r => r.Name != type))
                 model.References.Add(new ClassModel(type));
 
             // Add attributes by moving up the lines
             ParseAttributes(file, index, property);
 
             model.Properties.Add(property);
+        }
+
+        /// <summary>
+        /// Parse enum member and add to the root model
+        /// </summary>
+        /// <param name="file">All text lines of the file</param>
+        /// <param name="index">Current index in the file</param>
+        /// <param name="model">Enum model</param>
+        private void ParseMember(string[] file, int index, EnumModel model)
+        {
+            // Try parsing property
+            var match = _memberRegex.Match(file[index]);
+            if (!match.Success)
+                return;
+
+            // Create property model
+            var valueMatch = match.Groups["value"];
+            var member = new EnumMember(match.Groups["name"].Value)
+            {
+                Value = valueMatch.Success ? int.Parse(valueMatch.Value) : model.Members.Count + 1
+            };
+
+            // Add attributes by moving up the lines
+            ParseAttributes(file, index, member);
+
+            model.Members.Add(member);
         }
 
         /// <summary>
@@ -149,25 +215,25 @@ namespace CGbR
                     return AccessModifier.Public;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(modifier), "I have no idea how you managed this");
-            }   
+            }
         }
 
         /// <summary>
         /// Parse the enum representation of a type
         /// </summary>
         /// <param name="typeString">Type to parse</param>
-        private static ValueType DetermineType(string typeString)
+        private static ModelValueType DetermineType(string typeString)
         {
-            var enumType = typeof(ValueType);
+            var enumType = typeof(ModelValueType);
             var values = Enum.GetNames(enumType);
             foreach (var value in values)
             {
                 var member = enumType.GetMember(value);
                 var attribute = member[0].GetCustomAttribute<TypeAliasAttribute>();
                 if (attribute != null && attribute.Aliases.Contains(typeString))
-                    return (ValueType)Enum.Parse(typeof(ValueType), value);
+                    return (ModelValueType)Enum.Parse(typeof(ModelValueType), value);
             }
-            return ValueType.Class;
+            return ModelValueType.Class;
         }
 
         /// <summary>

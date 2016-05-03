@@ -14,7 +14,7 @@ namespace CGbR
         public string Name { get; } = nameof(BinarySerializer);
 
         /// <seealso cref="ILocalGenerator"/>
-        public string[] Usings { get; } = 
+        public string[] Usings { get; } =
         {
             "System",
             "System.Collections.Generic",
@@ -52,8 +52,13 @@ namespace CGbR
         int IClassSerializationTools.FixedSize(ClassModel model, PropertyModel property)
         {
             var child = GetChild(model, property);
-            if (child != null && !BinarySize.IsVariable(model))
-                return BinarySize.OfClass(model, this);
+            if (child != null)
+            {
+                if (child is ClassModel && !BinarySize.IsVariable((ClassModel)child))
+                    return BinarySize.OfClass((ClassModel)child, this);
+                if (child is EnumModel)
+                    return BinarySize.OfType(((EnumModel) child).BaseType);
+            }
 
             // Fall back to supported types
             switch (property.ElementType)
@@ -83,13 +88,26 @@ namespace CGbR
                 }
             }
 
-            string entrySize;
-            if (property.IsCollection)
-                entrySize = BinarySize.IsVariable(child) ? "Sum(entry => entry.Size)" : $"{GeneratorTools.CollectionSize(property)} * {BinarySize.OfClass(child, this)}";
-            else if (BinarySize.IsVariable(property))
-                entrySize = "Size";
-            else
-                return null;
+            string entrySize = null;
+            if (child is ClassModel)
+            {
+                var classChild = (ClassModel)child;
+                if (property.IsCollection)
+                    entrySize = BinarySize.IsVariable(classChild) ? "Sum(entry => entry.Size)" : $"{GeneratorTools.CollectionSize(property)} * {BinarySize.OfClass(classChild, this)}";
+                else if (BinarySize.IsVariable(property))
+                    entrySize = "Size";
+                else
+                    return null;
+            }
+            else if (child is EnumModel)
+            {
+                var enumChild = (EnumModel)child;
+                if (property.IsCollection)
+                    entrySize = $"{GeneratorTools.CollectionSize(property)} * {BinarySize.OfType(enumChild.BaseType)}";
+                else
+                    return null;
+            }
+
 
             return entrySize;
         }
@@ -137,7 +155,7 @@ namespace CGbR
             }
         }
 
-        private static ClassModel GetChild(ClassModel model, PropertyModel property)
+        private static CodeElementModel GetChild(ClassModel model, PropertyModel property)
         {
             return model.References.FirstOrDefault(r => r.Name == property.ElementType);
         }

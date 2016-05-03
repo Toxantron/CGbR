@@ -24,6 +24,11 @@ namespace CGbR
 		public string Name { get; set; }
 
         /// <summary>
+        /// Namespace the type is located in
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
         /// Attributes defined for this class
         /// </summary>
         /// <value>The attributes.</value>

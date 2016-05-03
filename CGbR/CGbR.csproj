@@ -42,9 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassModel\AccessModifier.cs" />
+    <Compile Include="ClassModel\EnumModel.cs" />
     <Compile Include="ClassModel\TypeAliasAttribute.cs" />
     <Compile Include="ClassModel\PropertyModel.cs" />
-    <Compile Include="ClassModel\ValueType.cs" />
+    <Compile Include="ClassModel\ModelValueType.cs" />
     <Compile Include="Configuration\CgbrConfiguration.cs" />
     <Compile Include="Configuration\GlobalGeneratorConfig.cs" />
     <Compile Include="Configuration\LocalGeneratorConfig.cs" />

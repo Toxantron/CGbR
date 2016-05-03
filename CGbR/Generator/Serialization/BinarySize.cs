@@ -22,27 +22,27 @@ namespace CGbR
         /// <summary>
         /// Get the binary size of a given value type
         /// </summary>
-        public static int OfType(ValueType type)
+        public static int OfType(ModelValueType type)
         {
             switch (type)
             {
-                case ValueType.Boolean:
-                case ValueType.Byte:
+                case ModelValueType.Boolean:
+                case ModelValueType.Byte:
                     return 1;
-                case ValueType.Char:
-                case ValueType.Int16:
-                case ValueType.UInt16:
+                case ModelValueType.Char:
+                case ModelValueType.Int16:
+                case ModelValueType.UInt16:
                     return 2;
-                case ValueType.Int32:
-                case ValueType.UInt32:
-                case ValueType.Single:
+                case ModelValueType.Int32:
+                case ModelValueType.UInt32:
+                case ModelValueType.Single:
                     return 4;
-                case ValueType.Double:
-                case ValueType.Int64:
-                case ValueType.UInt64:
+                case ModelValueType.Double:
+                case ModelValueType.Int64:
+                case ModelValueType.UInt64:
                     return 8;
-                case ValueType.String:
-                case ValueType.Class:
+                case ModelValueType.String:
+                case ModelValueType.Class:
                     return 0;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -63,10 +63,10 @@ namespace CGbR
                 if (property.IsCollection)
                     // Include 2 bytes length information for each dimension of flexible collections
                     sum += 2 * property.Dimensions;
-                else if (property.ValueType == ValueType.String)
+                else if (property.ValueType == ModelValueType.String)
                     // 2 bytes length for strings as well
                     sum += 2;
-                else if (property.ValueType == ValueType.Class)
+                else if (property.ValueType == ModelValueType.Class)
                     // Check if the class reference declares a fixed size
                     sum += tools.FixedSize(model, property);
                 else
@@ -83,11 +83,11 @@ namespace CGbR
         public static bool IsVariable(PropertyModel property)
         {
             // All collection and strings are variable
-            if (property.IsCollection || property.ValueType == ValueType.String)
+            if (property.IsCollection || property.ValueType == ModelValueType.String)
                 return true;
 
             // Same applies for classes
-            if (property.ValueType == ValueType.Class)
+            if (property.ValueType == ModelValueType.Class)
                 return true;
 
             // Everything else is static

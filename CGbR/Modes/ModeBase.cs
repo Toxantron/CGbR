@@ -41,7 +41,7 @@ namespace CGbR
             return new ParsedFile
             {
                 Name = filePath,
-                ClassModel = model
+                Model = model
             };
         }
 
@@ -51,7 +51,9 @@ namespace CGbR
         /// <param name="file">File to generate for</param>
         protected void GenerateLocalPartial(ParsedFile file)
         {
-            var model = file.ClassModel;
+            var model = file.Model as ClassModel;
+            if (model == null)
+                return;
 
             // Find all matching generators and collect their code fragments
             var fragments = (from gen in Generators.OfType<ILocalGenerator>()
@@ -105,12 +107,12 @@ namespace CGbR
             /// <summary>
             /// Classes that were found
             /// </summary>
-            public ClassModel ClassModel { get; set; }
+            public CodeElementModel Model { get; set; }
 
             /// <summary>
             /// String override for better debugging
             /// </summary>
-            public override string ToString() => $"{ClassModel.Namespace} at {Name}";
+            public override string ToString() => $"{Model.Namespace} at {Name}";
         }
     }
 }

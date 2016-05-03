@@ -107,9 +107,9 @@ namespace CGbR
 
         }
         var target = property.IsCollection ? "value" : property.Name;
-        if (property.ValueType == ValueType.String)
+        if (property.ValueType == ModelValueType.String)
             target = $"string.Format(\"\\\"{{0}}\\\"\", {target})";
-        else if(property.ValueType != ValueType.Class)
+        else if(property.ValueType != ModelValueType.Class)
             target = $"{target}.ToString(CultureInfo.InvariantCulture)";
 
             
@@ -124,7 +124,7 @@ namespace CGbR
             #line hidden
             
             #line 56 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\JsonSerializerGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(property.ValueType == ValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.Write({target})"));
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.ValueType == ModelValueType.Class ? $"{target}.IncludeJson(writer)" : $"writer.Write({target})"));
             
             #line default
             #line hidden
@@ -242,7 +242,7 @@ namespace CGbR
                                   .Where(p => p.IsCollection))
     {
         var varName = property.Name.ToLower();
-        var condition = property.ValueType == ValueType.Class
+        var condition = property.ValueType == ModelValueType.Class
             ? "== JsonToken.StartObject"
             : "!= JsonToken.EndArray";
 
@@ -344,7 +344,7 @@ namespace CGbR
     // Converter for different property types
     private static string Converter(PropertyModel property)
     {
-        var converter = property.ValueType == ValueType.Class
+        var converter = property.ValueType == ModelValueType.Class
             ? $"new {property.ElementType}().FromJson(reader)"
             : $"Convert.To{property.ValueType}(reader.Value)";
         return converter;

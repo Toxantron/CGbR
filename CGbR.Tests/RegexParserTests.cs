@@ -35,7 +35,7 @@ namespace CGbR.ParserTests
             File.WriteAllText("PlainRegex", code);
 
             // Act
-            var model = parser.ParseFile("PlainRegex");
+            var model = parser.ParseFile("PlainRegex") as ClassModel;
 
             // Assert
             Assert.IsNotNull(model);
@@ -61,7 +61,7 @@ namespace CGbR.ParserTests
             File.WriteAllText("PlainRegex", code);
 
             // Act
-            var model = parser.ParseFile("PlainRegex");
+            var model = parser.ParseFile("PlainRegex") as ClassModel;
 
             // Assert
             Assert.IsNotNull(model);
@@ -87,7 +87,7 @@ namespace CGbR.ParserTests
             File.WriteAllText("PlainRegex", code);
 
             // Act
-            var model = parser.ParseFile("PlainRegex");
+            var model = parser.ParseFile("PlainRegex") as ClassModel;
 
             // Assert
             Assert.IsNotNull(model);
@@ -113,7 +113,7 @@ namespace CGbR.ParserTests
             File.WriteAllText("ComplexRegex", code);
 
             // Act
-            var model = parser.ParseFile("ComplexRegex");
+            var model = parser.ParseFile("ComplexRegex") as ClassModel;
 
             // Assert
             Assert.IsNotNull(model);
@@ -178,9 +178,10 @@ namespace CGbR.ParserTests
             File.WriteAllText("TestRegex", code);
 
             // Act
-            var model = parser.ParseFile("TestRegex");
+            var model = parser.ParseFile("TestRegex") as ClassModel;
 
             // Assert
+            Assert.NotNull(model);
             Assert.AreEqual(2, model.Properties.Count, "Number of properties does not match!");
             var prop = model.Properties[0];
             Assert.AreEqual("WithoutAtt", prop.Name, "Name of first property does not match!");
@@ -212,14 +213,15 @@ namespace CGbR.ParserTests
             File.WriteAllText("ListRegex", code);
 
             // Act
-            var parsed = parser.ParseFile("ListRegex");
+            var parsed = parser.ParseFile("ListRegex") as ClassModel;
 
             // Assert
+            Assert.NotNull(parsed);
             Assert.AreEqual(1, parsed.Properties.Count);
             var prop = parsed.Properties.First();
             Assert.AreEqual("Numbers", prop.Name);
             Assert.AreEqual("ushort", prop.ElementType);
-            Assert.AreEqual(ValueType.UInt16, prop.ValueType);
+            Assert.AreEqual(ModelValueType.UInt16, prop.ValueType);
             Assert.AreEqual("IList", prop.CollectionType);
             Assert.AreEqual(AccessModifier.Public, parsed.AccessModifier);
         }
@@ -241,14 +243,133 @@ namespace CGbR.ParserTests
             File.WriteAllText("FieldRegex", code);
 
             // Act
-            var parsed = parser.ParseFile("FieldRegex");
+            var parsed = parser.ParseFile("FieldRegex") as ClassModel;
 
             // Assert
+            Assert.NotNull(parsed);
             Assert.AreEqual(1, parsed.Properties.Count);
             var prop = parsed.Properties.First();
             Assert.AreEqual("_number", prop.Name);
             Assert.AreEqual("long", prop.ElementType);
-            Assert.AreEqual(ValueType.Int64, prop.ValueType);
+            Assert.AreEqual(ModelValueType.Int64, prop.ValueType);
+        }
+
+        [Test]
+        public void ParseEnum()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    internal enum Plain
+    {
+    }
+}
+";
+            File.WriteAllText("Enum", code);
+
+            // Act
+            var model = parser.ParseFile("Enum") as EnumModel;
+
+            // Assert
+            Assert.NotNull(model);
+            Assert.AreEqual("Plain", model.Name);
+            Assert.AreEqual(ModelValueType.Int32, model.BaseType);
+            Assert.AreEqual(AccessModifier.Internal, model.AccessModifier);
+        }
+
+        [Test]
+        public void ParseEnumBaseType()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    public enum Short : short
+    {
+    }
+}
+";
+            File.WriteAllText("Enum", code);
+
+            // Act
+            var model = parser.ParseFile("Enum") as EnumModel;
+
+            // Assert
+            Assert.NotNull(model);
+            Assert.AreEqual("Short", model.Name);
+            Assert.AreEqual(ModelValueType.Int16, model.BaseType);
+            Assert.AreEqual(AccessModifier.Public, model.AccessModifier);
+        }
+
+        [Test]
+        public void ParseEnumMembers()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    internal enum Plain
+    {
+        A,
+        B
+    }
+}
+";
+            File.WriteAllText("Enum", code);
+
+            // Act
+            var model = parser.ParseFile("Enum") as EnumModel;
+
+            // Assert
+            Assert.NotNull(model);
+            Assert.AreEqual("Plain", model.Name);
+            Assert.AreEqual(ModelValueType.Int32, model.BaseType);
+            Assert.AreEqual(AccessModifier.Internal, model.AccessModifier);
+            Assert.AreEqual(2, model.Members.Count);
+            var first = model.Members[0];
+            Assert.AreEqual("A", first.Name);
+            Assert.AreEqual(1, first.Value);
+            var second = model.Members[1];
+            Assert.AreEqual("B", second.Name);
+            Assert.AreEqual(2, second.Value);
+        }
+
+        [Test]
+        public void ParseNumberedMembers()
+        {
+            // Arrange
+            var parser = ParserFactory.Resolve("Regex");
+            const string code =
+@"namespace Test
+{
+    internal enum Plain
+    {
+        A = 2,
+        B = 8
+    }
+}
+";
+            File.WriteAllText("Enum", code);
+
+            // Act
+            var model = parser.ParseFile("Enum") as EnumModel;
+
+            // Assert
+            Assert.NotNull(model);
+            Assert.AreEqual("Plain", model.Name);
+            Assert.AreEqual(ModelValueType.Int32, model.BaseType);
+            Assert.AreEqual(AccessModifier.Internal, model.AccessModifier);
+            Assert.AreEqual(2, model.Members.Count);
+            var first = model.Members[0];
+            Assert.AreEqual("A", first.Name);
+            Assert.AreEqual(2, first.Value);
+            var second = model.Members[1];
+            Assert.AreEqual("B", second.Name);
+            Assert.AreEqual(8, second.Value);
         }
     }
 }

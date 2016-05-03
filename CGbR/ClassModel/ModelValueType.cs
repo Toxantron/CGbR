@@ -3,7 +3,7 @@
     /// <summary>
     /// Type representation of property types
     /// </summary>
-    public enum ValueType
+    public enum ModelValueType
     {
         /// <summary>
         /// Single character

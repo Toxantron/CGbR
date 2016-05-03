@@ -105,17 +105,17 @@ namespace CGbR
         /// </summary>
         /// <param name="files">Parsed files</param>
         private static void LinkReferences(ICollection<ParsedFile> files)
-        {
-            foreach (var file in files)
+        { 
+            foreach (var @class in files.Select(f => f.Model).OfType<ClassModel>())
             {
                 // Find references classes in list of all classes
-                var references = (from model in files.Select(f => f.ClassModel)
-                                  from reference in file.ClassModel.References
+                var references = (from model in files.Select(f => f.Model)
+                                  from reference in @class.References
                                   where reference.Name == model.Name
                                   select model);
 
                 // Overwrite flat references with real instances
-                file.ClassModel.References = references.ToList();
+                @class.References = references.ToList();
             }
         }
 
@@ -128,7 +128,9 @@ namespace CGbR
             // Iterate over the files and generate the partial class
             foreach (var file in files)
             {
-                var model = file.ClassModel;
+                var model = file.Model as ClassModel;
+                if (model == null)
+                    continue;
 
                 // Find all matching generators and collect their code fragments
                 var fragments = (from gen in Generators.OfType<ILocalGenerator>()
@@ -154,7 +156,7 @@ namespace CGbR
         /// <param name="files"></param>
         private void GenerateGlobalClasses(IEnumerable<ParsedFile> files)
         {
-            var models = files.Select(f => f.ClassModel).ToArray();
+            var models = files.Select(f => f.Model).OfType<ClassModel>().ToArray();
             // Determine all global classes and generate their code
             var globalClasses = (from generator in Generators.OfType<IGlobalGenerator>()
                                  let matchingClasses = models.Where(generator.ClassFilter).ToList()

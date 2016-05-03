@@ -41,7 +41,7 @@
         /// <summary>
         /// Simple enum representation
         /// </summary>
-        public ValueType ValueType { get; set; }
+        public ModelValueType ValueType { get; set; }
 
         /// <summary>
         /// Value of the property if set
