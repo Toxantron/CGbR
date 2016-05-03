@@ -1,4 +1,6 @@
 # CGbR - Code dynamic, run static
+
+[![Join the chat at https://gitter.im/Toxantron/CGbR](https://badges.gitter.im/Toxantron/CGbR.svg)](https://gitter.im/Toxantron/CGbR?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![NuGet](https://img.shields.io/nuget/v/CGbR.svg)](https://www.nuget.org/packages/CGbR/)
 [![Build status](https://ci.appveyor.com/api/projects/status/9lbxnkji7ifaws2k?svg=true)](https://ci.appveyor.com/project/Toxantron/cgbr)
 [![Coverage Status](https://coveralls.io/repos/github/Toxantron/CGbR/badge.svg?branch=master)](https://coveralls.io/github/Toxantron/CGbR?branch=master)
