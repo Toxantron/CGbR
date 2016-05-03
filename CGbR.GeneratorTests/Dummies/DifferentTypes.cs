@@ -9,5 +9,13 @@ namespace CGbR.GeneratorTests
         [DataMember]
         public DateTime Time { get; set; }
 
+        [DataMember]
+        public ShortEnum Short { get; set; }
+
+        [DataMember]
+        public SomeEnum Some { get; set; }
+
+        [DataMember]
+        public BigEnum Big { get; set; }
     }
 }

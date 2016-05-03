@@ -121,7 +121,13 @@ namespace CGbR
             // Class is auto generated as well
             if (child != null)
             {
-                return $"{target}.ToBytes(bytes, ref index)";
+                if(child is ClassModel)
+                    return $"{target}.ToBytes(bytes, ref index)";
+                if(child is EnumModel)
+                {
+                    var enumModel = (EnumModel) child;
+                    return $"GeneratorByteConverter.Include(({enumModel.BaseType}){target}, bytes, ref index)";
+                }
             }
 
             // If we couldn't find the child we are bound to the classes we support
@@ -142,14 +148,22 @@ namespace CGbR
             // Class is auto generated as well
             if (child != null)
             {
-                return $"new {property.ElementType}().FromBytes(bytes, ref index)";
+                if (child is ClassModel)
+                    return $"new {property.ElementType}().FromBytes(bytes, ref index)";
+                if (child is EnumModel)
+                {
+                    var enumModel = (EnumModel)child;
+                    return enumModel.BaseType == ModelValueType.Byte 
+                        ? $"({enumModel.Name}) bytes[index++]"
+                        : $"({enumModel.Name}) GeneratorByteConverter.To{enumModel.BaseType}(bytes, ref index)";
+                }
             }
 
             // If we couldn't find the child we are bound to the classes we support
             switch (property.ElementType)
             {
                 case nameof(DateTime):
-                    return $"DateTime.FromBinary(GeneratorByteConverter.ToInt64(bytes, ref index))";
+                    return "DateTime.FromBinary(GeneratorByteConverter.ToInt64(bytes, ref index))";
                 default:
                     return string.Empty;
             }

@@ -29,7 +29,7 @@ namespace CGbR.GeneratorTests
         {
             get 
             { 
-                var size = 8;
+                var size = 21;
                 // Add size for collections and strings
   
                 return size;              
@@ -65,6 +65,12 @@ namespace CGbR.GeneratorTests
 
             // Convert Time
             GeneratorByteConverter.Include(Time.ToBinary(), bytes, ref index);
+            // Convert Short
+            GeneratorByteConverter.Include((Byte)Short, bytes, ref index);
+            // Convert Some
+            GeneratorByteConverter.Include((Int32)Some, bytes, ref index);
+            // Convert Big
+            GeneratorByteConverter.Include((Int64)Big, bytes, ref index);
             return bytes;
         }
 
@@ -92,82 +98,17 @@ namespace CGbR.GeneratorTests
         {
             // Read Time
             Time = DateTime.FromBinary(GeneratorByteConverter.ToInt64(bytes, ref index));
+            // Read Short
+            Short = (ShortEnum) bytes[index++];
+            // Read Some
+            Some = (SomeEnum) GeneratorByteConverter.ToInt32(bytes, ref index);
+            // Read Big
+            Big = (BigEnum) GeneratorByteConverter.ToInt64(bytes, ref index);
 
             return this;
         }
 
         
         #endregion
-
-        #region JsonSerializer
-
-        /// <summary>
-        /// Convert object to JSON string
-        /// </summary>
-        public string ToJson()
-        {
-            var builder = new StringBuilder();
-            using(var writer = new StringWriter(builder))
-            {
-                IncludeJson(writer);
-                return builder.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Include this class in a JSON string
-        /// </summary>
-        public void IncludeJson(TextWriter writer)
-        {
-            writer.Write('{');
-
-            writer.Write("\"Time\":");
-            //Time.IncludeJson(writer);
-    
-            writer.Write('}');
-        }
-
-        /// <summary>
-        /// Convert object to JSON string
-        /// </summary>
-        public DifferentTypes FromJson(string json)
-        {
-            using (var reader = new JsonTextReader(new StringReader(json)))
-            {
-                return FromJson(reader);
-            }
-        }
-
-        /// <summary>
-        /// Include this class in a JSON string
-        /// </summary>
-        public DifferentTypes FromJson(JsonReader reader)
-        {
-            while (reader.Read())
-            {
-                // Break on EndObject
-                if (reader.TokenType == JsonToken.EndObject)
-                    break;
-
-                // Only look for properties
-                if (reader.TokenType != JsonToken.PropertyName)
-                    continue;
-
-                switch ((string) reader.Value)
-                {
-                    case "Time":
-                        reader.Read();
-                        //Time = new DateTime().FromJson(reader);
-                        break;
-
-                }
-            }
-
-            return this;
-        }
-
-        
-        #endregion
-
     }
 }
