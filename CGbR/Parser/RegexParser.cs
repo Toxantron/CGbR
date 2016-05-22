@@ -16,7 +16,7 @@ namespace CGbR
         private readonly Regex _namespaceRegex = new Regex(@"namespace (?<namespace>(?:\w\.?)*)");
         private readonly Regex _attributeRegex = new Regex(@" \[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
 
-        private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
+        private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>[A-Z][a-z]\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
         private readonly Regex _enumRegex = new Regex(@" (?<accessModifier>(?:public|internal)) enum (?<enumName>\w+)(?: : )?(?<type>\w+)?");
 
         private readonly Regex _propRegex = new Regex(@" (?<accessModifier>(?:public|internal|private)) (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>_?\w+)");
