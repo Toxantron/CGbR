@@ -10,11 +10,7 @@
 namespace CGbR
 {
     using System.Linq;
-    using System.Net.Configuration;
     using System.Runtime.Serialization;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text;
-    using System.Collections.Generic;
     using System;
     
     /// <summary>
@@ -23,7 +19,7 @@ namespace CGbR
     
     #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
-    public partial class BinarySerializerGenerator : BinarySerializerGeneratorBase
+    internal partial class BinarySerializerGenerator : BinarySerializerGeneratorBase
     {
 #line hidden
         /// <summary>
@@ -35,14 +31,14 @@ namespace CGbR
                     "ry>\r\n        public int Size\r\n        {\r\n            get \r\n            { \r\n     " +
                     "           var size = ");
             
-            #line 18 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 13 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BinarySize.OfClass(Model, Tools)));
             
             #line default
             #line hidden
             this.Write(";\r\n                // Add size for collections and strings\r\n");
             
-            #line 20 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 15 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     foreach (var property in Model.Properties.Where(BinarySize.IsVariable)
                                              .Where(p => p.HasAttribute(nameof(DataMemberAttribute))))
@@ -73,21 +69,21 @@ namespace CGbR
             #line hidden
             this.Write("                size += ");
             
-            #line 45 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 40 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(" == null ? 0 : ");
             
-            #line 45 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 40 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture($"{property.Name}.{entrySize}"));
             
             #line default
             #line hidden
             this.Write(";\r\n");
             
-            #line 46 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 41 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     }
 
@@ -128,7 +124,7 @@ namespace CGbR
 
 ");
             
-            #line 80 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 75 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
@@ -138,14 +134,14 @@ namespace CGbR
             #line hidden
             this.Write("            // Convert ");
             
-            #line 84 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 79 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 85 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 80 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         ToBytes(property);          
     }
@@ -156,7 +152,7 @@ namespace CGbR
             this.Write("            return bytes;\r\n        }\r\n\r\n        /// <summary>\r\n        /// Create" +
                     " object from byte array\r\n        /// </summary>\r\n        public ");
             
-            #line 95 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 90 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
             
             #line default
@@ -180,14 +176,14 @@ namespace CGbR
         /// </summary>
         public ");
             
-            #line 112 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 107 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
             
             #line default
             #line hidden
             this.Write(" FromBytes(byte[] bytes, ref int index)\r\n        {\r\n");
             
-            #line 114 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 109 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     foreach (var property in Model.Properties.WhereAttribute(nameof(DataMemberAttribute)))
     {
@@ -197,14 +193,14 @@ namespace CGbR
             #line hidden
             this.Write("            // Read ");
             
-            #line 118 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 113 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 119 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+            #line 114 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         FromBytes(property);
     }
@@ -216,7 +212,7 @@ namespace CGbR
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 126 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 121 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
     //---------------------------------------------
     // Generate a byte conversion for this field 
@@ -268,6 +264,43 @@ namespace CGbR
         #line default
         #line hidden
         
+        #line 167 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write("            ");
+
+        
+        #line default
+        #line hidden
+        
+        #line 168 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(indent));
+
+        
+        #line default
+        #line hidden
+        
+        #line 168 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(conversion));
+
+        
+        #line default
+        #line hidden
+        
+        #line 168 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(";\r\n");
+
+        
+        #line default
+        #line hidden
+        
+        #line 169 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+
+        if (!string.IsNullOrEmpty(increment))
+        {
+
+        
+        #line default
+        #line hidden
+        
         #line 172 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            ");
 
@@ -283,7 +316,14 @@ this.Write(this.ToStringHelper.ToStringWithCulture(indent));
         #line hidden
         
         #line 173 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(conversion));
+this.Write("index += ");
+
+        
+        #line default
+        #line hidden
+        
+        #line 173 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(increment));
 
         
         #line default
@@ -297,50 +337,6 @@ this.Write(";\r\n");
         #line hidden
         
         #line 174 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-
-        if (!string.IsNullOrEmpty(increment))
-        {
-
-        
-        #line default
-        #line hidden
-        
-        #line 177 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write("            ");
-
-        
-        #line default
-        #line hidden
-        
-        #line 178 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(indent));
-
-        
-        #line default
-        #line hidden
-        
-        #line 178 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write("index += ");
-
-        
-        #line default
-        #line hidden
-        
-        #line 178 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(increment));
-
-        
-        #line default
-        #line hidden
-        
-        #line 178 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(";\r\n");
-
-        
-        #line default
-        #line hidden
-        
-        #line 179 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         }
 
@@ -362,14 +358,14 @@ this.Write(";\r\n");
         #line default
         #line hidden
         
-        #line 195 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 190 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            // Two bytes length information for each dimension\r\n");
 
         
         #line default
         #line hidden
         
-        #line 197 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 192 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         for (var dimension = 0; dimension < property.Dimensions; dimension++)
         {
@@ -378,28 +374,28 @@ this.Write("            // Two bytes length information for each dimension\r\n")
         #line default
         #line hidden
         
-        #line 200 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 195 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            ");
 
         
         #line default
         #line hidden
         
-        #line 201 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 196 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(BlockCopy(true, $"(ushort)({property.Name} == null ? 0 : {property.Name}.{GeneratorTools.CollectionSize(property, property.Dimensions > 1 ? dimension : -1 )})", "2")));
 
         
         #line default
         #line hidden
         
-        #line 201 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 196 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(";\r\n");
 
         
         #line default
         #line hidden
         
-        #line 202 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 197 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
    
         }  
     }
@@ -429,28 +425,28 @@ this.Write(";\r\n");
         #line default
         #line hidden
         
-        #line 226 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 221 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            if (");
 
         
         #line default
         #line hidden
         
-        #line 227 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 222 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 227 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 222 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" != null)\r\n            {\r\n");
 
         
         #line default
         #line hidden
         
-        #line 229 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 224 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         }
         else
@@ -460,14 +456,14 @@ this.Write(" != null)\r\n            {\r\n");
         #line default
         #line hidden
         
-        #line 233 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 228 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            }\r\n");
 
         
         #line default
         #line hidden
         
-        #line 235 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 230 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         }
     }
@@ -487,28 +483,28 @@ this.Write("            }\r\n");
         #line default
         #line hidden
         
-        #line 249 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 244 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            if (");
 
         
         #line default
         #line hidden
         
-        #line 250 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 245 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 250 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 245 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" != null)\r\n            {\r\n");
 
         
         #line default
         #line hidden
         
-        #line 252 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 247 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
             if (GeneratorTools.SupportsForLoop(property))
             {
@@ -522,84 +518,84 @@ this.Write(" != null)\r\n            {\r\n");
         #line default
         #line hidden
         
-        #line 260 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 255 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("                for(var ");
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(dimensions[dimension]));
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" = 0; ");
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(dimensions[dimension]));
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" < ");
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(".");
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(GeneratorTools.CollectionSize(property, targetDimension)));
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("; ");
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(dimensions[dimension]));
 
         
         #line default
         #line hidden
         
-        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 256 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("++)\r\n");
 
         
         #line default
         #line hidden
         
-        #line 262 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 257 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
                 }
 
@@ -607,42 +603,42 @@ this.Write("++)\r\n");
         #line default
         #line hidden
         
-        #line 264 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 259 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("                {\r\n                    var value = ");
 
         
         #line default
         #line hidden
         
-        #line 266 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 266 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("[");
 
         
         #line default
         #line hidden
         
-        #line 266 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(",", Enumerable.Range(0, property.Dimensions).Select(i => dimensions[i]))));
 
         
         #line default
         #line hidden
         
-        #line 266 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 261 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("];\r\n");
 
         
         #line default
         #line hidden
         
-        #line 267 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 262 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
             }
             else
@@ -652,28 +648,28 @@ this.Write("];\r\n");
         #line default
         #line hidden
         
-        #line 271 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 266 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("                foreach(var value in ");
 
         
         #line default
         #line hidden
         
-        #line 272 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 267 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 272 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 267 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(")\r\n                {\r\n");
 
         
         #line default
         #line hidden
         
-        #line 274 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 269 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
 
             }
@@ -685,14 +681,14 @@ this.Write(")\r\n                {\r\n");
         #line default
         #line hidden
         
-        #line 280 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 275 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("                }\r\n            }\r\n");
 
         
         #line default
         #line hidden
         
-        #line 283 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 278 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         }
     }
@@ -730,6 +726,57 @@ this.Write("                }\r\n            }\r\n");
         #line default
         #line hidden
         
+        #line 310 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write("            ");
+
+        
+        #line default
+        #line hidden
+        
+        #line 311 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(indent));
+
+        
+        #line default
+        #line hidden
+        
+        #line 311 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(target));
+
+        
+        #line default
+        #line hidden
+        
+        #line 311 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(" = ");
+
+        
+        #line default
+        #line hidden
+        
+        #line 311 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(conversion));
+
+        
+        #line default
+        #line hidden
+        
+        #line 311 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+this.Write(";\r\n");
+
+        
+        #line default
+        #line hidden
+        
+        #line 312 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+
+        if (!string.IsNullOrEmpty(increment))
+        {
+
+        
+        #line default
+        #line hidden
+        
         #line 315 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            ");
 
@@ -745,21 +792,14 @@ this.Write(this.ToStringHelper.ToStringWithCulture(indent));
         #line hidden
         
         #line 316 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(target));
+this.Write("index += ");
 
         
         #line default
         #line hidden
         
         #line 316 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(" = ");
-
-        
-        #line default
-        #line hidden
-        
-        #line 316 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(conversion));
+this.Write(this.ToStringHelper.ToStringWithCulture(increment));
 
         
         #line default
@@ -773,50 +813,6 @@ this.Write(";\r\n");
         #line hidden
         
         #line 317 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-
-        if (!string.IsNullOrEmpty(increment))
-        {
-
-        
-        #line default
-        #line hidden
-        
-        #line 320 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write("            ");
-
-        
-        #line default
-        #line hidden
-        
-        #line 321 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(indent));
-
-        
-        #line default
-        #line hidden
-        
-        #line 321 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write("index += ");
-
-        
-        #line default
-        #line hidden
-        
-        #line 321 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(increment));
-
-        
-        #line default
-        #line hidden
-        
-        #line 321 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
-this.Write(";\r\n");
-
-        
-        #line default
-        #line hidden
-        
-        #line 322 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
         }
 
@@ -842,28 +838,28 @@ this.Write(";\r\n");
         #line default
         #line hidden
         
-        #line 342 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 337 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            var ");
 
         
         #line default
         #line hidden
         
-        #line 343 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 338 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(FieldLength(property, dimension)));
 
         
         #line default
         #line hidden
         
-        #line 343 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 338 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" = GeneratorByteConverter.ToUInt16(bytes, ref index);\r\n");
 
         
         #line default
         #line hidden
         
-        #line 344 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 339 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
             }
         }
@@ -876,42 +872,42 @@ this.Write(" = GeneratorByteConverter.ToUInt16(bytes, ref index);\r\n");
         #line default
         #line hidden
         
-        #line 351 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 346 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            var temp");
 
         
         #line default
         #line hidden
         
-        #line 352 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 347 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 352 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 347 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" = ");
 
         
         #line default
         #line hidden
         
-        #line 352 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 347 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(GeneratorTools.CollectionConstructor(property, FieldLength(property))));
 
         
         #line default
         #line hidden
         
-        #line 352 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 347 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(";\r\n");
 
         
         #line default
         #line hidden
         
-        #line 353 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 348 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
  
              
             // Generate the loop
@@ -923,70 +919,70 @@ this.Write(";\r\n");
         #line default
         #line hidden
         
-        #line 359 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 354 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            for (var ");
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(dimensions[dimension]));
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" = 0; ");
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(dimensions[dimension]));
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" < ");
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(FieldLength(property, dimension)));
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("; ");
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(dimensions[dimension]));
 
         
         #line default
         #line hidden
         
-        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 355 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("++)\r\n");
 
         
         #line default
         #line hidden
         
-        #line 361 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 356 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 
             }
 
@@ -994,14 +990,14 @@ this.Write("++)\r\n");
         #line default
         #line hidden
         
-        #line 363 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 358 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("            {\r\n");
 
         
         #line default
         #line hidden
         
-        #line 365 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 360 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
            
         }
         else if(!header && property.IsCollection)
@@ -1015,56 +1011,56 @@ this.Write("            {\r\n");
         #line default
         #line hidden
         
-        #line 373 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 368 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write("                ");
 
         
         #line default
         #line hidden
         
-        #line 374 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 369 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(collAssignment));
 
         
         #line default
         #line hidden
         
-        #line 374 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 369 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(";\r\n            }\r\n            ");
 
         
         #line default
         #line hidden
         
-        #line 376 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 371 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 376 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 371 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(" = temp");
 
         
         #line default
         #line hidden
         
-        #line 376 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 371 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
 
         
         #line default
         #line hidden
         
-        #line 376 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 371 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
 this.Write(";\r\n");
 
         
         #line default
         #line hidden
         
-        #line 377 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
+        #line 372 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Serialization\BinarySerializerGenerator.tt"
    
         }
     }
@@ -1181,7 +1177,7 @@ if ((ToolsValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
-    public class BinarySerializerGeneratorBase
+    internal class BinarySerializerGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

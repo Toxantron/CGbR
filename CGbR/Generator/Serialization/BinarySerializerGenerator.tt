@@ -1,11 +1,6 @@
-﻿<#@ template language="C#" #>
-<#@ assembly name="System.Core" #>
+﻿<#@ template language="C#" visibility="internal" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Net.Configuration" #>
 <#@ import namespace="System.Runtime.Serialization" #>
-<#@ import namespace="System.Security.Cryptography.X509Certificates" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Model" type="CGbR.ClassModel" #>
 <#@ parameter name="Tools" type="CGbR.IClassSerializationTools" #>
         /// <summary>

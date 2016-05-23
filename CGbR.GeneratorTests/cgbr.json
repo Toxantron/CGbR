@@ -13,6 +13,10 @@
     },
     {
       "Name": "JsonSerializer",
+      "IsEnabled": false
+    },
+    {
+      "Name": "Cloneable",
       "IsEnabled": true
     }
   ],

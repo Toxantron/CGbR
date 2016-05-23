@@ -19,7 +19,7 @@ namespace CGbR
         private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>[A-Z][a-z]\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
         private readonly Regex _enumRegex = new Regex(@" (?<accessModifier>(?:public|internal)) enum (?<enumName>\w+)(?: : )?(?<type>\w+)?");
 
-        private readonly Regex _propRegex = new Regex(@" (?<accessModifier>(?:public|internal|private)) (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>_?\w+) ");
+        private readonly Regex _propRegex = new Regex(@" (?<accessModifier>(?:public|internal|private)) (?:(?<collectionType>\w+)<)?(?<type>\w+)(?<isArray>\[(?<dimensions>, ?)*\])?>? (?<name>_?\w+)");
         private readonly Regex _memberRegex = new Regex(@" (?<name>\w+)(?: ?= ?)?(?<value>\d+)?");
 
 
@@ -145,7 +145,7 @@ namespace CGbR
         {
             // Try parsing property
             var match = _propRegex.Match(file[index]);
-            if (!match.Success)
+            if (!match.Success || file[index].Contains('('))
                 return;
 
             // Create property model
