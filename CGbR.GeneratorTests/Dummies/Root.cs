@@ -9,10 +9,6 @@ namespace CGbR.GeneratorTests
     [DataContract]
     public partial class Root : ICloneable
     {
-        private Root()
-        {
-        }
-
         public Root(int number)
         {
             _number = number;
@@ -20,8 +16,6 @@ namespace CGbR.GeneratorTests
 
         [DataMember]
         private int _number;
-
-        public int Number{ get { return _number; } set { _number = value; } }
 
         [DataMember]
         public Partial[] Partials { get; set; }
@@ -31,7 +25,16 @@ namespace CGbR.GeneratorTests
 
         public object Clone()
         {
-            throw new NotImplementedException();
+            return Clone(true);
         }
+
+        private Root()
+        {
+        }
+
+
+
+
+        public int Number { get { return _number; } set { _number = value; } }
     }
 }
