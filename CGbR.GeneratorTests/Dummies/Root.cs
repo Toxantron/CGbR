@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CGbR.GeneratorTests
 {
     [DataContract]
-    public partial class Root
+    public partial class Root : ICloneable
     {
         public Root(int number)
         {
@@ -17,12 +17,24 @@ namespace CGbR.GeneratorTests
         [DataMember]
         private int _number;
 
-        public int Number { get { return _number; } }
-
         [DataMember]
         public Partial[] Partials { get; set; }
 
         [DataMember]
         public IList<ulong> Numbers { get; set; }
+
+        public object Clone()
+        {
+            return Clone(true);
+        }
+
+        private Root()
+        {
+        }
+
+
+
+
+        public int Number { get { return _number; } set { _number = value; } }
     }
 }

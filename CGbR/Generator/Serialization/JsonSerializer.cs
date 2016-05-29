@@ -37,7 +37,7 @@ namespace CGbR
             var template = new JsonSerializerGenerator();
             template.Session = new Dictionary<string, object>
             {
-                { "Model", model }
+                ["Model"] = model
             };
             template.Initialize();
             return template.TransformText();

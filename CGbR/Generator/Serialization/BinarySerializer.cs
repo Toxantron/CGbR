@@ -41,8 +41,8 @@ namespace CGbR
             var template = new BinarySerializerGenerator();
             template.Session = new Dictionary<string, object>
             {
-                { "Model", model },
-                { "Tools", this }
+                ["Model"] = model,
+                ["Tools"] = this 
             };
             template.Initialize();
             return template.TransformText();

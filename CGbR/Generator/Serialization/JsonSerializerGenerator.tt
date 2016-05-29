@@ -1,9 +1,6 @@
-﻿<#@ template language="C#" #>
-<#@ assembly name="System.Core" #>
+﻿<#@ template language="C#" visibility="internal" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Runtime.Serialization" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="Model" type="CGbR.ClassModel" #>
         /// <summary>
         /// Convert object to JSON string

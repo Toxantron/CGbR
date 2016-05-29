@@ -2,12 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>CGbR</id>
-        <version>0.4.5</version>
+        <version>0.5.0</version>
         <authors>Thomas Fuchs</authors>
         <licenseUrl>https://github.com/Toxantron/CGbR/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/Toxantron/CGbR</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>CGbR generates code based on the code you write. The generated code is fully reflection free, fast and can be AOT compiled. It can be used to replace reflection for serialization or dependency injection.</description>
+        <description>CGbR generates code based on the code you write. The generated code is fully reflection free, fast and can be AOT compiled. It can be used to replace reflection for serialization or dependency injection. Please note that some generates use the package CGbR-Lib</description>
         <summary />
         <language>en-US</language>
         <tags>generator json binary serializer</tags>
@@ -15,8 +15,6 @@
     <files>
         <file src="cgbr.targets" target="build\cgbr.targets" />
         <file src="cgbr.json" target="content\cgbr.json" />
-        <file src="..\bin\CGbR.Lib.dll" target="lib\CGbR.Lib.dll" />
-        <file src="..\bin\CGbR.Lib.XML" target="lib\CGbR.Lib.XML" />
         <file src="..\bin\CGbR.dll" target="tools\CGbR.dll" />
 		<file src="..\bin\cgbr-runner.exe" target="tools\cgbr-runner.exe" />
         <file src="..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />

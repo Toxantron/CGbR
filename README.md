@@ -22,9 +22,10 @@ class. This makes it the perfect choice for performance critical applications, l
 2. [Serialization](#serialization)
   * [Binary](#binary-datacontract-serializer)
   * [JSON](#json-datacontract-serializer)
-3. [Dependency Injection](#dependency-injection)
-4. [Generated UI](#generated-ui)
-5. [Developers](#developers)
+3. [Cloneable](#cloneable)
+4. [Dependency Injection](#dependency-injection)
+5. [Generated UI](#generated-ui)
+6. [Developers](#developers)
 
 ## Modes of operations
 The tool supports 3 modes of operation. It can run on a single file or a project/solution directory. The first one is meant
@@ -129,6 +130,30 @@ from Newtonsoft. While writing JSON is done directly it uses JsonReader classes 
 serializer classes with generated serialize and deserialize methods. Please refer to the [sample code](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
 and [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) for further information.
 
+## Cloneable
+CGbR can generate methods to create a deep or shallow copy of an object. After adding the nuget package you need the following config:
+
+```json
+{
+  "Enabled": true,
+  "Mappings": [
+    {
+      "Extension": ".cs",
+      "Parser": "Regex"
+    }
+  ],
+  "LocalGenerators": [
+    {
+      "Name": "Cloneable",
+      "IsEnabled": true
+    }
+  ],
+  "GlobalGenerators": [
+  ]
+}
+```
+
+For every partial class that implements `ICloneable` interface a partial class is generated with a `Clone(bool deep)` method. In order to work you class needs an empty default constructor. Because the partial class has full access, it can be a private constructor.
 
 ## Dependency Injection
 CGbR can also be used to generate dependency injection.

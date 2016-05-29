@@ -51,6 +51,12 @@
     <Compile Include="Configuration\LocalGeneratorConfig.cs" />
     <Compile Include="Configuration\ParserMapping.cs" />
     <Compile Include="GeneratorPartial.cs" />
+    <Compile Include="Generator\Clone\Cloneable.cs" />
+    <Compile Include="Generator\Clone\CloneGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CloneGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="Generator\Serialization\BinarySerializer.cs" />
     <Compile Include="Generator\Serialization\BinarySerializerGenerator.cs">
       <AutoGen>True</AutoGen>
@@ -91,6 +97,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Content Include="Generator\Clone\CloneGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CloneGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>CGbR</CustomToolNamespace>
+    </Content>
     <Content Include="Generator\Serialization\BinarySerializerGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>BinarySerializerGenerator.cs</LastGenOutput>

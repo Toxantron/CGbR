@@ -1,0 +1,148 @@
+﻿<#@ template language="C#" visibility="internal" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="Model" type="CGbR.ClassModel" #>
+        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public <#= Model.Name #> Clone(bool deep)
+        {
+            var copy = new <#= Model.Name #>();
+<#
+    var simple = Model.Properties.Where(IsValueType).ToArray();
+    if (simple.Length > 0)
+    {
+#>
+            // All value types can be simply copied
+<#
+        GenerateSimplyCopy(simple, string.Empty);
+    }
+
+    var refType = Model.Properties.Where(IsReferenceType).ToArray();
+    if (refType.Length > 0)
+    {
+#>
+            if (deep)
+            {
+                // In a deep clone the references are cloned 
+<#
+        foreach (var prop in refType)
+        {
+            var isCollection = CollectionWrapper(prop, true);
+            var indent = isCollection ? new string(' ', 4) : string.Empty;
+            // Only classes can be cloned
+            if (prop.ValueType == ModelValueType.Class)
+            {
+                var child = Model.References.OfType<ClassModel>().FirstOrDefault(r => r.Name == prop.ElementType);
+                const string cloneable = nameof(ICloneable);
+                var target = isCollection ? "value" : prop.Name;
+                if (child != null && child.Interfaces.Contains(cloneable))
+                {
+#>
+                <#= indent #><#= target #> = <#= target #>.Clone(true);
+<#
+                }
+                else
+                {
+#>
+                <#= indent #>//Can not clone it - just copy it
+<#                    
+                }
+            }
+            CollectionWrapper(prop, false);
+        }
+#>
+            }
+            else
+            {
+                // In a shallow clone only references are copied
+<#
+        GenerateSimplyCopy(refType, new string(' ', 4));
+#>
+            }
+<#
+    }
+#>
+            return copy;
+        }
+<#+
+
+    private void GenerateSimplyCopy(IEnumerable<PropertyModel> properties, string indent)
+    {
+        foreach (var prop in properties)
+        {
+#>
+            <#= indent #>copy.<#= prop.Name #> = <#= prop.Name #>; 
+<#+           
+        }      
+    }
+
+    private bool CollectionWrapper(PropertyModel prop, bool head)
+    {
+        if (!prop.IsCollection)
+            return false;
+
+        if (head)
+        {
+#>
+                var temp<#= prop.Name #> = <#= GeneratorTools.CollectionConstructor(prop, $"{prop.Name}.{GeneratorTools.CollectionSize(prop)}") #>;
+<#+
+            if (GeneratorTools.SupportsForLoop(prop))
+            {
+#>
+                for (var i = 0; i < <#= prop.Name #>.<#= GeneratorTools.CollectionSize(prop) #>; i++)
+                {
+                    var value = <#= prop.Name #>[i];
+<#+                
+            }
+            else
+            {
+#>
+                foreach (var value in <#= prop.Name #>)
+                {
+<#+                
+            }
+        }
+        else
+        {
+            if (GeneratorTools.SupportsForLoop(prop))
+            {
+#>
+                    temp<#= prop.Name #>[i] = value;
+<#+
+            }
+            else
+            {
+#>
+                    temp<#= prop.Name #>.Add(value);
+<#+ 
+            }
+#>
+                }
+                copy.<#= prop.Name #> = temp<#= prop.Name #>;
+<#+
+        }
+
+        return true;
+    }
+    
+    // FInd all value types
+    private static bool IsValueType(PropertyModel prop)
+    {
+        if (prop.IsCollection)
+            return false;
+
+        if (prop.ValueType == ModelValueType.Class)
+            return false;
+
+        return true;
+    }
+
+    // Find all reference types
+    private static bool IsReferenceType(PropertyModel prop)
+    {
+        return !IsValueType(prop);
+    }
+#>
