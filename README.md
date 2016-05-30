@@ -71,7 +71,7 @@ The perfect usage scenario and actually the origin of CGbR is serializing and de
 project performance gains from generated static code over the original reflection API were somewhere between factor of
 100 and 700.
 Sample code can be found in the [Generator tests](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
-and you will also find [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) comparing the different serializers.
+and you will also find [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) comparing the different serializers.
 
 ### Binary DataContract Serializer
 The binary DataContract serializer target generates code that maps single objects or object structure onto byte arrays.
@@ -128,7 +128,7 @@ The resulting array would look like this:
 Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
 from Newtonsoft. While writing JSON is done directly it uses JsonReader classes to parse the string. It replaces the reflection 
 serializer classes with generated serialize and deserialize methods. Please refer to the [sample code](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
-and [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) for further information.
+and [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) for further information.
 
 ## Cloneable
 CGbR can generate methods to create a deep or shallow copy of an object. After adding the nuget package you need the following config:
