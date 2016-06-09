@@ -11,7 +11,7 @@
         {
             var copy = new <#= Model.Name #>();
 <#
-    var simple = Model.Properties.Where(IsValueType).ToArray();
+    var simple = Model.Properties.Where(p => IsValueType(p, Model)).ToArray();
     if (simple.Length > 0)
     {
 #>
@@ -20,7 +20,7 @@
         GenerateSimplyCopy(simple, string.Empty);
     }
 
-    var refType = Model.Properties.Where(IsReferenceType).ToArray();
+    var refType = Model.Properties.Where(p => IsReferenceType(p, Model)).ToArray();
     if (refType.Length > 0)
     {
 #>
@@ -31,23 +31,27 @@
         foreach (var prop in refType)
         {
             var isCollection = CollectionWrapper(prop, true);
-            var indent = isCollection ? new string(' ', 4) : string.Empty;
+            var indent = isCollection ? new string(' ', 8) : string.Empty;
             // Only classes can be cloned
             if (prop.ValueType == ModelValueType.Class)
             {
                 var child = Model.References.OfType<ClassModel>().FirstOrDefault(r => r.Name == prop.ElementType);
                 const string cloneable = nameof(ICloneable);
-                var target = isCollection ? "value" : prop.Name;
+                var source = isCollection ? "value" : prop.Name;
+                var target = isCollection ? source : $"copy.{source}";
                 if (child != null && child.Interfaces.Contains(cloneable))
                 {
 #>
-                <#= indent #><#= target #> = <#= target #>.Clone(true);
+                <#= indent #>if (<#= source #> != null)
+                <#= indent #>{
+                <#= indent #>    <#= target #> = <#= source #>.Clone(true);
+                <#= indent #>}
 <#
                 }
                 else
                 {
 #>
-                <#= indent #>//Can not clone it - just copy it
+                <#= indent #><#= isCollection ? string.Empty : $"{target} = {source}; " #>//Can not clone it - just copy it
 <#                    
                 }
             }
@@ -86,42 +90,45 @@
 
         if (head)
         {
-#>
-                var temp<#= prop.Name #> = <#= GeneratorTools.CollectionConstructor(prop, $"{prop.Name}.{GeneratorTools.CollectionSize(prop)}") #>;
+#> 
+                if (<#= prop.Name #> != null)
+                {
+                    var temp<#= prop.Name #> = <#= GeneratorTools.CollectionConstructor(prop, $"{prop.Name}.{GeneratorTools.CollectionSize(prop)}") #>;
 <#+
             if (GeneratorTools.SupportsForLoop(prop))
             {
 #>
-                for (var i = 0; i < <#= prop.Name #>.<#= GeneratorTools.CollectionSize(prop) #>; i++)
-                {
-                    var value = <#= prop.Name #>[i];
+                    for (var i = 0; i < <#= prop.Name #>.<#= GeneratorTools.CollectionSize(prop) #>; i++)
+                    {
+                        var value = <#= prop.Name #>[i];
 <#+                
             }
             else
             {
 #>
-                foreach (var value in <#= prop.Name #>)
-                {
+                    foreach (var value in <#= prop.Name #>)
+                    {
 <#+                
             }
         }
         else
         {
-            if (GeneratorTools.SupportsForLoop(prop))
+            if (prop.CollectionType == "Array")
             {
 #>
-                    temp<#= prop.Name #>[i] = value;
+                        temp<#= prop.Name #>[i] = value;
 <#+
             }
             else
             {
 #>
-                    temp<#= prop.Name #>.Add(value);
+                        temp<#= prop.Name #>.Add(value);
 <#+ 
             }
 #>
+                    }
+                    copy.<#= prop.Name #> = temp<#= prop.Name #>;
                 }
-                copy.<#= prop.Name #> = temp<#= prop.Name #>;
 <#+
         }
 
@@ -129,20 +136,23 @@
     }
     
     // FInd all value types
-    private static bool IsValueType(PropertyModel prop)
+    private static bool IsValueType(PropertyModel prop, ClassModel model)
     {
         if (prop.IsCollection)
             return false;
 
         if (prop.ValueType == ModelValueType.Class)
-            return false;
+        {
+            // Check if it is actually an enum reference
+            return model.References.Any(r => r.Name == prop.ElementType && r is EnumModel);
+        }
 
         return true;
     }
 
     // Find all reference types
-    private static bool IsReferenceType(PropertyModel prop)
+    private static bool IsReferenceType(PropertyModel prop, ClassModel model)
     {
-        return !IsValueType(prop);
+        return !IsValueType(prop, model);
     }
 #>

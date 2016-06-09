@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace CGbR.GeneratorTests
 {
     [DataContract]
-    public partial class DifferentTypes
+    public partial class DifferentTypes : ICloneable
     {
         [DataMember]
         public DateTime Time { get; set; }
@@ -17,5 +17,10 @@ namespace CGbR.GeneratorTests
 
         [DataMember]
         public BigEnum Big { get; set; }
+
+        public object Clone()
+        {
+            return Clone(true);
+        }
     }
 }

@@ -22,9 +22,10 @@ class. This makes it the perfect choice for performance critical applications, l
 2. [Serialization](#serialization)
   * [Binary](#binary-datacontract-serializer)
   * [JSON](#json-datacontract-serializer)
-3. [Dependency Injection](#dependency-injection)
-4. [Generated UI](#generated-ui)
-5. [Developers](#developers)
+3. [Cloneable](#cloneable)
+4. [Dependency Injection](#dependency-injection)
+5. [Generated UI](#generated-ui)
+6. [Developers](#developers)
 
 ## Modes of operations
 The tool supports 3 modes of operation. It can run on a single file or a project/solution directory. The first one is meant
@@ -70,7 +71,7 @@ The perfect usage scenario and actually the origin of CGbR is serializing and de
 project performance gains from generated static code over the original reflection API were somewhere between factor of
 100 and 700.
 Sample code can be found in the [Generator tests](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
-and you will also find [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) comparing the different serializers.
+and you will also find [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) comparing the different serializers.
 
 ### Binary DataContract Serializer
 The binary DataContract serializer target generates code that maps single objects or object structure onto byte arrays.
@@ -127,8 +128,92 @@ The resulting array would look like this:
 Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
 from Newtonsoft. While writing JSON is done directly it uses JsonReader classes to parse the string. It replaces the reflection 
 serializer classes with generated serialize and deserialize methods. Please refer to the [sample code](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
-and [benchmarks](https://github.com/Toxantron/CGbR/tree/master/CGbR.Benchmarks) for further information.
+and [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) for further information.
 
+## Cloneable
+CGbR can generate methods to create a deep or shallow copy of an object. After adding the nuget package you need the following config:
+
+```json
+{
+  "Enabled": true,
+  "Mappings": [
+    {
+      "Extension": ".cs",
+      "Parser": "Regex"
+    }
+  ],
+  "LocalGenerators": [
+    {
+      "Name": "Cloneable",
+      "IsEnabled": true
+    }
+  ],
+  "GlobalGenerators": [
+  ]
+}
+```
+
+For every partial class that implements `ICloneable` interface a partial class is generated with a `Clone(bool deep)` method. In order to work you class needs an empty default constructor. Because the partial class has full access, it can be a private constructor.
+
+```c#
+public partial class Root : ICloneable
+{
+    public Root(int number)
+    {
+        _number = number;
+    }
+    private int _number;
+
+    public Partial[] Partials { get; set; }
+
+    public IList<ulong> Numbers { get; set; }
+
+    public object Clone()
+    {
+        return Clone(true);
+    }
+
+    private Root()
+    {
+    }
+} 
+
+public partial class Root
+{
+    public Root Clone(bool deep)
+    {
+        var copy = new Root();
+        // All value types can be simply copied
+        copy._number = _number; 
+        if (deep)
+        {
+            // In a deep clone the references are cloned 
+            var tempPartials = new Partial[Partials.Length];
+            for (var i = 0; i < Partials.Length; i++)
+            {
+                var value = Partials[i];
+                value = value.Clone(true);
+                tempPartials[i] = value;
+            }
+            copy.Partials = tempPartials;
+            var tempNumbers = new List<ulong>(Numbers.Count);
+            for (var i = 0; i < Numbers.Count; i++)
+            {
+                var value = Numbers[i];
+                tempNumbers[i] = value;
+            }
+            copy.Numbers = tempNumbers;
+        }
+        else
+        {
+            // In a shallow clone only references are copied
+            copy.Partials = Partials; 
+            copy.Numbers = Numbers; 
+        }
+        return copy;
+    }
+}
+```
 
 ## Dependency Injection
 CGbR can also be used to generate dependency injection.
