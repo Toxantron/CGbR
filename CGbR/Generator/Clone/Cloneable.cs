@@ -18,7 +18,8 @@ namespace CGbR
         /// Using the code requires
         /// </summary>
         public string[] Usings { get; } = {
-            "System"
+            "System",
+            "System.Collections.Generic",
         };
 
         /// <summary>
