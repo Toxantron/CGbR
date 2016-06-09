@@ -11,6 +11,11 @@
         Private,
 
         /// <summary>
+        /// Access limited to derived types
+        /// </summary>
+        Protected,
+
+        /// <summary>
         /// Access only to classes of the same assembly
         /// </summary>
         Internal,
