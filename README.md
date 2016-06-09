@@ -200,7 +200,7 @@ public partial class Root
             for (var i = 0; i < Numbers.Count; i++)
             {
                 var value = Numbers[i];
-                tempNumbers[i] = value;
+                tempNumbers.Add(value);
             }
             copy.Numbers = tempNumbers;
         }
