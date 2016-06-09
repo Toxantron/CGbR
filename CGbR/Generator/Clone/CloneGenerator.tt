@@ -47,7 +47,7 @@
                 else
                 {
 #>
-                <#= indent #>//Can not clone it - just copy it
+                <#= indent #><#= target #> = <#= target #>;//Can not clone it - just copy it
 <#                    
                 }
             }
