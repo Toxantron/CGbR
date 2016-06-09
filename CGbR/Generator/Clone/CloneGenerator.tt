@@ -47,7 +47,7 @@
                 else
                 {
 #>
-                <#= indent #><#= target #> = <#= target #>;//Can not clone it - just copy it
+                <#= indent #><#= isCollection ? string.Empty : $"copy.{target} = {target}; " #>//Can not clone it - just copy it
 <#                    
                 }
             }
