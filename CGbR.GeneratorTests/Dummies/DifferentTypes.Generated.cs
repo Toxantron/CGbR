@@ -174,29 +174,29 @@ namespace CGbR.GeneratorTests
                 if (reader.TokenType != JsonToken.PropertyName)
                     continue;
 
-                switch ((string) reader.Value)
-                {
-                    //case "Time":
-                    //    reader.Read();
-                    //    Time = new DateTime().FromJson(reader);
-                    //    break;
+                //switch ((string) reader.Value)
+                //{
+                //    case "Time":
+                //        reader.Read();
+                //        Time = new DateTime().FromJson(reader);
+                //        break;
 
-                    //case "Short":
-                    //    reader.Read();
-                    //    Short = new ShortEnum().FromJson(reader);
-                    //    break;
+                //    case "Short":
+                //        reader.Read();
+                //        Short = new ShortEnum().FromJson(reader);
+                //        break;
 
-                    //case "Some":
-                    //    reader.Read();
-                    //    Some = new SomeEnum().FromJson(reader);
-                    //    break;
+                //    case "Some":
+                //        reader.Read();
+                //        Some = new SomeEnum().FromJson(reader);
+                //        break;
 
-                    //case "Big":
-                    //    reader.Read();
-                    //    Big = new BigEnum().FromJson(reader);
-                    //    break;
+                //    case "Big":
+                //        reader.Read();
+                //        Big = new BigEnum().FromJson(reader);
+                //        break;
 
-                }
+                //}
             }
 
             return this;
