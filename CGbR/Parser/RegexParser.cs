@@ -14,7 +14,7 @@ namespace CGbR
     {
         // Regex used to parse source file
         private readonly Regex _namespaceRegex = new Regex(@"namespace (?<namespace>(?:\w\.?)*)");
-        private readonly Regex _attributeRegex = new Regex(@" \[(?<attributeName>\w+)\(?(?:(?<parameter>\d+),? ?)*(?:(?<property>\w+) ?= ?(?<value>\d+),? ?)*");
+        private readonly Regex _attributeRegex = new Regex(@" \[(?<attributeName>\w+)\(?(?:(?<parameter>\d+|(?:""\w*"")|(?:\w+\.\w+)),?\s*)*(?:(?<property>\w+)\s*=\s*(?<value>\d+|(?:""\w*"")|(?:\w+\.\w+)),?\s*)*");
 
         private readonly Regex _classRegex = new Regex(@" (?<accessModifier>(?:public|internal))(?<isPartial> partial)? class (?<className>\w+)(?: : )?(?<baseType>[A-Z][a-z]\w+)?(?:, )?(?:(?<interface>I\w+)(?:, )?)*");
         private readonly Regex _enumRegex = new Regex(@" (?<accessModifier>(?:public|internal)) enum (?<enumName>\w+)(?: : )?(?<type>\w+)?");
@@ -267,7 +267,7 @@ namespace CGbR
                 // Set properties
                 var propertygroup = match.Groups["property"];
                 var valueGroup = match.Groups["value"];
-                for (int i = 0; i < parameterGroup.Captures.Count; i++)
+                for (int i = 0; i < propertygroup.Captures.Count; i++)
                 {
                     var property = new PropertyModel(propertygroup.Captures[i].Value)
                     {

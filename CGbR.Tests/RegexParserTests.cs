@@ -132,7 +132,7 @@ namespace CGbR.ParserTests
             const string code =
 @"namespace Test.Attributes
 {
-    [Test(1, Blub = 2)]
+    [Test(1, SomeEnum.Bla, Blub = 2, Enum = SomeEnum.Foo)]
     public partial class Attributes
     {
     }
@@ -150,12 +150,17 @@ namespace CGbR.ParserTests
             Assert.AreEqual(1, model.Attributes.Count, "Number of attributes does not match!");
             var attribute = model.Attributes[0];
             Assert.AreEqual("Test", attribute.Name);
-            Assert.AreEqual(1,attribute.Parameters.Count, "Number of parameters does not match!");
+            Assert.AreEqual(2,attribute.Parameters.Count, "Number of parameters does not match!");
             Assert.AreEqual("1", attribute.Parameters[0], "Parameter does not match!");
-            Assert.AreEqual(1, attribute.Properties.Count, "Number of properties does not match");
+            Assert.AreEqual("SomeEnum.Bla", attribute.Parameters[1], "Parameter does not match!");
+
+            Assert.AreEqual(2, attribute.Properties.Count, "Number of properties does not match");
             var prop = attribute.Properties[0];
             Assert.AreEqual("Blub", prop.Name, "Name of the property not parsed!");
             Assert.AreEqual("2", prop.Value, "Value of properties does not match");
+            prop = attribute.Properties[1];
+            Assert.AreEqual("Enum", prop.Name, "Name of the property not parsed!");
+            Assert.AreEqual("SomeEnum.Foo", prop.Value, "Value of properties does not match");
         }
 
         [Test]
