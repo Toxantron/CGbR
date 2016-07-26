@@ -44,9 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneratorTests.cs" />
+    <Compile Include="GeneratedCodeTests\JsonSerializerTests.cs" />
     <Compile Include="ModeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexParserTests.cs" />
+    <Compile Include="GeneratedCodeTests\SizeCalculationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
