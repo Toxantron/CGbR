@@ -1,0 +1,21 @@
+﻿        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public Dummy Clone(bool deep)
+        {
+            var copy = new Dummy();
+            // All value types can be simply copied
+            copy.CharProp = CharProp; 
+            copy.BooleanProp = BooleanProp; 
+            copy.ByteProp = ByteProp; 
+            copy.Int16Prop = Int16Prop; 
+            copy.UInt16Prop = UInt16Prop; 
+            copy.Int32Prop = Int32Prop; 
+            copy.UInt32Prop = UInt32Prop; 
+            copy.SingleProp = SingleProp; 
+            copy.DoubleProp = DoubleProp; 
+            copy.Int64Prop = Int64Prop; 
+            copy.UInt64Prop = UInt64Prop; 
+            copy.StringProp = StringProp; 
+            return copy;
+        }

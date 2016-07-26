@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneratedCodeTests\BinarySerializerTests.cs" />
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="GeneratedCodeTests\JsonSerializerTests.cs" />
     <Compile Include="ModeTests.cs" />
@@ -59,6 +60,18 @@
       <Project>{F42BA2ED-3B24-49A1-B6CF-B1676038141B}</Project>
       <Name>CGbR</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Expected\BinaryValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\CloneValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\JsonValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
