@@ -78,6 +78,55 @@ namespace CGbR.Tests
             Assert.AreEqual(expected, generated);
         }
 
+        [TestCase(nameof(JsonSerializer), "JsonCollection")]
+        [TestCase(nameof(BinarySerializer), "BinaryCollection")]
+        [TestCase(nameof(Cloneable), "CloneCollection")]
+        public void TestCollection(string generator, string expectedCode)
+        {
+            // Arrange
+            var model = GenerateDataContract(AccessModifier.Public);
+            var index = 0;
+            foreach (ModelValueType value in Enum.GetValues(typeof(ModelValueType)))
+            {
+                if (value == ModelValueType.Class)
+                    continue;
+
+                var colType = CollectionType(ref index);
+                var prop = new PropertyModel($"{value}{colType}")
+                {
+                    AccessModifier = AccessModifier.Internal,
+                    ValueType = value,
+                    ElementType = value.ToString("G"),
+                    Dimensions = 1,
+                    IsCollection = true,
+                    CollectionType = colType
+                };
+                prop.Attributes.Add(new AttributeModel("DataMember"));
+                model.Properties.Add(prop);
+            }
+
+            // Act
+            var gen = GetGenerator(generator);
+            var generated = gen.Extend(model);
+
+            // Assert by comparing generated fragment with test oracle
+            var expected = File.ReadAllText(Path.Combine("Expected", $"{expectedCode}.txt"));
+            Assert.AreEqual(expected, generated);
+        }
+
+        private static string CollectionType(ref int index)
+        {
+            index++;
+
+            if (index%3 == 0)
+                return "IEnumerable";
+
+            if (index%3 == 1)
+                return "List";
+
+            return "Array";
+        }
+
         /// <summary>
         /// Generate a class model to generate for
         /// </summary>

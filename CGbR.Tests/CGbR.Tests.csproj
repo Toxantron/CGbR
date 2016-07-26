@@ -63,10 +63,19 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Expected\BinaryCollection.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Expected\BinaryValue.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Expected\CloneCollection.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Expected\CloneValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\JsonCollection.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Expected\JsonValue.txt">
