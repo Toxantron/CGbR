@@ -1,0 +1,368 @@
+﻿        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public string ToJson()
+        {
+            var builder = new StringBuilder();
+            using(var writer = new StringWriter(builder))
+            {
+                IncludeJson(writer);
+                return builder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public void IncludeJson(TextWriter writer)
+        {
+            writer.Write('{');
+
+            writer.Write("\"CharList\":");
+            if (CharList == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in CharList)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"BooleanArray\":");
+            if (BooleanArray == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in BooleanArray)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"ByteIEnumerable\":");
+            if (ByteIEnumerable == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in ByteIEnumerable)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"Int16List\":");
+            if (Int16List == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in Int16List)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"UInt16Array\":");
+            if (UInt16Array == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in UInt16Array)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"Int32IEnumerable\":");
+            if (Int32IEnumerable == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in Int32IEnumerable)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"UInt32List\":");
+            if (UInt32List == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in UInt32List)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"SingleArray\":");
+            if (SingleArray == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in SingleArray)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"DoubleIEnumerable\":");
+            if (DoubleIEnumerable == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in DoubleIEnumerable)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"Int64List\":");
+            if (Int64List == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in Int64List)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"UInt64Array\":");
+            if (UInt64Array == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in UInt64Array)
+                {
+            		writer.Write(value.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write(",\"StringIEnumerable\":");
+            if (StringIEnumerable == null)
+            {
+                writer.Write("null");
+            }
+            else
+            {
+                writer.Write('[');
+                foreach (var value in StringIEnumerable)
+                {
+            		writer.Write(string.Format("\"{0}\"", value));
+                    writer.Write(',');
+                }
+                writer.Write(']');
+            }
+    
+            writer.Write('}');
+        }
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public Dummy FromJson(string json)
+        {
+            using (var reader = new JsonTextReader(new StringReader(json)))
+            {
+                return FromJson(reader);
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public Dummy FromJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                // Break on EndObject
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
+
+                // Only look for properties
+                if (reader.TokenType != JsonToken.PropertyName)
+                    continue;
+
+                switch ((string) reader.Value)
+                {
+                    case "CharList":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var charlist = new List<Char>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            charlist.Add(Convert.ToChar(reader.Value));
+                        CharList = charlist;
+                        break;
+
+                    case "BooleanArray":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var booleanarray = new List<Boolean>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            booleanarray.Add(Convert.ToBoolean(reader.Value));
+                        BooleanArray = booleanarray.ToArray();
+                        break;
+
+                    case "ByteIEnumerable":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var byteienumerable = new List<Byte>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            byteienumerable.Add(Convert.ToByte(reader.Value));
+                        ByteIEnumerable = byteienumerable;
+                        break;
+
+                    case "Int16List":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var int16list = new List<Int16>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            int16list.Add(Convert.ToInt16(reader.Value));
+                        Int16List = int16list;
+                        break;
+
+                    case "UInt16Array":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var uint16array = new List<UInt16>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            uint16array.Add(Convert.ToUInt16(reader.Value));
+                        UInt16Array = uint16array.ToArray();
+                        break;
+
+                    case "Int32IEnumerable":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var int32ienumerable = new List<Int32>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            int32ienumerable.Add(Convert.ToInt32(reader.Value));
+                        Int32IEnumerable = int32ienumerable;
+                        break;
+
+                    case "UInt32List":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var uint32list = new List<UInt32>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            uint32list.Add(Convert.ToUInt32(reader.Value));
+                        UInt32List = uint32list;
+                        break;
+
+                    case "SingleArray":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var singlearray = new List<Single>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            singlearray.Add(Convert.ToSingle(reader.Value));
+                        SingleArray = singlearray.ToArray();
+                        break;
+
+                    case "DoubleIEnumerable":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var doubleienumerable = new List<Double>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            doubleienumerable.Add(Convert.ToDouble(reader.Value));
+                        DoubleIEnumerable = doubleienumerable;
+                        break;
+
+                    case "Int64List":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var int64list = new List<Int64>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            int64list.Add(Convert.ToInt64(reader.Value));
+                        Int64List = int64list;
+                        break;
+
+                    case "UInt64Array":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var uint64array = new List<UInt64>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            uint64array.Add(Convert.ToUInt64(reader.Value));
+                        UInt64Array = uint64array.ToArray();
+                        break;
+
+                    case "StringIEnumerable":
+                        reader.Read(); // Read token where array should begin
+                        if (reader.TokenType == JsonToken.Null)
+                            break;
+                        var stringienumerable = new List<String>();
+                        while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            stringienumerable.Add(Convert.ToString(reader.Value));
+                        StringIEnumerable = stringienumerable;
+                        break;
+
+                }
+            }
+
+            return this;
+        }

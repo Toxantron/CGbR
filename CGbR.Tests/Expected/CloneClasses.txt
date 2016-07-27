@@ -1,0 +1,58 @@
+﻿        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public Dummy Clone(bool deep)
+        {
+            var copy = new Dummy();
+            if (deep)
+            {
+                // In a deep clone the references are cloned 
+                if (FixedSize != null)
+                {
+                    copy.FixedSize = FixedSize.Clone(true);
+                }
+                if (FlexSize != null)
+                {
+                    copy.FlexSize = FlexSize.Clone(true);
+                }
+ 
+                if (FixCollection != null)
+                {
+                    var tempFixCollection = new List<FixedClass>(FixCollection.Count);
+                    for (var i = 0; i < FixCollection.Count; i++)
+                    {
+                        var value = FixCollection[i];
+                        if (value != null)
+                        {
+                            value = value.Clone(true);
+                        }
+                        tempFixCollection.Add(value);
+                    }
+                    copy.FixCollection = tempFixCollection;
+                }
+ 
+                if (FlexCollection != null)
+                {
+                    var tempFlexCollection = new FlexClass[FlexCollection.Length];
+                    for (var i = 0; i < FlexCollection.Length; i++)
+                    {
+                        var value = FlexCollection[i];
+                        if (value != null)
+                        {
+                            value = value.Clone(true);
+                        }
+                        tempFlexCollection[i] = value;
+                    }
+                    copy.FlexCollection = tempFlexCollection;
+                }
+            }
+            else
+            {
+                // In a shallow clone only references are copied
+                copy.FixedSize = FixedSize; 
+                copy.FlexSize = FlexSize; 
+                copy.FixCollection = FixCollection; 
+                copy.FlexCollection = FlexCollection; 
+            }
+            return copy;
+        }

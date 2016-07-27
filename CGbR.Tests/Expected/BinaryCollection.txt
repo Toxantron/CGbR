@@ -1,0 +1,315 @@
+﻿        /// <summary>
+        /// Binary size of the object
+        /// </summary>
+        public int Size
+        {
+            get 
+            { 
+                var size = 24;
+                // Add size for collections and strings
+                size += CharList == null ? 0 : CharList.Count * 2;
+                size += BooleanArray == null ? 0 : BooleanArray.Length * 1;
+                size += ByteIEnumerable == null ? 0 : ByteIEnumerable.Length;
+                size += Int16List == null ? 0 : Int16List.Count * 2;
+                size += UInt16Array == null ? 0 : UInt16Array.Length * 2;
+                size += Int32IEnumerable == null ? 0 : Int32IEnumerable.Count() * 4;
+                size += UInt32List == null ? 0 : UInt32List.Count * 4;
+                size += SingleArray == null ? 0 : SingleArray.Length * 4;
+                size += DoubleIEnumerable == null ? 0 : DoubleIEnumerable.Count() * 8;
+                size += Int64List == null ? 0 : Int64List.Count * 8;
+                size += UInt64Array == null ? 0 : UInt64Array.Length * 8;
+                size += StringIEnumerable == null ? 0 : StringIEnumerable.Sum(s => s.Length + 2);
+  
+                return size;              
+            }
+        }
+
+        /// <summary>
+        /// Convert object to bytes
+        /// </summary>
+        public byte[] ToBytes()
+        {
+            var index = 0;
+            var bytes = new byte[Size];
+
+            return ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        void IByteSerializable.ToBytes(byte[] bytes, ref int index)
+        {
+            ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        public byte[] ToBytes(byte[] bytes, ref int index)
+        {
+            if (index + Size > bytes.Length)
+                throw new ArgumentOutOfRangeException("index", "Object does not fit in array");
+
+            // Convert CharList
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(CharList == null ? 0 : CharList.Count), bytes, ref index);
+            if (CharList != null)
+            {
+                for(var i = 0; i < CharList.Count; i++)
+                {
+                    var value = CharList[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert BooleanArray
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(BooleanArray == null ? 0 : BooleanArray.Length), bytes, ref index);
+            if (BooleanArray != null)
+            {
+                for(var i = 0; i < BooleanArray.Length; i++)
+                {
+                    var value = BooleanArray[i];
+            		bytes[index++] = value ? (byte)1 : (byte)0;
+                }
+            }
+            // Convert ByteIEnumerable
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(ByteIEnumerable == null ? 0 : ByteIEnumerable.Count()), bytes, ref index);
+            if (ByteIEnumerable != null)
+            {
+            	Buffer.BlockCopy(ByteIEnumerable, 0, bytes, index, ByteIEnumerable.Length);
+            	index += ByteIEnumerable.Length;
+            }
+            // Convert Int16List
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(Int16List == null ? 0 : Int16List.Count), bytes, ref index);
+            if (Int16List != null)
+            {
+                for(var i = 0; i < Int16List.Count; i++)
+                {
+                    var value = Int16List[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert UInt16Array
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(UInt16Array == null ? 0 : UInt16Array.Length), bytes, ref index);
+            if (UInt16Array != null)
+            {
+                for(var i = 0; i < UInt16Array.Length; i++)
+                {
+                    var value = UInt16Array[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert Int32IEnumerable
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(Int32IEnumerable == null ? 0 : Int32IEnumerable.Count()), bytes, ref index);
+            if (Int32IEnumerable != null)
+            {
+                foreach(var value in Int32IEnumerable)
+                {
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert UInt32List
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(UInt32List == null ? 0 : UInt32List.Count), bytes, ref index);
+            if (UInt32List != null)
+            {
+                for(var i = 0; i < UInt32List.Count; i++)
+                {
+                    var value = UInt32List[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert SingleArray
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(SingleArray == null ? 0 : SingleArray.Length), bytes, ref index);
+            if (SingleArray != null)
+            {
+                for(var i = 0; i < SingleArray.Length; i++)
+                {
+                    var value = SingleArray[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert DoubleIEnumerable
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(DoubleIEnumerable == null ? 0 : DoubleIEnumerable.Count()), bytes, ref index);
+            if (DoubleIEnumerable != null)
+            {
+                foreach(var value in DoubleIEnumerable)
+                {
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert Int64List
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(Int64List == null ? 0 : Int64List.Count), bytes, ref index);
+            if (Int64List != null)
+            {
+                for(var i = 0; i < Int64List.Count; i++)
+                {
+                    var value = Int64List[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert UInt64Array
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(UInt64Array == null ? 0 : UInt64Array.Length), bytes, ref index);
+            if (UInt64Array != null)
+            {
+                for(var i = 0; i < UInt64Array.Length; i++)
+                {
+                    var value = UInt64Array[i];
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            // Convert StringIEnumerable
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(StringIEnumerable == null ? 0 : StringIEnumerable.Count()), bytes, ref index);
+            if (StringIEnumerable != null)
+            {
+                foreach(var value in StringIEnumerable)
+                {
+            		GeneratorByteConverter.Include(value, bytes, ref index);
+                }
+            }
+            return bytes;
+        }
+
+        /// <summary>
+        /// Create object from byte array
+        /// </summary>
+        public Dummy FromBytes(byte[] bytes)
+        {
+            var index = 0;            
+            return FromBytes(bytes, ref index); 
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        void IByteSerializable.FromBytes(byte[] bytes, ref int index)
+        {
+            FromBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        public Dummy FromBytes(byte[] bytes, ref int index)
+        {
+            // Read CharList
+            var charlistLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempCharList = new List<Char>(charlistLength);
+            for (var i = 0; i < charlistLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToChar(bytes, ref index);
+                tempCharList.Add(value);
+            }
+            CharList = tempCharList;
+            // Read BooleanArray
+            var booleanarrayLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempBooleanArray = new Boolean[booleanarrayLength];
+            for (var i = 0; i < booleanarrayLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToBoolean(bytes, ref index);
+                tempBooleanArray[i] = value;
+            }
+            BooleanArray = tempBooleanArray;
+            // Read ByteIEnumerable
+            var byteienumerableLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempByteIEnumerable = new List<Byte>(byteienumerableLength);
+            for (var i = 0; i < byteienumerableLength; i++)
+            {
+            	var value = bytes[index++];
+                tempByteIEnumerable.Add(value);
+            }
+            ByteIEnumerable = tempByteIEnumerable;
+            // Read Int16List
+            var int16listLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempInt16List = new List<Int16>(int16listLength);
+            for (var i = 0; i < int16listLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToInt16(bytes, ref index);
+                tempInt16List.Add(value);
+            }
+            Int16List = tempInt16List;
+            // Read UInt16Array
+            var uint16arrayLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempUInt16Array = new UInt16[uint16arrayLength];
+            for (var i = 0; i < uint16arrayLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToUInt16(bytes, ref index);
+                tempUInt16Array[i] = value;
+            }
+            UInt16Array = tempUInt16Array;
+            // Read Int32IEnumerable
+            var int32ienumerableLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempInt32IEnumerable = new List<Int32>(int32ienumerableLength);
+            for (var i = 0; i < int32ienumerableLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToInt32(bytes, ref index);
+                tempInt32IEnumerable.Add(value);
+            }
+            Int32IEnumerable = tempInt32IEnumerable;
+            // Read UInt32List
+            var uint32listLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempUInt32List = new List<UInt32>(uint32listLength);
+            for (var i = 0; i < uint32listLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToUInt32(bytes, ref index);
+                tempUInt32List.Add(value);
+            }
+            UInt32List = tempUInt32List;
+            // Read SingleArray
+            var singlearrayLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempSingleArray = new Single[singlearrayLength];
+            for (var i = 0; i < singlearrayLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToSingle(bytes, ref index);
+                tempSingleArray[i] = value;
+            }
+            SingleArray = tempSingleArray;
+            // Read DoubleIEnumerable
+            var doubleienumerableLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempDoubleIEnumerable = new List<Double>(doubleienumerableLength);
+            for (var i = 0; i < doubleienumerableLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToDouble(bytes, ref index);
+                tempDoubleIEnumerable.Add(value);
+            }
+            DoubleIEnumerable = tempDoubleIEnumerable;
+            // Read Int64List
+            var int64listLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempInt64List = new List<Int64>(int64listLength);
+            for (var i = 0; i < int64listLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToInt64(bytes, ref index);
+                tempInt64List.Add(value);
+            }
+            Int64List = tempInt64List;
+            // Read UInt64Array
+            var uint64arrayLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempUInt64Array = new UInt64[uint64arrayLength];
+            for (var i = 0; i < uint64arrayLength; i++)
+            {
+            	var value = GeneratorByteConverter.ToUInt64(bytes, ref index);
+                tempUInt64Array[i] = value;
+            }
+            UInt64Array = tempUInt64Array;
+            // Read StringIEnumerable
+            var stringienumerableLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempStringIEnumerable = new List<String>(stringienumerableLength);
+            for (var i = 0; i < stringienumerableLength; i++)
+            {
+            	var value = GeneratorByteConverter.GetString(bytes, ref index);
+                tempStringIEnumerable.Add(value);
+            }
+            StringIEnumerable = tempStringIEnumerable;
+
+            return this;
+        }

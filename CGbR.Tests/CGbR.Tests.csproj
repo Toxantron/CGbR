@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneratorTests.cs" />
     <Compile Include="ModeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexParserTests.cs" />
+    <Compile Include="SizeCalculationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -56,6 +58,36 @@
       <Project>{F42BA2ED-3B24-49A1-B6CF-B1676038141B}</Project>
       <Name>CGbR</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Expected\BinaryClasses.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\BinaryCollection.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\BinaryValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\CloneClasses.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\CloneCollection.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\CloneValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\JsonClasses.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\JsonCollection.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Expected\JsonValue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

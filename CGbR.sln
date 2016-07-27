@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR", "CGbR\CGbR.csproj", "{F42BA2ED-3B24-49A1-B6CF-B1676038141B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.GeneratorTests", "CGbR.GeneratorTests\CGbR.GeneratorTests.csproj", "{E41C63AA-1B24-4E11-B587-68C639196690}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGbR.Tests", "CGbR.Tests\CGbR.Tests.csproj", "{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}"
 EndProject
@@ -23,10 +21,6 @@ Global
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F42BA2ED-3B24-49A1-B6CF-B1676038141B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E41C63AA-1B24-4E11-B587-68C639196690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E41C63AA-1B24-4E11-B587-68C639196690}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E41C63AA-1B24-4E11-B587-68C639196690}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E41C63AA-1B24-4E11-B587-68C639196690}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6414019E-AF9B-4C27-8A10-11CE7BD95FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU

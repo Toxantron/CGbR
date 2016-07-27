@@ -1,0 +1,118 @@
+﻿        /// <summary>
+        /// Binary size of the object
+        /// </summary>
+        public int Size
+        {
+            get 
+            { 
+                var size = 46;
+                // Add size for collections and strings
+                size += StringProp == null ? 0 : StringProp.Length;
+  
+                return size;              
+            }
+        }
+
+        /// <summary>
+        /// Convert object to bytes
+        /// </summary>
+        public byte[] ToBytes()
+        {
+            var index = 0;
+            var bytes = new byte[Size];
+
+            return ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        void IByteSerializable.ToBytes(byte[] bytes, ref int index)
+        {
+            ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        public byte[] ToBytes(byte[] bytes, ref int index)
+        {
+            if (index + Size > bytes.Length)
+                throw new ArgumentOutOfRangeException("index", "Object does not fit in array");
+
+            // Convert CharProp
+            GeneratorByteConverter.Include(CharProp, bytes, ref index);
+            // Convert BooleanProp
+            bytes[index++] = BooleanProp ? (byte)1 : (byte)0;
+            // Convert ByteProp
+            bytes[index++] = ByteProp;
+            // Convert Int16Prop
+            GeneratorByteConverter.Include(Int16Prop, bytes, ref index);
+            // Convert UInt16Prop
+            GeneratorByteConverter.Include(UInt16Prop, bytes, ref index);
+            // Convert Int32Prop
+            GeneratorByteConverter.Include(Int32Prop, bytes, ref index);
+            // Convert UInt32Prop
+            GeneratorByteConverter.Include(UInt32Prop, bytes, ref index);
+            // Convert SingleProp
+            GeneratorByteConverter.Include(SingleProp, bytes, ref index);
+            // Convert DoubleProp
+            GeneratorByteConverter.Include(DoubleProp, bytes, ref index);
+            // Convert Int64Prop
+            GeneratorByteConverter.Include(Int64Prop, bytes, ref index);
+            // Convert UInt64Prop
+            GeneratorByteConverter.Include(UInt64Prop, bytes, ref index);
+            // Convert StringProp
+            GeneratorByteConverter.Include(StringProp, bytes, ref index);
+            return bytes;
+        }
+
+        /// <summary>
+        /// Create object from byte array
+        /// </summary>
+        public Dummy FromBytes(byte[] bytes)
+        {
+            var index = 0;            
+            return FromBytes(bytes, ref index); 
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        void IByteSerializable.FromBytes(byte[] bytes, ref int index)
+        {
+            FromBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        public Dummy FromBytes(byte[] bytes, ref int index)
+        {
+            // Read CharProp
+            CharProp = GeneratorByteConverter.ToChar(bytes, ref index);
+            // Read BooleanProp
+            BooleanProp = GeneratorByteConverter.ToBoolean(bytes, ref index);
+            // Read ByteProp
+            ByteProp = bytes[index++];
+            // Read Int16Prop
+            Int16Prop = GeneratorByteConverter.ToInt16(bytes, ref index);
+            // Read UInt16Prop
+            UInt16Prop = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            // Read Int32Prop
+            Int32Prop = GeneratorByteConverter.ToInt32(bytes, ref index);
+            // Read UInt32Prop
+            UInt32Prop = GeneratorByteConverter.ToUInt32(bytes, ref index);
+            // Read SingleProp
+            SingleProp = GeneratorByteConverter.ToSingle(bytes, ref index);
+            // Read DoubleProp
+            DoubleProp = GeneratorByteConverter.ToDouble(bytes, ref index);
+            // Read Int64Prop
+            Int64Prop = GeneratorByteConverter.ToInt64(bytes, ref index);
+            // Read UInt64Prop
+            UInt64Prop = GeneratorByteConverter.ToUInt64(bytes, ref index);
+            // Read StringProp
+            StringProp = GeneratorByteConverter.GetString(bytes, ref index);
+
+            return this;
+        }

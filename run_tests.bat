@@ -1,1 +1,1 @@
-nunit-console /noshadow /domain:single CGbR.Tests\bin\Release\CGbR.Tests.dll CGbR.GeneratorTests\bin\Release\CGbR.GeneratorTests.dll
+nunit-console /noshadow /domain:single CGbR.Tests\bin\Release\CGbR.Tests.dll
