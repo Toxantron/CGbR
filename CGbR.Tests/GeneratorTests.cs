@@ -75,7 +75,7 @@ namespace CGbR.Tests
 
             // Assert by comparing generated fragment with test oracle
             var expected = File.ReadAllText(Path.Combine("Expected", $"{expectedCode}.txt"));
-            Assert.AreEqual(expected, generated);
+            CodeCompare(expected, generated);
         }
 
         [TestCase(nameof(JsonSerializer), "JsonCollection")]
@@ -111,7 +111,7 @@ namespace CGbR.Tests
 
             // Assert by comparing generated fragment with test oracle
             var expected = File.ReadAllText(Path.Combine("Expected", $"{expectedCode}.txt"));
-            Assert.AreEqual(expected, generated);
+            CodeCompare(expected, generated);
         }
 
         [TestCase(nameof(JsonSerializer), "JsonClasses")]
@@ -160,7 +160,7 @@ namespace CGbR.Tests
 
             // Assert by comparing generated fragment with test oracle
             var expected = File.ReadAllText(Path.Combine("Expected", $"{expectedCode}.txt"));
-            Assert.AreEqual(expected, code);
+            CodeCompare(expected, code);
         }
 
         private static ClassModel GenerateSub(bool fixedSize)
@@ -202,6 +202,15 @@ namespace CGbR.Tests
             });
 
             return model;
+        }
+
+        private static void CodeCompare(string expected, string value)
+        {
+            // Normalize all line endings
+            var expectedClean = expected.Replace("\r\n", "\n");
+            var valueClean = value.Replace("\r\n", "\n");
+
+            Assert.AreEqual(expectedClean, valueClean);
         }
 
         private static string CollectionType(ref int index)
