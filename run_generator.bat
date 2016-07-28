@@ -1,1 +1,0 @@
-bin\cgbr-runner.exe CGbR.GeneratorTests\

@@ -1,0 +1,156 @@
+﻿        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public Dummy Clone(bool deep)
+        {
+            var copy = new Dummy();
+            if (deep)
+            {
+                // In a deep clone the references are cloned 
+ 
+                if (CharList != null)
+                {
+                    var tempCharList = new List<Char>(CharList.Count);
+                    for (var i = 0; i < CharList.Count; i++)
+                    {
+                        var value = CharList[i];
+                        tempCharList.Add(value);
+                    }
+                    copy.CharList = tempCharList;
+                }
+ 
+                if (BooleanArray != null)
+                {
+                    var tempBooleanArray = new Boolean[BooleanArray.Length];
+                    for (var i = 0; i < BooleanArray.Length; i++)
+                    {
+                        var value = BooleanArray[i];
+                        tempBooleanArray[i] = value;
+                    }
+                    copy.BooleanArray = tempBooleanArray;
+                }
+ 
+                if (ByteIEnumerable != null)
+                {
+                    var tempByteIEnumerable = new List<Byte>(ByteIEnumerable.Count());
+                    foreach (var value in ByteIEnumerable)
+                    {
+                        tempByteIEnumerable.Add(value);
+                    }
+                    copy.ByteIEnumerable = tempByteIEnumerable;
+                }
+ 
+                if (Int16List != null)
+                {
+                    var tempInt16List = new List<Int16>(Int16List.Count);
+                    for (var i = 0; i < Int16List.Count; i++)
+                    {
+                        var value = Int16List[i];
+                        tempInt16List.Add(value);
+                    }
+                    copy.Int16List = tempInt16List;
+                }
+ 
+                if (UInt16Array != null)
+                {
+                    var tempUInt16Array = new UInt16[UInt16Array.Length];
+                    for (var i = 0; i < UInt16Array.Length; i++)
+                    {
+                        var value = UInt16Array[i];
+                        tempUInt16Array[i] = value;
+                    }
+                    copy.UInt16Array = tempUInt16Array;
+                }
+ 
+                if (Int32IEnumerable != null)
+                {
+                    var tempInt32IEnumerable = new List<Int32>(Int32IEnumerable.Count());
+                    foreach (var value in Int32IEnumerable)
+                    {
+                        tempInt32IEnumerable.Add(value);
+                    }
+                    copy.Int32IEnumerable = tempInt32IEnumerable;
+                }
+ 
+                if (UInt32List != null)
+                {
+                    var tempUInt32List = new List<UInt32>(UInt32List.Count);
+                    for (var i = 0; i < UInt32List.Count; i++)
+                    {
+                        var value = UInt32List[i];
+                        tempUInt32List.Add(value);
+                    }
+                    copy.UInt32List = tempUInt32List;
+                }
+ 
+                if (SingleArray != null)
+                {
+                    var tempSingleArray = new Single[SingleArray.Length];
+                    for (var i = 0; i < SingleArray.Length; i++)
+                    {
+                        var value = SingleArray[i];
+                        tempSingleArray[i] = value;
+                    }
+                    copy.SingleArray = tempSingleArray;
+                }
+ 
+                if (DoubleIEnumerable != null)
+                {
+                    var tempDoubleIEnumerable = new List<Double>(DoubleIEnumerable.Count());
+                    foreach (var value in DoubleIEnumerable)
+                    {
+                        tempDoubleIEnumerable.Add(value);
+                    }
+                    copy.DoubleIEnumerable = tempDoubleIEnumerable;
+                }
+ 
+                if (Int64List != null)
+                {
+                    var tempInt64List = new List<Int64>(Int64List.Count);
+                    for (var i = 0; i < Int64List.Count; i++)
+                    {
+                        var value = Int64List[i];
+                        tempInt64List.Add(value);
+                    }
+                    copy.Int64List = tempInt64List;
+                }
+ 
+                if (UInt64Array != null)
+                {
+                    var tempUInt64Array = new UInt64[UInt64Array.Length];
+                    for (var i = 0; i < UInt64Array.Length; i++)
+                    {
+                        var value = UInt64Array[i];
+                        tempUInt64Array[i] = value;
+                    }
+                    copy.UInt64Array = tempUInt64Array;
+                }
+ 
+                if (StringIEnumerable != null)
+                {
+                    var tempStringIEnumerable = new List<String>(StringIEnumerable.Count());
+                    foreach (var value in StringIEnumerable)
+                    {
+                        tempStringIEnumerable.Add(value);
+                    }
+                    copy.StringIEnumerable = tempStringIEnumerable;
+                }
+            }
+            else
+            {
+                // In a shallow clone only references are copied
+                copy.CharList = CharList; 
+                copy.BooleanArray = BooleanArray; 
+                copy.ByteIEnumerable = ByteIEnumerable; 
+                copy.Int16List = Int16List; 
+                copy.UInt16Array = UInt16Array; 
+                copy.Int32IEnumerable = Int32IEnumerable; 
+                copy.UInt32List = UInt32List; 
+                copy.SingleArray = SingleArray; 
+                copy.DoubleIEnumerable = DoubleIEnumerable; 
+                copy.Int64List = Int64List; 
+                copy.UInt64Array = UInt64Array; 
+                copy.StringIEnumerable = StringIEnumerable; 
+            }
+            return copy;
+        }

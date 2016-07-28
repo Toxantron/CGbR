@@ -1,0 +1,152 @@
+﻿        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public string ToJson()
+        {
+            var builder = new StringBuilder();
+            using(var writer = new StringWriter(builder))
+            {
+                IncludeJson(writer);
+                return builder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public void IncludeJson(TextWriter writer)
+        {
+            writer.Write('{');
+
+            writer.Write("\"CharProp\":");
+            writer.Write(CharProp.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"BooleanProp\":");
+            writer.Write(BooleanProp.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"ByteProp\":");
+            writer.Write(ByteProp.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"Int16Prop\":");
+            writer.Write(Int16Prop.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"UInt16Prop\":");
+            writer.Write(UInt16Prop.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"Int32Prop\":");
+            writer.Write(Int32Prop.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"UInt32Prop\":");
+            writer.Write(UInt32Prop.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"SingleProp\":");
+            writer.Write(SingleProp.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"DoubleProp\":");
+            writer.Write(DoubleProp.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"Int64Prop\":");
+            writer.Write(Int64Prop.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"UInt64Prop\":");
+            writer.Write(UInt64Prop.ToString(CultureInfo.InvariantCulture));
+    
+            writer.Write(",\"StringProp\":");
+            writer.Write(string.Format("\"{0}\"", StringProp));
+    
+            writer.Write('}');
+        }
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        public Dummy FromJson(string json)
+        {
+            using (var reader = new JsonTextReader(new StringReader(json)))
+            {
+                return FromJson(reader);
+            }
+        }
+
+        /// <summary>
+        /// Include this class in a JSON string
+        /// </summary>
+        public Dummy FromJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                // Break on EndObject
+                if (reader.TokenType == JsonToken.EndObject)
+                    break;
+
+                // Only look for properties
+                if (reader.TokenType != JsonToken.PropertyName)
+                    continue;
+
+                switch ((string) reader.Value)
+                {
+                    case "CharProp":
+                        reader.Read();
+                        CharProp = Convert.ToChar(reader.Value);
+                        break;
+
+                    case "BooleanProp":
+                        reader.Read();
+                        BooleanProp = Convert.ToBoolean(reader.Value);
+                        break;
+
+                    case "ByteProp":
+                        reader.Read();
+                        ByteProp = Convert.ToByte(reader.Value);
+                        break;
+
+                    case "Int16Prop":
+                        reader.Read();
+                        Int16Prop = Convert.ToInt16(reader.Value);
+                        break;
+
+                    case "UInt16Prop":
+                        reader.Read();
+                        UInt16Prop = Convert.ToUInt16(reader.Value);
+                        break;
+
+                    case "Int32Prop":
+                        reader.Read();
+                        Int32Prop = Convert.ToInt32(reader.Value);
+                        break;
+
+                    case "UInt32Prop":
+                        reader.Read();
+                        UInt32Prop = Convert.ToUInt32(reader.Value);
+                        break;
+
+                    case "SingleProp":
+                        reader.Read();
+                        SingleProp = Convert.ToSingle(reader.Value);
+                        break;
+
+                    case "DoubleProp":
+                        reader.Read();
+                        DoubleProp = Convert.ToDouble(reader.Value);
+                        break;
+
+                    case "Int64Prop":
+                        reader.Read();
+                        Int64Prop = Convert.ToInt64(reader.Value);
+                        break;
+
+                    case "UInt64Prop":
+                        reader.Read();
+                        UInt64Prop = Convert.ToUInt64(reader.Value);
+                        break;
+
+                    case "StringProp":
+                        reader.Read();
+                        StringProp = Convert.ToString(reader.Value);
+                        break;
+
+                }
+            }
+
+            return this;
+        }

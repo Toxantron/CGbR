@@ -1,0 +1,121 @@
+﻿        /// <summary>
+        /// Binary size of the object
+        /// </summary>
+        public int Size
+        {
+            get 
+            { 
+                var size = 16;
+                // Add size for collections and strings
+                size += FixedSize == null ? 0 : FixedSize.Size;
+                size += FlexSize == null ? 0 : FlexSize.Size;
+                size += FixCollection == null ? 0 : FixCollection.Count * 12;
+                size += FlexCollection == null ? 0 : FlexCollection.Sum(entry => entry.Size);
+  
+                return size;              
+            }
+        }
+
+        /// <summary>
+        /// Convert object to bytes
+        /// </summary>
+        public byte[] ToBytes()
+        {
+            var index = 0;
+            var bytes = new byte[Size];
+
+            return ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        void IByteSerializable.ToBytes(byte[] bytes, ref int index)
+        {
+            ToBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Convert object to bytes within object tree
+        /// </summary>
+        public byte[] ToBytes(byte[] bytes, ref int index)
+        {
+            if (index + Size > bytes.Length)
+                throw new ArgumentOutOfRangeException("index", "Object does not fit in array");
+
+            // Convert FixedSize
+            FixedSize.ToBytes(bytes, ref index);
+            // Convert FlexSize
+            FlexSize.ToBytes(bytes, ref index);
+            // Convert FixCollection
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(FixCollection == null ? 0 : FixCollection.Count), bytes, ref index);
+            if (FixCollection != null)
+            {
+                for(var i = 0; i < FixCollection.Count; i++)
+                {
+                    var value = FixCollection[i];
+            		value.ToBytes(bytes, ref index);
+                }
+            }
+            // Convert FlexCollection
+            // Two bytes length information for each dimension
+            GeneratorByteConverter.Include((ushort)(FlexCollection == null ? 0 : FlexCollection.Length), bytes, ref index);
+            if (FlexCollection != null)
+            {
+                for(var i = 0; i < FlexCollection.Length; i++)
+                {
+                    var value = FlexCollection[i];
+            		value.ToBytes(bytes, ref index);
+                }
+            }
+            return bytes;
+        }
+
+        /// <summary>
+        /// Create object from byte array
+        /// </summary>
+        public Dummy FromBytes(byte[] bytes)
+        {
+            var index = 0;            
+            return FromBytes(bytes, ref index); 
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        void IByteSerializable.FromBytes(byte[] bytes, ref int index)
+        {
+            FromBytes(bytes, ref index);
+        }
+
+        /// <summary>
+        /// Create object from segment in byte array
+        /// </summary>
+        public Dummy FromBytes(byte[] bytes, ref int index)
+        {
+            // Read FixedSize
+            FixedSize = new FixedClass().FromBytes(bytes, ref index);
+            // Read FlexSize
+            FlexSize = new FlexClass().FromBytes(bytes, ref index);
+            // Read FixCollection
+            var fixcollectionLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempFixCollection = new List<FixedClass>(fixcollectionLength);
+            for (var i = 0; i < fixcollectionLength; i++)
+            {
+            	var value = new FixedClass().FromBytes(bytes, ref index);
+                tempFixCollection.Add(value);
+            }
+            FixCollection = tempFixCollection;
+            // Read FlexCollection
+            var flexcollectionLength = GeneratorByteConverter.ToUInt16(bytes, ref index);
+            var tempFlexCollection = new FlexClass[flexcollectionLength];
+            for (var i = 0; i < flexcollectionLength; i++)
+            {
+            	var value = new FlexClass().FromBytes(bytes, ref index);
+                tempFlexCollection[i] = value;
+            }
+            FlexCollection = tempFlexCollection;
+
+            return this;
+        }

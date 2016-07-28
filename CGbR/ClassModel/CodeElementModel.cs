@@ -32,7 +32,7 @@ namespace CGbR
         /// Attributes defined for this class
         /// </summary>
         /// <value>The attributes.</value>
-        public IList<AttributeModel> Attributes { get; private set; }
+        public IList<AttributeModel> Attributes { get; set; }
     }
 }
 
