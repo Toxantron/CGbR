@@ -32,7 +32,7 @@ namespace CGbR
         /// </summary>
         public bool CanExtend(ClassModel model)
         {
-            return model.Interfaces.Any(i => i == nameof(ICloneable));
+            return model.Interfaces.Any(i => i == nameof(ICloneable)) || model.HasAttribute("CloneableAttribute");
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace CGbR
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+    #line 1 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     internal partial class CloneGenerator : CloneGeneratorBase
     {
@@ -31,23 +31,23 @@ namespace CGbR
             this.Write("        /// <summary>\r\n        /// Method to create a deep or shallow copy of thi" +
                     "s object\r\n        /// </summary>\r\n        public ");
             
-            #line 10 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 10 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
             
             #line default
             #line hidden
             this.Write(" Clone(bool deep)\r\n        {\r\n            var copy = new ");
             
-            #line 12 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 12 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Name));
             
             #line default
             #line hidden
             this.Write("();\r\n");
             
-            #line 13 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 13 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
-    var simple = Model.Properties.Where(p => IsValueType(p, Model)).ToArray();
+    var simple = Model.Properties.Where(SimplyCopy).ToArray();
     if (simple.Length > 0)
     {
 
@@ -56,12 +56,12 @@ namespace CGbR
             #line hidden
             this.Write("            // All value types can be simply copied\r\n");
             
-            #line 19 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 19 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
         GenerateSimplyCopy(simple, string.Empty);
     }
 
-    var refType = Model.Properties.Where(p => IsReferenceType(p, Model)).ToArray();
+    var refType = Model.Properties.Where(DeepCopy).ToArray();
     if (refType.Length > 0)
     {
 
@@ -71,7 +71,7 @@ namespace CGbR
             this.Write("            if (deep)\r\n            {\r\n                // In a deep clone the refe" +
                     "rences are cloned \r\n");
             
-            #line 30 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 30 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
         foreach (var prop in refType)
         {
@@ -86,62 +86,64 @@ namespace CGbR
                 var target = isCollection ? source : $"copy.{source}";
                 if (child != null && child.Interfaces.Contains(cloneable))
                 {
+                    var cloneAtt = prop.GetAttributeOrNull("ReferenceCloneAttribute");
+                    var cloneType = cloneAtt == null || cloneAtt.Parameters[0] == "Deep" ? "true" : "false";
 
             
             #line default
             #line hidden
             this.Write("                ");
             
-            #line 45 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 47 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(indent));
             
             #line default
             #line hidden
             this.Write("if (");
             
-            #line 45 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 47 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(source));
             
             #line default
             #line hidden
             this.Write(" != null)\r\n                ");
             
-            #line 46 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 48 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(indent));
             
             #line default
             #line hidden
             this.Write("{\r\n                ");
             
-            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 49 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(indent));
             
             #line default
             #line hidden
             this.Write("    ");
             
-            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 49 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(target));
             
             #line default
             #line hidden
             this.Write(" = ");
             
-            #line 47 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 49 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(source));
             
             #line default
             #line hidden
             this.Write(".Clone(true);\r\n                ");
             
-            #line 48 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 50 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(indent));
             
             #line default
             #line hidden
             this.Write("}\r\n");
             
-            #line 49 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 51 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
                 }
                 else
@@ -152,20 +154,20 @@ namespace CGbR
             #line hidden
             this.Write("                ");
             
-            #line 54 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 56 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(indent));
             
             #line default
             #line hidden
             
-            #line 54 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 56 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(isCollection ? string.Empty : $"{target} = {source}; "));
             
             #line default
             #line hidden
             this.Write("//Can not clone it - just copy it\r\n");
             
-            #line 55 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 57 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
                     
                 }
             }
@@ -178,7 +180,7 @@ namespace CGbR
             this.Write("            }\r\n            else\r\n            {\r\n                // In a shallow c" +
                     "lone only references are copied\r\n");
             
-            #line 65 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 67 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
         GenerateSimplyCopy(refType, new string(' ', 4));
 
@@ -187,7 +189,7 @@ namespace CGbR
             #line hidden
             this.Write("            }\r\n");
             
-            #line 69 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+            #line 71 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
     }
 
@@ -198,7 +200,7 @@ namespace CGbR
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 74 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 76 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
 
     private void GenerateSimplyCopy(IEnumerable<PropertyModel> properties, string indent)
@@ -210,56 +212,56 @@ namespace CGbR
         #line default
         #line hidden
         
-        #line 80 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 82 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("            ");
 
         
         #line default
         #line hidden
         
-        #line 81 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 83 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(indent));
 
         
         #line default
         #line hidden
         
-        #line 81 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 83 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("copy.");
 
         
         #line default
         #line hidden
         
-        #line 81 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 83 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 81 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 83 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(" = ");
 
         
         #line default
         #line hidden
         
-        #line 81 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 83 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 81 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 83 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("; \r\n");
 
         
         #line default
         #line hidden
         
-        #line 82 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 84 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
            
         }      
     }
@@ -276,56 +278,56 @@ this.Write("; \r\n");
         #line default
         #line hidden
         
-        #line 93 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 95 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(" \r\n                if (");
 
         
         #line default
         #line hidden
         
-        #line 94 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 96 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 94 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 96 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(" != null)\r\n                {\r\n                    var temp");
 
         
         #line default
         #line hidden
         
-        #line 96 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 98 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 96 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 98 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(" = ");
 
         
         #line default
         #line hidden
         
-        #line 96 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 98 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(GeneratorTools.CollectionConstructor(prop, $"{prop.Name}.{GeneratorTools.CollectionSize(prop)}")));
 
         
         #line default
         #line hidden
         
-        #line 96 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 98 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(";\r\n");
 
         
         #line default
         #line hidden
         
-        #line 97 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 99 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
             if (GeneratorTools.SupportsForLoop(prop))
             {
@@ -334,56 +336,56 @@ this.Write(";\r\n");
         #line default
         #line hidden
         
-        #line 100 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 102 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("                    for (var i = 0; i < ");
 
         
         #line default
         #line hidden
         
-        #line 101 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 103 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 101 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 103 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(".");
 
         
         #line default
         #line hidden
         
-        #line 101 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 103 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(GeneratorTools.CollectionSize(prop)));
 
         
         #line default
         #line hidden
         
-        #line 101 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 103 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("; i++)\r\n                    {\r\n                        var value = ");
 
         
         #line default
         #line hidden
         
-        #line 103 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 105 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 103 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 105 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("[i];\r\n");
 
         
         #line default
         #line hidden
         
-        #line 104 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 106 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
                 
             }
             else
@@ -393,28 +395,28 @@ this.Write("[i];\r\n");
         #line default
         #line hidden
         
-        #line 108 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 110 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("                    foreach (var value in ");
 
         
         #line default
         #line hidden
         
-        #line 109 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 111 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 109 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 111 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(")\r\n                    {\r\n");
 
         
         #line default
         #line hidden
         
-        #line 111 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 113 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
                 
             }
         }
@@ -427,28 +429,28 @@ this.Write(")\r\n                    {\r\n");
         #line default
         #line hidden
         
-        #line 118 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 120 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("                        temp");
 
         
         #line default
         #line hidden
         
-        #line 119 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 121 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 119 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 121 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("[i] = value;\r\n");
 
         
         #line default
         #line hidden
         
-        #line 120 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 122 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
             }
             else
@@ -458,28 +460,28 @@ this.Write("[i] = value;\r\n");
         #line default
         #line hidden
         
-        #line 124 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 126 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("                        temp");
 
         
         #line default
         #line hidden
         
-        #line 125 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 127 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 125 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 127 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(".Add(value);\r\n");
 
         
         #line default
         #line hidden
         
-        #line 126 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 128 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
  
             }
 
@@ -487,42 +489,42 @@ this.Write(".Add(value);\r\n");
         #line default
         #line hidden
         
-        #line 128 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 130 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write("                    }\r\n                    copy.");
 
         
         #line default
         #line hidden
         
-        #line 130 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 132 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 130 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 132 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(" = temp");
 
         
         #line default
         #line hidden
         
-        #line 130 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 132 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(prop.Name));
 
         
         #line default
         #line hidden
         
-        #line 130 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 132 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 this.Write(";\r\n                }\r\n");
 
         
         #line default
         #line hidden
         
-        #line 132 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 134 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
         }
 
@@ -530,31 +532,41 @@ this.Write(";\r\n                }\r\n");
     }
     
     // FInd all value types
-    private static bool IsValueType(PropertyModel prop, ClassModel model)
+    private bool SimplyCopy(PropertyModel prop)
     {
+        if (prop.HasAttribute("CloneIgnoreAttribute"))
+            return false;
+
+        var cloneAtt = prop.GetAttributeOrNull("ReferenceCloneAttribute");
+        if (cloneAtt != null && cloneAtt.Parameters[0] == "Reference")
+            return true;
+
         if (prop.IsCollection)
             return false;
 
         if (prop.ValueType == ModelValueType.Class)
         {
             // Check if it is actually an enum reference
-            return model.References.Any(r => r.Name == prop.ElementType && r is EnumModel);
+            return Model.References.Any(r => r.Name == prop.ElementType && r is EnumModel);
         }
 
         return true;
     }
 
     // Find all reference types
-    private static bool IsReferenceType(PropertyModel prop, ClassModel model)
+    private bool DeepCopy(PropertyModel prop)
     {
-        return !IsValueType(prop, model);
+        if (prop.HasAttribute("CloneIgnoreAttribute"))
+            return false;
+
+        return !SimplyCopy(prop);
     }
 
         
         #line default
         #line hidden
         
-        #line 1 "C:\Users\Thomas\Documents\Development\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
+        #line 1 "C:\Users\thomas\Desktop\CGbR\CGbR\Generator\Clone\CloneGenerator.tt"
 
 private global::CGbR.ClassModel _ModelField;
 

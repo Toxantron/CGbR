@@ -11,7 +11,7 @@
         {
             var copy = new <#= Model.Name #>();
 <#
-    var simple = Model.Properties.Where(p => IsValueType(p, Model)).ToArray();
+    var simple = Model.Properties.Where(SimplyCopy).ToArray();
     if (simple.Length > 0)
     {
 #>
@@ -20,7 +20,7 @@
         GenerateSimplyCopy(simple, string.Empty);
     }
 
-    var refType = Model.Properties.Where(p => IsReferenceType(p, Model)).ToArray();
+    var refType = Model.Properties.Where(DeepCopy).ToArray();
     if (refType.Length > 0)
     {
 #>
@@ -41,6 +41,8 @@
                 var target = isCollection ? source : $"copy.{source}";
                 if (child != null && child.Interfaces.Contains(cloneable))
                 {
+                    var cloneAtt = prop.GetAttributeOrNull("ReferenceCloneAttribute");
+                    var cloneType = cloneAtt == null || cloneAtt.Parameters[0] == "Deep" ? "true" : "false";
 #>
                 <#= indent #>if (<#= source #> != null)
                 <#= indent #>{
@@ -136,23 +138,33 @@
     }
     
     // FInd all value types
-    private static bool IsValueType(PropertyModel prop, ClassModel model)
+    private bool SimplyCopy(PropertyModel prop)
     {
+        if (prop.HasAttribute("CloneIgnoreAttribute"))
+            return false;
+
+        var cloneAtt = prop.GetAttributeOrNull("ReferenceCloneAttribute");
+        if (cloneAtt != null && cloneAtt.Parameters[0] == "Reference")
+            return true;
+
         if (prop.IsCollection)
             return false;
 
         if (prop.ValueType == ModelValueType.Class)
         {
             // Check if it is actually an enum reference
-            return model.References.Any(r => r.Name == prop.ElementType && r is EnumModel);
+            return Model.References.Any(r => r.Name == prop.ElementType && r is EnumModel);
         }
 
         return true;
     }
 
     // Find all reference types
-    private static bool IsReferenceType(PropertyModel prop, ClassModel model)
+    private bool DeepCopy(PropertyModel prop)
     {
-        return !IsValueType(prop, model);
+        if (prop.HasAttribute("CloneIgnoreAttribute"))
+            return false;
+
+        return !SimplyCopy(prop);
     }
 #>

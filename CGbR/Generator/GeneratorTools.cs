@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CGbR
@@ -16,8 +17,7 @@ namespace CGbR
         /// <returns>True if attribute is set</returns>
         public static bool HasAttribute(this CodeElementModel element, string name)
         {
-            var shortName = name.Replace("Attribute", string.Empty);
-            return element.HasAttributeShort(shortName);
+            return element.Attributes.Any(att => AttributeCompare(att, name));
         }
 
         /// <summary>
@@ -29,19 +29,24 @@ namespace CGbR
         public static IEnumerable<T> WhereAttribute<T>(this IEnumerable<T> elements, string name)
             where T : CodeElementModel
         {
-            var shortName = name.Replace("Attribute", string.Empty);
-            return elements.Where(e => e.HasAttributeShort(shortName));
+            return elements.Where(e => e.HasAttribute(name));
         }
 
         /// <summary>
-        /// Checks if an element has an attribute with given short name
+        /// Get attribute with this name or null
         /// </summary>
-        /// <param name="element">Code element to check</param>
-        /// <param name="shortName">Name of the attribute</param>
-        /// <returns>True if attribute is set</returns>
-        private static bool HasAttributeShort(this CodeElementModel element, string shortName)
+        public static AttributeModel GetAttributeOrNull(this CodeElementModel element, string attributeName)
         {
-            return element.Attributes.Any(att => att.Name.Replace("Attribute", string.Empty) == shortName);
+            return element.Attributes.FirstOrDefault(att => AttributeCompare(att, attributeName));
+        }
+
+        /// <summary>
+        /// Compare different attributes
+        /// </summary>
+        private static bool AttributeCompare(AttributeModel attribute, string searchName)
+        {
+            const string suffix = nameof(Attribute);
+            return attribute.Name.Replace(suffix, string.Empty) == searchName.Replace(suffix, string.Empty);
         }
 
         /// <summary>
@@ -57,7 +62,7 @@ namespace CGbR
         /// </summary>
         /// <param name="property">Property to generate</param>
         /// <param name="length">Optional length of the collection</param>
-        /// <returns>Collection construtor string</returns>
+        /// <returns>Collection constructor string</returns>
         public static string CollectionConstructor(PropertyModel property, string length = null)
         {
             if (property.CollectionType == "Array")
@@ -89,11 +94,11 @@ namespace CGbR
         }
 
         /// <summary>
-        /// Code fragement that returns size of the collection
+        /// Code fragment that returns size of the collection
         /// </summary>
         /// <param name="property">Collection property</param>
         /// <param name="dimension">Optional dimension parameter</param>
-        /// <returns>Code fragement</returns>
+        /// <returns>Code fragment</returns>
         public static string CollectionSize(PropertyModel property, int dimension = -1)
         {
             if (!property.IsCollection && property.ValueType == ModelValueType.String)

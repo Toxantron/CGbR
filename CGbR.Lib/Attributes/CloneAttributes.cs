@@ -3,6 +3,15 @@
 namespace CGbR.Lib
 {
     /// <summary>
+    /// Decorate a class with this attribute to activate
+    /// the clone generator
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class CloneableAttribute : Attribute
+    {
+    }
+
+    /// <summary>
     /// Attribute to signal CGbR this property shall be ignored
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
