@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using static System.Reflection.Assembly;
 
 namespace CGbR
 {
@@ -21,6 +24,30 @@ namespace CGbR
 
         /// <see cref="IGeneratorMode"/>
         public abstract bool Initialize(string path, string[] args);
+
+
+        /// <summary>
+        /// Resolve assemblies from path including our own assembly
+        /// </summary>
+        protected static IEnumerable<Assembly> ResolveAssemblies(IEnumerable<string> paths)
+        {
+            var assembly = GetExecutingAssembly();
+            yield return assembly;
+
+            foreach (var path in paths)
+            {
+                try
+                {
+                    var resolved = Environment.ExpandEnvironmentVariables(path);
+                    assembly = LoadFile(resolved);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Failed to load assembly from path: {path}");
+                }
+                yield return assembly;
+            }
+        }
 
         /// <see cref="IGeneratorMode"/>
         public abstract void Execute();

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using static System.Reflection.Assembly;
 using CGbR.Configuration;
 using Newtonsoft.Json;
 
@@ -62,28 +61,6 @@ namespace CGbR
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Resolve assemblies from path including our own assembly
-        /// </summary>
-        private static IEnumerable<Assembly> ResolveAssemblies(IEnumerable<string> paths)
-        {
-            var assembly = GetExecutingAssembly();
-            yield return assembly;
-
-            foreach (var path in paths)
-            {
-                try
-                {
-                    assembly = LoadFile(path);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine($"Failed to load assembly from path: {path}");
-                }
-                yield return assembly;
-            }
         }
 
         /// <see cref="IGeneratorMode"/>
