@@ -1,26 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace CGbR
 {
     /// <summary>
     /// Factory to resolve generators
     /// </summary>
-    public static class GeneratorFactory
+    internal static class GeneratorFactory
     {
-        private static readonly IGenerator[] Generators = {
-            new BinarySerializer(), 
-            new JsonSerializer(), 
-            new Cloneable(), 
-        };
+        private static IGenerator[] _generators;
 
         /// <summary>
-        /// Resolve all properties
+        /// Initialize the factory and load all generators from the app domain
         /// </summary>
-        /// <returns>All available properties</returns>
-        public static IGenerator[] ResolveAll()
+        public static void Initialize(IEnumerable<Assembly> assemblies)
         {
-            return Generators;
+            var generators = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                              from type in assembly.GetExportedTypes()
+                              where type.IsClass && typeof(IGenerator).IsAssignableFrom(type)
+                              select (IGenerator) Activator.CreateInstance(type));
+            _generators = generators.ToArray();
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace CGbR
         /// <returns>Generator instance</returns>
         public static IGenerator Resolve(string name)
         {
-            var generator = Generators.FirstOrDefault(g => g.Name == name);
+            var generator = _generators.FirstOrDefault(g => g.Name == name);
 
             if (generator == null)
                 throw new ArgumentException($"No generator with name '{name}' found!", nameof(name));

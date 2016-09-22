@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using static System.Reflection.Assembly;
 using CGbR.Configuration;
 using Newtonsoft.Json;
 
@@ -39,7 +41,11 @@ namespace CGbR
             var configText = File.ReadAllText(configPath);
             var config = JsonConvert.DeserializeObject<CgbrConfiguration>(configText);
 
-            // Parser mapppings
+            // Load extension parsers
+            var assemblies = ResolveAssemblies(config.Extensions);
+            GeneratorFactory.Initialize(assemblies);
+
+            // Parser mappings
             foreach (var mapping in config.Mappings)
             {
                 Parsers[mapping.Extension] = ParserFactory.Resolve(mapping.Parser);
@@ -56,6 +62,28 @@ namespace CGbR
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Resolve assemblies from path including our own assembly
+        /// </summary>
+        private static IEnumerable<Assembly> ResolveAssemblies(IEnumerable<string> paths)
+        {
+            var assembly = GetExecutingAssembly();
+            yield return assembly;
+
+            foreach (var path in paths)
+            {
+                try
+                {
+                    assembly = LoadFile(path);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Failed to load assembly from path: {path}");
+                }
+                yield return assembly;
+            }
         }
 
         /// <see cref="IGeneratorMode"/>

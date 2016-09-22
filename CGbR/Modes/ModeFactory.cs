@@ -18,12 +18,12 @@ namespace CGbR
         {
             if (File.Exists(path))
                 return new FileMode();
-            else if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".csproj"))
+            if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".csproj"))
                 return new ProjectMode();
-            else if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".sln"))
+            if (Directory.GetFiles(path).Any(f => Path.GetExtension(f) == ".sln"))
                 return null;
-            else
-                return null;
+
+            return null;
         }
     }
 }

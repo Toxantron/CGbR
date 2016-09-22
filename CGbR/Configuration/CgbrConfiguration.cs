@@ -13,14 +13,14 @@ namespace CGbR.Configuration
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// Mappings of extension to parser
-        /// </summary>
-        public ParserMapping[] Mappings { get; set; }
-
-        /// <summary>
         /// Path to extension libraries
         /// </summary>
         public string[] Extensions { get; set; }
+
+        /// <summary>
+        /// Mappings of extension to parser
+        /// </summary>
+        public ParserMapping[] Mappings { get; set; }
 
         /// <summary>
         /// Local generators
