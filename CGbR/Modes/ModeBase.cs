@@ -31,22 +31,29 @@ namespace CGbR
         /// </summary>
         protected static IEnumerable<Assembly> ResolveAssemblies(IEnumerable<string> paths)
         {
+            var assemblies = new List<Assembly>();
+
             var assembly = GetExecutingAssembly();
-            yield return assembly;
+            assemblies.Add(assembly);
 
             foreach (var path in paths)
             {
                 try
                 {
                     var resolved = Environment.ExpandEnvironmentVariables(path);
+
+                    Console.WriteLine($"Loading extension from {resolved}");
+
                     assembly = LoadFile(resolved);
+                    assemblies.Add(assembly);
                 }
                 catch (Exception)
                 {
                     Console.WriteLine($"Failed to load assembly from path: {path}");
                 }
-                yield return assembly;
             }
+
+            return assemblies;
         }
 
         /// <see cref="IGeneratorMode"/>

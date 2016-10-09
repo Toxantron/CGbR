@@ -17,7 +17,7 @@ namespace CGbR
         /// </summary>
         public static void Initialize(IEnumerable<Assembly> assemblies)
         {
-            var generators = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+            var generators = (from assembly in assemblies
                               from type in assembly.GetExportedTypes()
                               where type.IsClass && typeof(IGenerator).IsAssignableFrom(type)
                               select (IGenerator) Activator.CreateInstance(type));

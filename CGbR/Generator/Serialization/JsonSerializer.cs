@@ -6,7 +6,7 @@ namespace CGbR
     /// <summary>
     /// Generator for JSON serialization
     /// </summary>
-    internal class JsonSerializer : ILocalGenerator
+    public class JsonSerializer : ILocalGenerator
     {
         /// <see cref="ILocalGenerator"/>
         public string Name { get; } = nameof(JsonSerializer);

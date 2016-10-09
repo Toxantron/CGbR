@@ -8,7 +8,7 @@ namespace CGbR
     /// <summary>
     /// Serializer that writes to/reads from a byte array
     /// </summary>
-    internal class BinarySerializer : ILocalGenerator, IClassSerializationTools
+    public class BinarySerializer : ILocalGenerator, IClassSerializationTools
     {
         /// <seealso cref="ILocalGenerator"/>
         public string Name { get; } = nameof(BinarySerializer);
