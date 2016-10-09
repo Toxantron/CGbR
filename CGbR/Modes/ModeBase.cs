@@ -36,20 +36,29 @@ namespace CGbR
             var assembly = GetExecutingAssembly();
             assemblies.Add(assembly);
 
+            // Move up till we find the solution directory
+            var dir = Directory.GetCurrentDirectory();
+            while (Directory.GetFiles(dir, "*.sln").Length == 0)
+            {
+                dir = Directory.GetParent(dir).FullName;
+            }
+            Console.WriteLine($"Found solution directory at {dir}");
+
             foreach (var path in paths)
             {
+                // Make full path and resolve
+                var fullPath = Path.Combine(dir, path);
+
+                Console.WriteLine($"Loading extension from {fullPath}");
+
                 try
-                {
-                    var resolved = Environment.ExpandEnvironmentVariables(path);
-
-                    Console.WriteLine($"Loading extension from {resolved}");
-
-                    assembly = LoadFile(resolved);
+                {                  
+                    assembly = LoadFile(fullPath);
                     assemblies.Add(assembly);
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine($"Failed to load assembly from path: {path}");
+                    Console.WriteLine($"Failed to load assembly from path: {fullPath}");
                 }
             }
 
