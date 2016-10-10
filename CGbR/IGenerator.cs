@@ -21,6 +21,13 @@ namespace CGbR
         /// Interfaces the generated code exports
         /// </summary>
         string[] Interfaces { get; }
-	}
+
+        /// <summary>
+        /// Check if this generator has any additions to this class
+        /// </summary>
+        /// <returns><c>true</c> if this instance can extend the specified model; otherwise, <c>false</c>.</returns>
+        /// <param name="model">Class model that shall be extended</param>
+        bool CanExtend(ClassModel model);
+    }
 }
 

@@ -31,10 +31,8 @@ namespace CGbR
         /// </summary>
         protected static IEnumerable<Assembly> ResolveAssemblies(IEnumerable<string> paths)
         {
-            var assemblies = new List<Assembly>();
-
-            var assembly = GetExecutingAssembly();
-            assemblies.Add(assembly);
+            // Load this assembly be default
+            var assemblies = new List<Assembly> { GetExecutingAssembly() };
 
             // Move up till we find the solution directory
             var dir = Directory.GetCurrentDirectory();
@@ -48,12 +46,11 @@ namespace CGbR
             {
                 // Make full path and resolve
                 var fullPath = Path.Combine(dir, path);
-
                 Console.WriteLine($"Loading extension from {fullPath}");
 
                 try
                 {                  
-                    assembly = LoadFile(fullPath);
+                    var assembly = LoadFile(fullPath);
                     assemblies.Add(assembly);
                 }
                 catch (Exception)
@@ -101,10 +98,13 @@ namespace CGbR
             // Find all matching generators and collect their code fragments
             var fragments = (from gen in Generators.OfType<ILocalGenerator>()
                              where gen.CanExtend(model)
-                             select new GeneratorPartial(gen, gen.Extend(model)));
+                             select new GeneratorPartial(gen, gen.Extend(model))).ToArray();
+            if (fragments.Length == 0)
+                return;
 
             // Initialize and execute the class skeleton template
-            var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments.ToArray());
+            var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments);
+            Console.WriteLine($"Generated {fragments.Length} fragments of code for {model.Name}.");
 
             // Write file
             var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";

@@ -36,10 +36,15 @@ targets. Choice is made automatically based on the first argument. For filepathe
 ### File Mode
 In the File Mode CGbR operators on a single file only. Instead of a configuration it requires a couple of arguments. The first
 argument is obviously the file. Next cames the name of the parser and all following arguments are interpreted as generator names.
+_Right now it does not support extension libraries_.
 This might look like this: `$ cgbr.exe Messages/MyMessage.cs Regex BinarySerializer`
 
 ### Project mode
-In the Project Mode CGbR operates on the entire directory recursively. Parsers and Generators are selected by a `cgbr.json` config file with the following structure. This is the default mode activated by adding the nuget package. With each build the generated files are created and must be included into the project.
+In the Project Mode CGbR operates on the entire directory recursively. Parsers and Generators are selected by a `cgbr.json` config 
+file with the following structure. This is the default mode activated by adding the nuget package. With each build the generated files 
+are created and must be included into the project. You can configure which generators are active and which are not. CGbR can be extended
+with libraries that provide implementations of `ILocalGenerator` or `IGlobalGenerator`. File paths in the config are relative from the
+directory that contains the ".sln"-file.
 
 ```json
 {
@@ -54,14 +59,12 @@ In the Project Mode CGbR operates on the entire directory recursively. Parsers a
     {
       "Name": "BinarySerializer",
       "IsEnabled": true
-    },
-    {
-      "Name": "JsonSerializer",
-      "IsEnabled": true
     }
   ],
   "GlobalGenerators": [
-
+  ],
+  "Extensions": [
+     "bin\\ExtensionLib.dll" 
   ]
 }
 ```
@@ -70,8 +73,7 @@ In the Project Mode CGbR operates on the entire directory recursively. Parsers a
 The perfect usage scenario and actually the origin of CGbR is serializing and deserializing objects. In the original
 project performance gains from generated static code over the original reflection API were somewhere between factor of
 100 and 700.
-Sample code can be found in the [Generator tests](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
-and you will also find [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) comparing the different serializers.
+Sample code can be found in the [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) comparing the different serializers.
 
 ### Binary DataContract Serializer
 The binary DataContract serializer target generates code that maps single objects or object structure onto byte arrays.
@@ -127,8 +129,7 @@ The resulting array would look like this:
 ### JSON DataContract Serializer
 Another serializer is the JSON serializer. It is not build from scratch but rather builds on the popular [Json.NET](http://www.newtonsoft.com/json)
 from Newtonsoft. While writing JSON is done directly it uses JsonReader classes to parse the string. It replaces the reflection 
-serializer classes with generated serialize and deserialize methods. Please refer to the [sample code](https://github.com/Toxantron/CGbR/tree/master/CGbR.GeneratorTests)
-and [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) for further information.
+serializer classes with generated serialize and deserialize methods. Please refer to the [benchmarks](https://github.com/Toxantron/CGbR-Benchmarks) for further information.
 
 ## Cloneable
 CGbR can generate methods to create a deep or shallow copy of an object. After adding the nuget package you need the following config:
@@ -153,7 +154,8 @@ CGbR can generate methods to create a deep or shallow copy of an object. After a
 }
 ```
 
-For every partial class that implements `ICloneable` interface a partial class is generated with a `Clone(bool deep)` method. In order to work you class needs an empty default constructor. Because the partial class has full access, it can be a private constructor.
+For every partial class that implements `ICloneable` interface a partial class is generated with a `Clone(bool deep)` method. In order to work you class needs an empty 
+default constructor. Because the partial class has full access, it can be a private constructor.
 
 ```c#
 public partial class Root : ICloneable
@@ -222,4 +224,37 @@ CGbR can also be used to generate dependency injection.
 CGbR could also be used to generate XAML or Forms based on class definitions.
 
 ## Developers
-Detailed guides on how to write custom generators follow soon.
+CGbR comes with a couple of generators pre-packeged, but you can write your own generators and let CGbR execute them as well. All you need
+is a class library project that references the [CGbR-Extend nuget package](https://www.nuget.org/packages/CGbR-Extend/). Within this libary
+you create implementations of [`ILocalGenerator`](https://github.com/Toxantron/CGbR/blob/master/CGbR/ILocalGenerator.cs) or [`IGlobalGenerator`](https://github.com/Toxantron/CGbR/blob/master/CGbR/IGlobalGenerator.cs).
+
+A simple example might look like this:
+````cs
+public class ExtendedGenerator : ILocalGenerator
+{
+    public string Name { get; } = "TestGenerator";
+    public string[] Usings { get; } = { "System" };
+    public string[] Interfaces { get; } = {};
+
+
+    public bool CanExtend(ClassModel model)
+    {
+        return true;
+    }
+
+    public string Extend(ClassModel model)
+    {
+        return $"        // Size of { model.Name }\n" +
+               $"        public int Size {{ get; }} = 5;";
+    }
+}
+````
+
+Than reference the path to this libary in the **cgbr.json** of the project.
+````json
+{
+  //...
+  "Extensions": [
+    "bin\\ExtensionLib.dll"
+  ]
+}
