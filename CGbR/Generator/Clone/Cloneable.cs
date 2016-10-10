@@ -7,7 +7,7 @@ namespace CGbR
     /// <summary>
     /// Local generator that generates clone method
     /// </summary>
-    internal class Cloneable : ILocalGenerator
+    public class Cloneable : ILocalGenerator
     {
         /// <summary>
         /// Name of the generator

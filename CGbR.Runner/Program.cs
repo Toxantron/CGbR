@@ -24,6 +24,8 @@ namespace CGbR
                 return;
             }
 
+            Console.WriteLine($"Starting CGbR on {args[0]}");
+
             // Prepare mode
             var path = args[0].Replace("\"", string.Empty);
             var generatorMode = ModeFactory.Resolve(path);

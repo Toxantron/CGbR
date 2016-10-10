@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using CGbR.Configuration;
 using Newtonsoft.Json;
 
@@ -39,7 +40,11 @@ namespace CGbR
             var configText = File.ReadAllText(configPath);
             var config = JsonConvert.DeserializeObject<CgbrConfiguration>(configText);
 
-            // Parser mapppings
+            // Load extension parsers
+            var assemblies = ResolveAssemblies(config.Extensions);
+            GeneratorFactory.Initialize(assemblies);
+
+            // Parser mappings
             foreach (var mapping in config.Mappings)
             {
                 Parsers[mapping.Extension] = ParserFactory.Resolve(mapping.Parser);
@@ -66,6 +71,7 @@ namespace CGbR
             // Parse all files in directory recursive
             var files = new List<ParsedFile>();
             ParseFilesInDirectory(_directory, files);
+            Console.WriteLine($"Found and parsed {files.Count} files.");
 
             // Link classes of this project
             LinkReferences(files);
@@ -128,25 +134,7 @@ namespace CGbR
             // Iterate over the files and generate the partial class
             foreach (var file in files)
             {
-                var model = file.Model as ClassModel;
-                if (model == null)
-                    continue;
-
-                // Find all matching generators and collect their code fragments
-                var fragments = (from gen in Generators.OfType<ILocalGenerator>()
-                                 where gen.CanExtend(model)
-                                 select new GeneratorPartial(gen, gen.Extend(model))).ToArray();
-
-                if (fragments.Length == 0)
-                    continue;
-
-                // Initialize and execute the class skeleton template
-                var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments);
-
-                // Write file
-                var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";
-                fileName = Path.Combine(Path.GetDirectoryName(file.Name), fileName);
-                File.WriteAllText(fileName, code);
+                GenerateLocalPartial(file);
             }
         }
 
@@ -159,7 +147,9 @@ namespace CGbR
             var models = files.Select(f => f.Model).OfType<ClassModel>().ToArray();
             // Determine all global classes and generate their code
             var globalClasses = (from generator in Generators.OfType<IGlobalGenerator>()
-                                 let matchingClasses = models.Where(generator.ClassFilter).ToList()
+                                 let matchingClasses = (from model in models
+                                                        where generator.CanExtend(model)
+                                                        select model).ToList()
                                  where matchingClasses.Count > 0
                                  let globalPartial = new GeneratorPartial(generator, generator.Extend(matchingClasses))
                                  group globalPartial by generator.ClassName into globalClass

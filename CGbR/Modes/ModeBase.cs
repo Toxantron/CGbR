@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using static System.Reflection.Assembly;
 
 namespace CGbR
 {
@@ -21,6 +24,43 @@ namespace CGbR
 
         /// <see cref="IGeneratorMode"/>
         public abstract bool Initialize(string path, string[] args);
+
+
+        /// <summary>
+        /// Resolve assemblies from path including our own assembly
+        /// </summary>
+        protected static IEnumerable<Assembly> ResolveAssemblies(IEnumerable<string> paths)
+        {
+            // Load this assembly be default
+            var assemblies = new List<Assembly> { GetExecutingAssembly() };
+
+            // Move up till we find the solution directory
+            var dir = Directory.GetCurrentDirectory();
+            while (Directory.GetFiles(dir, "*.sln").Length == 0)
+            {
+                dir = Directory.GetParent(dir).FullName;
+            }
+            Console.WriteLine($"Found solution directory at {dir}");
+
+            foreach (var path in paths)
+            {
+                // Make full path and resolve
+                var fullPath = Path.Combine(dir, path);
+                Console.WriteLine($"Loading extension from {fullPath}");
+
+                try
+                {                  
+                    var assembly = LoadFile(fullPath);
+                    assemblies.Add(assembly);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Failed to load assembly from path: {fullPath}");
+                }
+            }
+
+            return assemblies;
+        }
 
         /// <see cref="IGeneratorMode"/>
         public abstract void Execute();
@@ -58,10 +98,13 @@ namespace CGbR
             // Find all matching generators and collect their code fragments
             var fragments = (from gen in Generators.OfType<ILocalGenerator>()
                              where gen.CanExtend(model)
-                             select new GeneratorPartial(gen, gen.Extend(model)));
+                             select new GeneratorPartial(gen, gen.Extend(model))).ToArray();
+            if (fragments.Length == 0)
+                return;
 
             // Initialize and execute the class skeleton template
-            var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments.ToArray());
+            var code = GenerateClass(model.Name, model.AccessModifier, model.Namespace, fragments);
+            Console.WriteLine($"Generated {fragments.Length} fragments of code for {model.Name}.");
 
             // Write file
             var fileName = Path.GetFileNameWithoutExtension(file.Name) + ".Generated.cs";

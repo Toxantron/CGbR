@@ -14,9 +14,9 @@ namespace CGbR
         string ClassName { get; }
 
         /// <summary>
-        /// Filter to find classes that can be extended by this generator
+        /// Use the class frame or an empty file. 
         /// </summary>
-        Func<ClassModel, bool> ClassFilter { get; }
+        bool UseClassFrame { get; }
 
         /// <summary>
         /// Generate code to extend given classes
