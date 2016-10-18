@@ -250,10 +250,10 @@ public class ExtendedGenerator : ILocalGenerator
 }
 ````
 
-Than reference the path to this libary in the **cgbr.json** of the project.
+Than reference the path to this libary in the **cgbr.json** of the project. The path must be relative to the directory of
+your solution.
 ````json
 {
-  //...
   "Extensions": [
     "bin\\ExtensionLib.dll"
   ]
