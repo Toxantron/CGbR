@@ -34,8 +34,8 @@ targets. Choice is made automatically based on the first argument. For filepathe
 ".csproj" or ".sln" file in the given path.
 
 ### File Mode
-In the File Mode CGbR operators on a single file only. Instead of a configuration it requires a couple of arguments. The first
-argument is obviously the file. Next cames the name of the parser and all following arguments are interpreted as generator names.
+In the File Mode CGbR operates on a single file only. Instead of a configuration it requires a couple of arguments. The first
+argument is obviously the file path. Next cames the name of the parser and all following arguments are interpreted as generator names.
 _Right now it does not support extension libraries_.
 This might look like this: `$ cgbr.exe Messages/MyMessage.cs Regex BinarySerializer`
 
