@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace CGbR
 {
@@ -23,6 +24,9 @@ namespace CGbR
             // Second argument is parser
             var ext = Path.GetExtension(_path);
             Parsers[ext] = ParserFactory.Resolve(args[0]);
+
+            // Load generators
+            GeneratorFactory.Initialize(new[] {Assembly.GetExecutingAssembly()});
 
             // All following arguments are the active generators
             for (var i = 1; i < args.Length; i++)
